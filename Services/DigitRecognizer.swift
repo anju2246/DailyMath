@@ -4,86 +4,52 @@ import UIKit
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
-// MARK: - Reconocedor de Dígitos Híbrido (MNIST + Vision)
+// MARK: - Reconocedor de Dígitos con Vision Framework
 class DigitRecognizer {
     
     private let context = CIContext()
-    private let mnistClassifier = MNISTClassifier()
-    
-    // Umbral de confianza para aceptar resultado MNIST
-    private let mnistConfidenceThreshold: Float = 0.7
     
     // Reconocer desde PKDrawing (PencilKit)
     func recognize(drawing: PKDrawing, completion: @escaping (String?) -> Void) {
         let image = drawing.image(from: drawing.bounds, scale: 2.0)
-        recognizeHybrid(image: image, completion: completion)
+        recognizeWithVision(image, completion: completion)
     }
     
     // Reconocer desde UIImage (Manual Drawing)
     func recognize(image: UIImage, completion: @escaping (String?) -> Void) {
-        recognizeHybrid(image: image, completion: completion)
-    }
-    
-    // MARK: - Reconocimiento Híbrido
-    private func recognizeHybrid(image: UIImage, completion: @escaping (String?) -> Void) {
         // Preprocesar imagen
         let processedImage = preprocessImage(image)
-        
-        // Intentar primero con MNIST si el modelo está cargado
-        if mnistClassifier.isModelLoaded {
-            mnistClassifier.classify(image: processedImage) { [weak self] digit, confidence in
-                if let digit = digit, let confidence = confidence, 
-                   confidence >= (self?.mnistConfidenceThreshold ?? 0.7) {
-                    // MNIST dio resultado confiable
-                    print("✅ MNIST: \(digit) (confianza: \(Int(confidence * 100))%)")
-                    completion(String(digit))
-                } else {
-                    // Fallback a Vision
-                    print("⚠️ MNIST baja confianza, usando Vision...")
-                    self?.recognizeWithVision(processedImage, completion: completion)
-                }
-            }
-        } else {
-            // Solo Vision
-            recognizeWithVision(processedImage, completion: completion)
-        }
+        recognizeWithVision(processedImage, completion: completion)
     }
     
     // MARK: - Preprocesamiento de Imagen
     private func preprocessImage(_ image: UIImage) -> UIImage {
         guard let ciImage = CIImage(image: image) else { return image }
         
-        // 1. Agregar padding alrededor del dibujo
-        let paddedImage = addPadding(to: ciImage, padding: 40)
+        // 1. Convertir a escala de grises
+        let grayscaleFilter = CIFilter.colorControls()
+        grayscaleFilter.inputImage = ciImage
+        grayscaleFilter.saturation = 0
+        grayscaleFilter.contrast = 2.0  // Alto contraste
+        grayscaleFilter.brightness = 0.1
         
-        // 2. Aumentar contraste
-        let contrastFilter = CIFilter.colorControls()
-        contrastFilter.inputImage = paddedImage
-        contrastFilter.contrast = 1.5
-        contrastFilter.brightness = 0.1
+        guard let grayscaleOutput = grayscaleFilter.outputImage else { return image }
         
-        guard let outputImage = contrastFilter.outputImage,
-              let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else {
+        // 2. Binarización (blanco y negro puro)
+        let thresholdFilter = CIFilter(name: "CIColorThreshold")
+        thresholdFilter?.setValue(grayscaleOutput, forKey: kCIInputImageKey)
+        thresholdFilter?.setValue(0.5, forKey: "inputThreshold")
+        
+        let finalOutput = thresholdFilter?.outputImage ?? grayscaleOutput
+        
+        guard let cgImage = context.createCGImage(finalOutput, from: finalOutput.extent) else {
             return image
         }
         
         return UIImage(cgImage: cgImage)
     }
     
-    private func addPadding(to image: CIImage, padding: CGFloat) -> CIImage {
-        let newExtent = image.extent.insetBy(dx: -padding, dy: -padding)
-        
-        // Crear fondo blanco
-        let whiteBackground = CIImage(color: CIColor.white)
-            .cropped(to: newExtent)
-        
-        // Componer imagen sobre fondo blanco con offset
-        let translatedImage = image.transformed(by: CGAffineTransform(translationX: padding, y: padding))
-        
-        return translatedImage.composited(over: whiteBackground)
-    }
-    
-    // MARK: - Reconocimiento con Vision (Fallback)
+    // MARK: - Reconocimiento con Vision
     private func recognizeWithVision(_ image: UIImage, completion: @escaping (String?) -> Void) {
         guard let cgImage = image.cgImage else {
             completion(nil)
@@ -98,36 +64,53 @@ class DigitRecognizer {
                 return
             }
             
-            // Obtener múltiples candidatos y elegir el mejor número
-            var bestNumber: String? = nil
-            var bestConfidence: Float = 0
+            // Buscar números en todos los resultados
+            var allNumbers: [(String, Float)] = []
             
             for observation in observations {
-                for candidate in observation.topCandidates(3) {
+                for candidate in observation.topCandidates(5) {
                     let numbers = candidate.string.filter { $0.isNumber }
-                    if !numbers.isEmpty && candidate.confidence > bestConfidence {
-                        bestNumber = numbers
-                        bestConfidence = candidate.confidence
+                    if !numbers.isEmpty {
+                        allNumbers.append((numbers, candidate.confidence))
                     }
                 }
             }
             
-            print("📝 Vision: \(bestNumber ?? "nil") (confianza: \(Int(bestConfidence * 100))%)")
+            // Ordenar por confianza y tomar el mejor
+            allNumbers.sort { $0.1 > $1.1 }
+            let bestNumber = allNumbers.first?.0
+            
+            if let number = bestNumber {
+                print("📝 Reconocido: \(number) (confianza: \(Int((allNumbers.first?.1 ?? 0) * 100))%)")
+            } else {
+                print("❌ No se reconoció ningún número")
+            }
             
             DispatchQueue.main.async {
                 completion(bestNumber)
             }
         }
         
+        // Configuración optimizada para dígitos manuscritos
         request.recognitionLevel = .accurate
         request.usesLanguageCorrection = false
         request.recognitionLanguages = ["en-US"]
-        request.customWords = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        request.customWords = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                               "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+                               "20", "21", "22", "23", "24", "25", "30", "40", "50", "60",
+                               "70", "80", "90", "100"]
         
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
         
         DispatchQueue.global(qos: .userInitiated).async {
-            try? handler.perform([request])
+            do {
+                try handler.perform([request])
+            } catch {
+                print("❌ Error en Vision: \(error)")
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+            }
         }
     }
 }
