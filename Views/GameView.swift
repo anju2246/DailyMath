@@ -44,17 +44,15 @@ struct GameView: View {
             }
             
             // Área de dibujo
-            ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.blue, lineWidth: 3)
-                    .background(Color.white)
-                    .frame(height: 250)
-                
-                DrawingCanvasView(canvasView: $canvasView)
-                    .frame(height: 250)
-                    .cornerRadius(20)
-            }
-            .padding(.horizontal)
+            DrawingCanvasView(canvasView: $canvasView)
+                .frame(height: 250)
+                .background(Color.white)
+                .cornerRadius(20)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.blue, lineWidth: 3)
+                )
+                .padding(.horizontal)
             
             // Número reconocido
             if !recognizedNumber.isEmpty {
