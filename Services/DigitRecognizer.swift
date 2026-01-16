@@ -1,5 +1,6 @@
 import PencilKit
 import Vision
+import UIKit
 
 // MARK: - Reconocedor de Dígitos
 class DigitRecognizer {

@@ -1,5 +1,8 @@
+import SwiftUI
+import Combine
+
 @main
-struct MathTrainingApp: App {
+struct DailyMathApp: App {
     @StateObject private var statsManager = StatsManager()
     
     var body: some Scene {
@@ -17,12 +20,5 @@ struct MathTrainingApp: App {
                     }
             }
         }
-    }
-}
-
-// MARK: - Preview
-struct MathTrainingApp_Previews: PreviewProvider {
-    static var previews: some View {
-        MathTrainingApp()
     }
 }

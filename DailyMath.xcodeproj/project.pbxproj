@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */; };
 		DAD5FD5E2F19D9C6003B7185 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAD5FD5D2F19D9C5003B7185 /* Vision.framework */; };
 		DAD5FD7C2F19DBA3003B7185 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */; };
 		DAD5FD7D2F19DBA3003B7185 /* ProblemGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD792F19DBA2003B7185 /* ProblemGenerator.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMathApp.swift; sourceTree = "<group>"; };
 		DAD5FD202F19D885003B7185 /* DailyMath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMath.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD2D2F19D888003B7185 /* DailyMathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD372F19D888003B7185 /* DailyMathUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +106,7 @@
 		DAD5FD172F19D885003B7185 = {
 			isa = PBXGroup;
 			children = (
+				DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */,
 				DAD5FD9A2F19DD37003B7185 /* Models */,
 				DAD5FD9C2F19DD37003B7185 /* Services */,
 				DAD5FDA02F19DD37003B7185 /* Views */,
@@ -309,6 +312,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */,
 				DAD5FDA62F19DD37003B7185 /* GameView.swift in Sources */,
 				DAD5FDA72F19DD37003B7185 /* StatsView.swift in Sources */,
 				DAD5FDA82F19DD37003B7185 /* DigitRecognizer.swift in Sources */,
@@ -416,7 +420,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0.1;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -474,7 +478,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0.1;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -499,6 +503,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -531,6 +536,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -556,7 +562,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 68K85UB3R3;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Inminente.DailyMathTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -578,7 +584,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 68K85UB3R3;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Inminente.DailyMathTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
