@@ -4,10 +4,22 @@ import UIKit
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
-// MARK: - Reconocedor de Dígitos Optimizado (Multi-Path)
+// MARK: - Reconocedor de Dígitos Optimizado (Ensemble + Heuristics)
 class DigitRecognizer {
     
     private let context = CIContext()
+    
+    // Mapeo de confusiones comunes de Vision Framework (Letras a Números)
+    private let specialMappings: [String: String] = [
+        "O": "0", "o": "0", "()": "0", "D": "0", "U": "0", "Q": "0",
+        "I": "1", "l": "1", "|": "1", "!": "1", "j": "1", "i": "1", "L": "1",
+        "Z": "2", "z": "2",
+        "S": "5", "s": "5", "$": "5",
+        "G": "6", "b": "6",
+        "T": "7", "t": "7", "Y": "7",
+        "B": "8",
+        "q": "9", "g": "9", "p": "9"
+    ]
     
     // Reconocer desde PKDrawing (PencilKit)
     func recognize(drawing: PKDrawing, completion: @escaping (String?) -> Void) {
@@ -17,47 +29,46 @@ class DigitRecognizer {
     
     // Reconocer desde UIImage (Manual Drawing)
     func recognize(image: UIImage, completion: @escaping (String?) -> Void) {
-        // Enviar a procesamiento multi-camino
         recognizeMultiPath(image, completion: completion)
     }
     
-    // MARK: - Procesamiento Multi-Camino
+    // MARK: - Procesamiento Multi-Camino (Triple Path)
     private func recognizeMultiPath(_ image: UIImage, completion: @escaping (String?) -> Void) {
-        // Path 1: Imagen Original (Antialiased)
+        // Path 1: Imagen Original (Centrada/Normalizada)
         // Path 2: Imagen Binarizada (Alto Contraste)
+        // Path 3: Imagen con Dilatación (Trazos más gruesos)
+        
         let binarizedImage = preprocessBinarized(image)
+        let dilatedImage = preprocessDilated(image)
         
         let dispatchGroup = DispatchGroup()
-        var results: [(String, Float)] = []
+        var allCandidates: [(String, Float)] = []
         
-        // Ejecutar Path 1
-        dispatchGroup.enter()
-        performVisionRequest(on: image) { result in
-            if let result = result { results.append(result) }
-            dispatchGroup.leave()
-        }
+        let paths = [image, binarizedImage, dilatedImage]
         
-        // Ejecutar Path 2
-        dispatchGroup.enter()
-        performVisionRequest(on: binarizedImage) { result in
-            if let result = result { results.append(result) }
-            dispatchGroup.leave()
+        for pathImage in paths {
+            dispatchGroup.enter()
+            performVisionRequest(on: pathImage) { candidates in
+                if let candidates = candidates {
+                    allCandidates.append(contentsOf: candidates)
+                }
+                dispatchGroup.leave()
+            }
         }
         
         dispatchGroup.notify(queue: .main) {
-            // Elegir el mejor resultado basado en confianza y lógica de números
-            let finalResult = self.selectBestResult(results)
+            let finalResult = self.selectBestResult(allCandidates)
             completion(finalResult)
         }
     }
     
-    // MARK: - Binarización
+    // MARK: - Preprocesamientos
     private func preprocessBinarized(_ image: UIImage) -> UIImage {
         guard let ciImage = CIImage(image: image) else { return image }
         
         let filter = CIFilter.colorControls()
         filter.inputImage = ciImage
-        filter.contrast = 3.0
+        filter.contrast = 5.0
         filter.brightness = 0.0
         filter.saturation = 0.0
         
@@ -69,8 +80,24 @@ class DigitRecognizer {
         return UIImage(cgImage: cgImage)
     }
     
+    private func preprocessDilated(_ image: UIImage) -> UIImage {
+        guard let ciImage = CIImage(image: image) else { return image }
+        
+        // Usar un filtro de morfología para dilatar (engrosar) el trazo
+        let filter = CIFilter.morphologyMaximum()
+        filter.inputImage = ciImage
+        filter.radius = 1.5 // Engrosar ligeramente
+        
+        guard let output = filter.outputImage,
+              let cgImage = context.createCGImage(output, from: output.extent) else {
+            return image
+        }
+        
+        return UIImage(cgImage: cgImage)
+    }
+    
     // MARK: - Vision Request
-    private func performVisionRequest(on image: UIImage, completion: @escaping ((String, Float)?) -> Void) {
+    private func performVisionRequest(on image: UIImage, completion: @escaping ([(String, Float)]?) -> Void) {
         guard let cgImage = image.cgImage else {
             completion(nil)
             return
@@ -82,24 +109,15 @@ class DigitRecognizer {
                 return
             }
             
-            var bestCandidate: (String, Float)? = nil
+            var candidates: [(String, Float)] = []
             
             for observation in observations {
-                // Buscamos en los mejores 5 candidatos
-                for candidate in observation.topCandidates(5) {
-                    let text = candidate.string.trimmingCharacters(in: .whitespacesAndNewlines)
-                    let numbers = text.filter { $0.isNumber }
-                    
-                    // Si el candidato es puramente numérico, le damos prioridad
-                    if !numbers.isEmpty {
-                        let confidence = candidate.confidence
-                        if bestCandidate == nil || confidence > (bestCandidate?.1 ?? 0) {
-                            bestCandidate = (numbers, confidence)
-                        }
-                    }
+                // Capturamos hasta 10 candidatos por observación para aplicar mejor nuestras heurísticas
+                for candidate in observation.topCandidates(10) {
+                    candidates.append((candidate.string, candidate.confidence))
                 }
             }
-            completion(bestCandidate)
+            completion(candidates)
         }
         
         request.recognitionLevel = .accurate
@@ -113,31 +131,55 @@ class DigitRecognizer {
         }
     }
     
-    // MARK: - Lógica de Selección y Heurística
+    // MARK: - Lógica de Selección y Heurística de Precisión Extrema
     private func selectBestResult(_ results: [(String, Float)]) -> String? {
         if results.isEmpty { return nil }
         
-        // Ordenar por confianza
-        let sortedResults = results.sorted { $0.1 > $1.1 }
+        var mappedResults: [(String, Float)] = []
         
-        // Tomar el de mayor confianza
-        let bestText = sortedResults.first?.0
-        
-        // Heurística de corrección (Heurística de "Dígitos solitarios")
-        if let text = bestText {
-            // Si detectó 'l' o 'I' como números (a veces Vision lo hace internamente)
-            // Aunque ya filtramos por isNumber, a veces '1' se confunde con 'l' antes de filtrar
+        for (rawText, confidence) in results {
+            let text = rawText.trimmingCharacters(in: .whitespacesAndNewlines)
+            if text.isEmpty { continue }
             
-            // Corrección específica para confusiones comunes de Vision con dígitos
-            // Nota: Aquí el texto ya es solo números debido al filtro anterior
+            // 1. Si ya es un número, añadirlo tal cual
+            let numbersOnly = text.filter { $0.isNumber }
+            if !numbersOnly.isEmpty {
+                mappedResults.append((numbersOnly, confidence))
+            }
             
-            // Si el resultado es vacío pero tenemos candidatos, re-intentar con mapeos
-            if text.isEmpty && !sortedResults.isEmpty {
-                // Esto no debería pasar con el filtro isNumber arriba
+            // 2. Aplicar mapeo heurístico a letras individuales o combinaciones
+            // Ej: "O" -> "0", "S" -> "5"
+            if let mapped = specialMappings[text] {
+                // Le damos una confianza un poco menor al mapeo para que el número real gane si existe
+                mappedResults.append((mapped, confidence * 0.9))
+            }
+            
+            // 3. Caso especial de Vision: a veces reconoce "1" como "l" interno
+            // Procesamos el texto letra por letra si no es puramente numérico
+            if numbersOnly.count != text.count {
+                var hybridString = ""
+                for char in text {
+                    if char.isNumber {
+                        hybridString.append(char)
+                    } else if let digit = specialMappings[String(char)] {
+                        hybridString.append(digit)
+                    }
+                }
+                
+                if !hybridString.isEmpty && hybridString.count == text.count {
+                    mappedResults.append((hybridString, confidence * 0.85))
+                }
             }
         }
         
-        print("🎯 Resultado Final: \(bestText ?? "nil") (Paths: \(results.count))")
-        return bestText
+        // Ordenar por confianza
+        let finalSorted = mappedResults.sorted { $0.1 > $1.1 }
+        
+        if let best = finalSorted.first {
+            print("💎 Best Final: \(best.0) (Confidence: \(Int(best.1 * 100))%)")
+            return best.0
+        }
+        
+        return nil
     }
 }
