@@ -94,8 +94,8 @@ extension ManualDrawingView {
             // Dibujar strokes centrados
             UIColor.black.setStroke()
             
-            // Grosor de línea proporcional al tamaño del dibujo para consistencia
-            let strokeWidth = max(8, outputDimension * 0.05)
+            // Grosor de línea más contundente para Vision (mejor para 0 y 8)
+            let strokeWidth = max(12, outputDimension * 0.07)
             
             for stroke in strokes {
                 guard stroke.count > 1 else { continue }
