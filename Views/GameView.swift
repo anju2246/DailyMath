@@ -5,7 +5,7 @@ import Vision
 // MARK: - Vista Principal del Juego
 struct GameView: View {
     @EnvironmentObject var statsManager: StatsManager
-    @State private var canvasView = PKCanvasView()
+    @State private var canvasController: CanvasViewController?
     @State private var currentProblem: MathProblem?
     @State private var recognizedNumber: String = ""
     @State private var isRecognizing = false
@@ -43,16 +43,12 @@ struct GameView: View {
                     .padding()
             }
             
-            // Área de dibujo
-            DrawingCanvasView(canvasView: $canvasView)
-                .frame(height: 250)
-                .background(Color.white)
-                .cornerRadius(20)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.blue, lineWidth: 3)
-                )
-                .padding(.horizontal)
+            // Área de dibujo (UIKit Controller)
+            CanvasView { controller in
+                self.canvasController = controller
+            }
+            .frame(height: 250)
+            .padding(.horizontal)
             
             // Número reconocido
             if !recognizedNumber.isEmpty {
@@ -108,17 +104,18 @@ struct GameView: View {
     }
     
     private func clearCanvas() {
-        canvasView.drawing = PKDrawing()
+        canvasController?.clearCanvas()
         recognizedNumber = ""
         showResult = false
     }
     
     private func recognizeAndCheck() {
-        guard !canvasView.drawing.bounds.isEmpty else { return }
+        guard let controller = canvasController, !controller.isCanvasEmpty() else { return }
         
         isRecognizing = true
+        let drawing = controller.getDrawing()
         
-        recognizer.recognize(drawing: canvasView.drawing) { result in
+        recognizer.recognize(drawing: drawing) { result in
             DispatchQueue.main.async {
                 isRecognizing = false
                 

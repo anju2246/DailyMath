@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */; };
 		DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */; };
 		DAD5FD5E2F19D9C6003B7185 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAD5FD5D2F19D9C5003B7185 /* Vision.framework */; };
 		DAD5FD7C2F19DBA3003B7185 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasViewController.swift; sourceTree = "<group>"; };
 		DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMathApp.swift; sourceTree = "<group>"; };
 		DAD5FD202F19D885003B7185 /* DailyMath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMath.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD2D2F19D888003B7185 /* DailyMathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,10 +105,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DAD5FDB42F19F000003B7185 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		DAD5FD172F19D885003B7185 = {
 			isa = PBXGroup;
 			children = (
 				DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */,
+				DAD5FDB42F19F000003B7185 /* Controllers */,
 				DAD5FD9A2F19DD37003B7185 /* Models */,
 				DAD5FD9C2F19DD37003B7185 /* Services */,
 				DAD5FDA02F19DD37003B7185 /* Views */,
@@ -312,6 +323,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */,
 				DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */,
 				DAD5FDA62F19DD37003B7185 /* GameView.swift in Sources */,
 				DAD5FDA72F19DD37003B7185 /* StatsView.swift in Sources */,
