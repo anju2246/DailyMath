@@ -11,7 +11,7 @@ class DigitRecognizer {
     
     // Mapeo de confusiones comunes de Vision Framework (Letras a Números)
     private let specialMappings: [String: String] = [
-        "O": "0", "o": "0", "()": "0", "D": "0", "U": "0", "Q": "0", "@": "0", "C": "0",
+        "O": "0", "o": "0", "()": "0", "D": "0", "U": "0", "Q": "0", "@": "0", "C": "0", "[]": "0", "{}": "0", "V": "0", "u": "0",
         "I": "1", "l": "1", "|": "1", "!": "1", "j": "1", "i": "1", "L": "1",
         "Z": "2", "z": "2",
         "S": "5", "s": "5", "$": "5",
@@ -134,16 +134,16 @@ class DigitRecognizer {
         }
     }
     
-    // MARK: - Lógica de Selección y Heurística de Precisión Extrema
     private func selectBestResult(_ results: [(String, Float)], originalImage: UIImage?) -> String? {
-        if results.isEmpty {
-            // Fallback para el cero si no se detectó nada pero hay dibujo
-            if let img = originalImage, isLikelyZero(img) {
-                print("🧠 Fallback Geométrico: Detectado forma de '0'")
-                return "0"
+        // 0. COMPROBAR PLANTILLAS PERSONALES (Prioridad Máxima)
+        if let img = originalImage, let userMatch = matchUserTemplates(image: img) {
+            if userMatch.1 > 0.8 {
+                print("🧠 Match Personal Encontrado: \(userMatch.0) (Score: \(Int(userMatch.1 * 100))%)")
+                return String(userMatch.0)
             }
-            return nil
         }
+        
+        if results.isEmpty { return nil }
         
         var mappedResults: [(String, Float)] = []
         
@@ -206,9 +206,63 @@ class DigitRecognizer {
         return nil
     }
     
-    // MARK: - Análisis de Píxeles (Geometría)
+    // MARK: - Análisis de Píxeles (Geometría y Personalización)
+    
+    /// Compara el dibujo actual con las plantillas personales del usuario.
+    /// Retorna el dígito que más se parece si la similitud es alta.
+    private func matchUserTemplates(image: UIImage) -> (Int, Float)? {
+        guard let currentPixels = getGreyPixelData(image) else { return nil }
+        
+        var bestDigit: Int? = nil
+        var minError: Float = Float.infinity
+        
+        for digit in 0...9 {
+            guard let template = HandwritingPersonalizationManager.shared.loadTemplate(for: digit),
+                  let templatePixels = getGreyPixelData(template) else { continue }
+            
+            // Calcular Error Cuadrático Medio (MSE) entre píxeles
+            var totalError: Float = 0
+            for i in 0..<min(currentPixels.count, templatePixels.count) {
+                let diff = Float(currentPixels[i]) - Float(templatePixels[i])
+                totalError += diff * diff
+            }
+            
+            let avgError = totalError / Float(currentPixels.count)
+            
+            if avgError < minError {
+                minError = avgError
+                bestDigit = digit
+            }
+        }
+        
+        // Un error < 1500 (empírico) indica una similitud muy alta con una plantilla personal
+        // Convertimos el error en un puntaje de "confianza" para el sistema de ensamble
+        if let best = bestDigit {
+            let confidence = max(0, 1.0 - (minError / 5000.0))
+            if minError < 2500 { // Umbral de "Match Personal"
+                return (best, confidence)
+            }
+        }
+        
+        return nil
+    }
+    
+    private func getGreyPixelData(_ image: UIImage) -> [UInt8]? {
+        guard let cgImage = image.cgImage else { return nil }
+        let width = 64 // Reducimos resolución para comparación rápida
+        let height = 64
+        let bytesPerRow = width
+        var data = [UInt8](repeating: 0, count: width * height)
+        let context = CGContext(data: &data, width: width, height: height, bitsPerComponent: 8, bytesPerRow: bytesPerRow, space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue)
+        
+        context?.interpolationQuality = .medium
+        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        
+        return data
+    }
     
     private func refineSixNine(_ image: UIImage) -> Int {
+        // ... (el código existente de refineSixNine se mantiene)
         guard let cgImage = image.cgImage else { return 6 }
         let width = cgImage.width
         let height = cgImage.height
@@ -225,12 +279,8 @@ class DigitRecognizer {
             for x in 0..<width {
                 let pixelIndex = (y * bytesPerRow) + (x * 4)
                 let r = data[pixelIndex]
-                if r < 128 { // Tinta negra
-                    if y < midY {
-                        bottomWeight += 1 // En CG y=0 es abajo
-                    } else {
-                        topWeight += 1
-                    }
+                if r < 128 {
+                    if y < midY { bottomWeight += 1 } else { topWeight += 1 }
                 }
             }
         }
@@ -238,6 +288,7 @@ class DigitRecognizer {
     }
     
     private func isLikelyZero(_ image: UIImage) -> Bool {
+        // ... (el código existente de isLikelyZero se mantiene)
         guard let cgImage = image.cgImage else { return false }
         let width = cgImage.width
         let height = cgImage.height
@@ -250,25 +301,19 @@ class DigitRecognizer {
         var centerDark = 0
         let centerX = width / 2
         let centerY = height / 2
-        let margin = width / 5
+        let margin = width / 6 
         
         for y in 0..<height {
             for x in 0..<width {
                 let pixelIndex = (y * bytesPerRow) + (x * 4)
-                let r = data[pixelIndex]
-                if r < 128 {
+                if data[pixelIndex] < 160 {
                     totalDark += 1
-                    if abs(x - centerX) < margin && abs(y - centerY) < margin {
-                        centerDark += 1
-                    }
+                    if abs(x - centerX) < margin && abs(y - centerY) < margin { centerDark += 1 }
                 }
             }
         }
-        
         let density = Float(totalDark) / Float(width * height)
         let centerDensity = Float(centerDark) / Float(margin * margin * 4)
-        
-        // Un 0 tiene tinta en los bordes pero el centro está vacío
-        return density > 0.01 && centerDensity < (density * 0.4)
+        return density > 0.005 && centerDensity < (density * 0.8)
     }
 }

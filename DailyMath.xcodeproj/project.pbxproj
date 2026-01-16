@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */; };
 		DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */; };
+		DAD5FDC02F1A0000003B7185 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDC12F1A0000003B7185 /* OnboardingView.swift */; };
+		DAD5FDC22F1A0000003B7185 /* HandwritingPersonalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDC32F1A0000003B7185 /* HandwritingPersonalizationManager.swift */; };
 		DAD5FD5E2F19D9C6003B7185 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAD5FD5D2F19D9C5003B7185 /* Vision.framework */; };
 		DAD5FD7C2F19DBA3003B7185 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */; };
 		DAD5FD7D2F19DBA3003B7185 /* ProblemGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD792F19DBA2003B7185 /* ProblemGenerator.swift */; };
@@ -53,6 +55,8 @@
 /* Begin PBXFileReference section */
 		DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasViewController.swift; sourceTree = "<group>"; };
 		DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMathApp.swift; sourceTree = "<group>"; };
+		DAD5FDC12F1A0000003B7185 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		DAD5FDC32F1A0000003B7185 /* HandwritingPersonalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwritingPersonalizationManager.swift; sourceTree = "<group>"; };
 		DAD5FD202F19D885003B7185 /* DailyMath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMath.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD2D2F19D888003B7185 /* DailyMathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD372F19D888003B7185 /* DailyMathUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				DAD5FD9B2F19DD37003B7185 /* DigitRecognizer.swift */,
+				DAD5FDC32F1A0000003B7185 /* HandwritingPersonalizationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -178,6 +183,7 @@
 				DAD5FD9D2F19DD37003B7185 /* DrawingCanvasView.swift */,
 				DAD5FD9E2F19DD37003B7185 /* GameView.swift */,
 				DAD5FD9F2F19DD37003B7185 /* StatsView.swift */,
+				DAD5FDC12F1A0000003B7185 /* OnboardingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -325,6 +331,8 @@
 			files = (
 				DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */,
 				DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */,
+				DAD5FDC02F1A0000003B7185 /* OnboardingView.swift in Sources */,
+				DAD5FDC22F1A0000003B7185 /* HandwritingPersonalizationManager.swift in Sources */,
 				DAD5FDA62F19DD37003B7185 /* GameView.swift in Sources */,
 				DAD5FDA72F19DD37003B7185 /* StatsView.swift in Sources */,
 				DAD5FDA82F19DD37003B7185 /* DigitRecognizer.swift in Sources */,
