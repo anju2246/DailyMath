@@ -5,7 +5,7 @@ import Vision
 // MARK: - Vista Principal del Juego
 struct GameView: View {
     @EnvironmentObject var statsManager: StatsManager
-    @State private var drawing = PKDrawing()  // Usar PKDrawing directamente
+    @State private var strokes: [[CGPoint]] = []  // Para ManualDrawingView
     @State private var currentProblem: MathProblem?
     @State private var recognizedNumber: String = ""
     @State private var isRecognizing = false
@@ -15,6 +15,7 @@ struct GameView: View {
     
     private let problemGenerator = ProblemGenerator()
     private let recognizer = DigitRecognizer()
+    private let canvasSize = CGSize(width: 350, height: 250)
     
     var body: some View {
         VStack(spacing: 20) {
@@ -43,8 +44,8 @@ struct GameView: View {
                     .padding()
             }
             
-            // Área de dibujo con SimpleCanvasView
-            SimpleCanvasView(drawing: $drawing)
+            // Área de dibujo manual (sin PencilKit)
+            ManualDrawingView(strokes: $strokes)
                 .frame(height: 250)
                 .cornerRadius(20)
                 .overlay(
@@ -107,17 +108,20 @@ struct GameView: View {
     }
     
     private func clearCanvas() {
-        drawing = PKDrawing()
+        strokes = []
         recognizedNumber = ""
         showResult = false
     }
     
     private func recognizeAndCheck() {
-        guard !drawing.bounds.isEmpty else { return }
+        guard !strokes.isEmpty else { return }
         
         isRecognizing = true
         
-        recognizer.recognize(drawing: drawing) { result in
+        // Renderizar dibujo a imagen
+        let image = ManualDrawingView.renderToImage(strokes: strokes, size: canvasSize)
+        
+        recognizer.recognize(image: image) { result in
             DispatchQueue.main.async {
                 isRecognizing = false
                 

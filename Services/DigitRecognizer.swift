@@ -4,9 +4,20 @@ import UIKit
 
 // MARK: - Reconocedor de Dígitos
 class DigitRecognizer {
+    
+    // Reconocer desde PKDrawing (PencilKit)
     func recognize(drawing: PKDrawing, completion: @escaping (String?) -> Void) {
         let image = drawing.image(from: drawing.bounds, scale: 2.0)
-        
+        recognizeImage(image, completion: completion)
+    }
+    
+    // Reconocer desde UIImage (Manual Drawing)
+    func recognize(image: UIImage, completion: @escaping (String?) -> Void) {
+        recognizeImage(image, completion: completion)
+    }
+    
+    // Método interno de reconocimiento
+    private func recognizeImage(_ image: UIImage, completion: @escaping (String?) -> Void) {
         guard let cgImage = image.cgImage else {
             completion(nil)
             return
@@ -24,7 +35,7 @@ class DigitRecognizer {
             completion(text.isEmpty ? nil : text)
         }
         
-        request.recognitionLevel = .fast
+        request.recognitionLevel = .accurate  // Cambiado a accurate para mejor precisión
         request.usesLanguageCorrection = false
         request.recognitionLanguages = ["en-US"]
         
