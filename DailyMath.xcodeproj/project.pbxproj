@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DAD5FDB52F19F100003B7185 /* MNISTClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB62F19F100003B7185 /* MNISTClassifier.swift */; };
+		DAD5FDB72F19F100003B7185 /* MNIST.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB82F19F100003B7185 /* MNIST.mlmodel */; };
 		DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */; };
 		DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */; };
 		DAD5FD5E2F19D9C6003B7185 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAD5FD5D2F19D9C5003B7185 /* Vision.framework */; };
@@ -51,6 +53,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DAD5FDB62F19F100003B7185 /* MNISTClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNISTClassifier.swift; sourceTree = "<group>"; };
+		DAD5FDB82F19F100003B7185 /* MNIST.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MNIST.mlmodel; sourceTree = "<group>"; };
 		DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasViewController.swift; sourceTree = "<group>"; };
 		DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMathApp.swift; sourceTree = "<group>"; };
 		DAD5FD202F19D885003B7185 /* DailyMath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMath.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,6 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				DAD5FD9B2F19DD37003B7185 /* DigitRecognizer.swift */,
+				DAD5FDB62F19F100003B7185 /* MNISTClassifier.swift */,
+				DAD5FDB82F19F100003B7185 /* MNIST.mlmodel */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -323,6 +329,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAD5FDB52F19F100003B7185 /* MNISTClassifier.swift in Sources */,
+				DAD5FDB72F19F100003B7185 /* MNIST.mlmodel in Sources */,
 				DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */,
 				DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */,
 				DAD5FDA62F19DD37003B7185 /* GameView.swift in Sources */,

@@ -58,18 +58,23 @@ struct StrokePath: Shape {
 // MARK: - Extensión para convertir dibujo a imagen para Vision
 extension ManualDrawingView {
     static func renderToImage(strokes: [[CGPoint]], size: CGSize) -> UIImage {
-        let renderer = UIGraphicsImageRenderer(size: size)
+        // Usar escala 2x para mejor calidad
+        let scale: CGFloat = 2.0
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = scale
+        
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
         return renderer.image { context in
             // Fondo blanco
             UIColor.white.setFill()
             context.fill(CGRect(origin: .zero, size: size))
             
-            // Dibujar strokes
+            // Dibujar strokes con líneas más gruesas para mejor reconocimiento
             UIColor.black.setStroke()
             for stroke in strokes {
                 guard stroke.count > 1 else { continue }
                 let path = UIBezierPath()
-                path.lineWidth = 8
+                path.lineWidth = 12  // Más grueso para mejor reconocimiento
                 path.lineCapStyle = .round
                 path.lineJoinStyle = .round
                 path.move(to: stroke[0])
@@ -79,5 +84,26 @@ extension ManualDrawingView {
                 path.stroke()
             }
         }
+    }
+    
+    // Calcular bounding box del dibujo
+    static func getBounds(strokes: [[CGPoint]]) -> CGRect {
+        guard !strokes.isEmpty else { return .zero }
+        
+        var minX = CGFloat.infinity
+        var minY = CGFloat.infinity
+        var maxX = -CGFloat.infinity
+        var maxY = -CGFloat.infinity
+        
+        for stroke in strokes {
+            for point in stroke {
+                minX = min(minX, point.x)
+                minY = min(minY, point.y)
+                maxX = max(maxX, point.x)
+                maxY = max(maxY, point.y)
+            }
+        }
+        
+        return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
 }
