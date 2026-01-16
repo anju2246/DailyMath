@@ -58,29 +58,32 @@ struct StrokePath: Shape {
 // MARK: - Extensión para convertir dibujo a imagen para Vision
 extension ManualDrawingView {
     
-    // Renderizar solo el área del dibujo con padding
+    // Renderizar solo el área del dibujo con padding y normalización
     static func renderToImage(strokes: [[CGPoint]], size: CGSize) -> UIImage {
         guard !strokes.isEmpty else {
-            return createBlankImage(size: CGSize(width: 100, height: 100))
+            return createBlankImage(size: CGSize(width: 224, height: 224))
         }
         
         // Obtener bounds del dibujo
         let bounds = getBounds(strokes: strokes)
         guard bounds.width > 0 && bounds.height > 0 else {
-            return createBlankImage(size: CGSize(width: 100, height: 100))
+            return createBlankImage(size: CGSize(width: 224, height: 224))
         }
         
-        // Agregar padding y hacer cuadrado
-        let padding: CGFloat = 30
-        let maxDimension = max(bounds.width, bounds.height)
-        let outputSize = CGSize(width: maxDimension + padding * 2, height: maxDimension + padding * 2)
+        // Objetivo: Imagen cuadrada de al menos 224x224 (estándar para muchas redes neuronales)
+        let minTargetSize: CGFloat = 224
+        let padding: CGFloat = 25
         
-        // Calcular offset para centrar
-        let offsetX = padding + (maxDimension - bounds.width) / 2 - bounds.minX
-        let offsetY = padding + (maxDimension - bounds.height) / 2 - bounds.minY
+        let maxDimension = max(bounds.width, bounds.height)
+        let outputDimension = max(maxDimension + padding * 2, minTargetSize)
+        let outputSize = CGSize(width: outputDimension, height: outputDimension)
+        
+        // Calcular offset para centrar el dibujo en la imagen cuadrada
+        let offsetX = (outputDimension - bounds.width) / 2 - bounds.minX
+        let offsetY = (outputDimension - bounds.height) / 2 - bounds.minY
         
         let format = UIGraphicsImageRendererFormat()
-        format.scale = 2.0
+        format.scale = 2.0 // Renderizar a retina para más detalle
         
         let renderer = UIGraphicsImageRenderer(size: outputSize, format: format)
         return renderer.image { context in
@@ -88,12 +91,16 @@ extension ManualDrawingView {
             UIColor.white.setFill()
             context.fill(CGRect(origin: .zero, size: outputSize))
             
-            // Dibujar strokes trasladados y centrados
+            // Dibujar strokes centrados
             UIColor.black.setStroke()
+            
+            // Grosor de línea proporcional al tamaño del dibujo para consistencia
+            let strokeWidth = max(8, outputDimension * 0.05)
+            
             for stroke in strokes {
                 guard stroke.count > 1 else { continue }
                 let path = UIBezierPath()
-                path.lineWidth = 15  // Líneas gruesas para mejor reconocimiento
+                path.lineWidth = strokeWidth
                 path.lineCapStyle = .round
                 path.lineJoinStyle = .round
                 

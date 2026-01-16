@@ -1,6 +1,7 @@
 import SwiftUI
 import PencilKit
 import Vision
+import Combine
 
 // MARK: - Vista Principal del Juego
 struct GameView: View {
@@ -12,6 +13,10 @@ struct GameView: View {
     @State private var showResult = false
     @State private var isCorrect = false
     @State private var startTime = Date()
+    
+    // Timer para auto-reconocimiento
+    @State private var timerSubscription: AnyCancellable?
+    private let autoRecognizeDelay: TimeInterval = 0.8
     
     private let problemGenerator = ProblemGenerator()
     private let recognizer = DigitRecognizer()
@@ -37,29 +42,55 @@ struct GameView: View {
             
             Spacer()
             
-            // Problema actual
-            if let problem = currentProblem {
-                Text(problem.displayText)
-                    .font(.system(size: 48, weight: .bold))
-                    .padding()
+            // Problema actual e Icono de Feedback
+            ZStack {
+                if let problem = currentProblem {
+                    Text(problem.displayText)
+                        .font(.system(size: 48, weight: .bold))
+                        .padding()
+                        .blur(radius: showResult ? 3 : 0)
+                }
+                
+                if showResult {
+                    Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .font(.system(size: 100))
+                        .foregroundColor(isCorrect ? .green : .red)
+                        .background(Circle().fill(Color.white).shadow(radius: 10))
+                        .transition(.scale.combined(with: .opacity))
+                        .zIndex(1)
+                }
             }
+            .frame(height: 100)
             
-            // Área de dibujo manual (sin PencilKit)
+            // Área de dibujo manual
             ManualDrawingView(strokes: $strokes)
                 .frame(height: 250)
                 .cornerRadius(20)
                 .overlay(
                     RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.blue, lineWidth: 3)
+                        .stroke(showResult ? (isCorrect ? Color.green : Color.red) : Color.blue, lineWidth: 3)
                 )
                 .padding(.horizontal)
+                .onChange(of: strokes) { oldValue, newValue in
+                    resetAutoRecognizeTimer()
+                }
             
             // Número reconocido
-            if !recognizedNumber.isEmpty {
-                Text("Tu respuesta: \(recognizedNumber)")
-                    .font(.title)
-                    .foregroundColor(showResult ? (isCorrect ? .green : .red) : .blue)
+            VStack {
+                if !recognizedNumber.isEmpty {
+                    Text("Tu respuesta: \(recognizedNumber)")
+                        .font(.title2)
+                        .bold()
+                        .foregroundColor(showResult ? (isCorrect ? .green : .red) : .blue)
+                }
+                
+                if isRecognizing {
+                    Text("Reconociendo...")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
             }
+            .frame(height: 60)
             
             Spacer()
             
@@ -69,56 +100,75 @@ struct GameView: View {
                     Label("Borrar", systemImage: "trash")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.red.opacity(0.2))
+                        .background(Color.red.opacity(0.1))
                         .cornerRadius(10)
                 }
                 
                 Button(action: recognizeAndCheck) {
-                    if isRecognizing {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                    } else {
-                        Label("Verificar", systemImage: "checkmark.circle")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green.opacity(0.2))
-                            .cornerRadius(10)
-                    }
+                    Label("Verificar", systemImage: "checkmark.circle")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green.opacity(0.1))
+                        .cornerRadius(10)
                 }
-                .disabled(isRecognizing)
+                .disabled(isRecognizing || strokes.isEmpty || showResult)
             }
             .padding(.horizontal)
+            .opacity(showResult ? 0.3 : 1.0)
             
             if showResult {
                 Button(action: nextProblem) {
-                    Text("Siguiente")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    HStack {
+                        Text(isCorrect ? "¡Excelente! Siguiente" : "Siguiente")
+                        Image(systemName: "arrow.right")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
                 }
                 .padding(.horizontal)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
+        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: showResult)
         .onAppear {
             nextProblem()
         }
     }
     
+    private func resetAutoRecognizeTimer() {
+        // Cancelar timer anterior
+        timerSubscription?.cancel()
+        
+        // No auto-reconocer si ya se mostró el resultado o si no hay trazos
+        guard !showResult && !strokes.isEmpty else { return }
+        
+        // Iniciar nuevo timer
+        timerSubscription = Just(())
+            .delay(for: .seconds(autoRecognizeDelay), scheduler: RunLoop.main)
+            .sink { _ in
+                recognizeAndCheck()
+            }
+    }
+    
     private func clearCanvas() {
+        timerSubscription?.cancel()
         strokes = []
         recognizedNumber = ""
         showResult = false
     }
     
     private func recognizeAndCheck() {
-        guard !strokes.isEmpty else { return }
+        guard !strokes.isEmpty && !showResult else { return }
         
+        // Evitar múltiples reconocimientos simultáneos
+        timerSubscription?.cancel()
         isRecognizing = true
         
-        // Renderizar dibujo a imagen
+        // Renderizar dibujo a imagen (ahora con normalización y padding en DrawingCanvasView)
         let image = ManualDrawingView.renderToImage(strokes: strokes, size: canvasSize)
         
         recognizer.recognize(image: image) { result in
@@ -129,7 +179,11 @@ struct GameView: View {
                     recognizedNumber = number
                     checkAnswer(userAnswer)
                 } else {
-                    recognizedNumber = "No reconocido"
+                    // Si falló el auto-reconocimiento, simplemente esperamos o avisamos
+                    // No queremos que sea intrusivo si fue automático
+                    if recognizedNumber.isEmpty {
+                        recognizedNumber = "???"
+                    }
                 }
             }
         }
