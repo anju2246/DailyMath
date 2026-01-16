@@ -1,6 +1,12 @@
 import UIKit
 
-/// Gestiona el almacenamiento y carga de las plantillas de escritura del usuario.
+/// Representa un punto normalizado (O.0 a 1.0) para almacenamiento eficiente.
+struct NormalizedPoint: Codable {
+    let x: Float
+    let y: Float
+}
+
+/// Gestiona el almacenamiento y carga de las plantillas de escritura (trazo) del usuario.
 class HandwritingPersonalizationManager {
     static let shared = HandwritingPersonalizationManager()
     
@@ -16,26 +22,48 @@ class HandwritingPersonalizationManager {
         }
     }
     
-    /// Guarda una imagen como plantilla para un dígito específico.
-    func saveTemplate(image: UIImage, for digit: Int) {
-        let fileURL = templatesDir.appendingPathComponent("template_\(digit).png")
-        if let data = image.pngData() {
-            try? data.write(to: fileURL)
-            print("💾 Plantilla guardada para el dígito \(digit) en \(fileURL.lastPathComponent)")
+    /// Normaliza un trazo (CGPoint) a un espacio 1.0 x 1.0 para comparación consistente.
+    func normalize(strokes: [[CGPoint]]) -> [NormalizedPoint] {
+        let allPoints = strokes.flatMap { $0 }
+        guard !allPoints.isEmpty else { return [] }
+        
+        let minX = allPoints.map { $0.x }.min() ?? 0
+        let maxX = allPoints.map { $0.x }.max() ?? 1
+        let minY = allPoints.map { $0.y }.min() ?? 0
+        let maxY = allPoints.map { $0.y }.max() ?? 1
+        
+        let width = maxX - minX
+        let height = maxY - minY
+        let maxDim = max(width, height, 1.0)
+        
+        return allPoints.map { point in
+            NormalizedPoint(
+                x: Float((point.x - minX) / maxDim),
+                y: Float((point.y - minY) / maxDim)
+            )
         }
     }
     
-    /// Carga la plantilla de un dígito si existe.
-    func loadTemplate(for digit: Int) -> UIImage? {
-        let fileURL = templatesDir.appendingPathComponent("template_\(digit).png")
-        guard fileManager.fileExists(atPath: fileURL.path) else { return nil }
-        return UIImage(contentsOfFile: fileURL.path)
+    /// Guarda los puntos del trazo como plantilla para un dígito específico.
+    func saveStrokeTemplate(_ points: [NormalizedPoint], for digit: Int) {
+        let fileURL = templatesDir.appendingPathComponent("stroke_template_\(digit).json")
+        if let data = try? JSONEncoder().encode(points) {
+            try? data.write(to: fileURL)
+            print("💾 Trazo guardado para el dígito \(digit)")
+        }
+    }
+    
+    /// Carga los puntos del trazo de un dígito si existe.
+    func loadStrokeTemplate(for digit: Int) -> [NormalizedPoint]? {
+        let fileURL = templatesDir.appendingPathComponent("stroke_template_\(digit).json")
+        guard let data = try? Data(contentsOf: fileURL) else { return nil }
+        return try? JSONDecoder().decode([NormalizedPoint].self, from: data)
     }
     
     /// Verifica si el usuario ya ha completado todas las plantillas (0-9).
     func hasAllTemplates() -> Bool {
         for i in 0...9 {
-            if loadTemplate(for: i) == nil { return false }
+            if loadStrokeTemplate(for: i) == nil { return false }
         }
         return true
     }

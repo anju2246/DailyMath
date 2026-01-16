@@ -89,36 +89,11 @@ struct OnboardingView: View {
     }
     
     private func saveAndNext() {
-        // 1. Renderizar el dibujo a UIImage
-        // Nota: Reutilizamos la lógica de renderizado que ya perfeccionamos en DrawingCanvasView
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 224, height: 224))
-        let image = renderer.image { context in
-            UIColor.white.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 224, height: 224))
-            
-            UIColor.black.setStroke()
-            let strokeWidth: CGFloat = 16 // Grosor extra para las plantillas
-            
-            // Calcular bounds para centrar (simplificado para onboarding)
-            for stroke in strokes {
-                guard stroke.count > 1 else { continue }
-                let path = UIBezierPath()
-                path.lineWidth = strokeWidth
-                path.lineCapStyle = .round
-                path.lineJoinStyle = .round
-                
-                // Centrado manual básico para las plantillas
-                // (Mejoramos esto en la implementación final si es necesario)
-                path.move(to: stroke[0])
-                for i in 1..<stroke.count {
-                    path.addLine(to: stroke[i])
-                }
-                path.stroke()
-            }
-        }
+        // 1. Normalizar los puntos del trazo actual
+        let normalizedPoints = HandwritingPersonalizationManager.shared.normalize(strokes: strokes)
         
-        // 2. Guardar plantilla
-        HandwritingPersonalizationManager.shared.saveTemplate(image: image, for: currentDigit)
+        // 2. Guardar plantilla de trazo
+        HandwritingPersonalizationManager.shared.saveStrokeTemplate(normalizedPoints, for: currentDigit)
         
         // 3. Avanzar o Terminar
         if currentDigit < 9 {

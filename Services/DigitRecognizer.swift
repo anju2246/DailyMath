@@ -24,16 +24,16 @@ class DigitRecognizer {
     // Reconocer desde PKDrawing (PencilKit)
     func recognize(drawing: PKDrawing, completion: @escaping (String?) -> Void) {
         let image = drawing.image(from: drawing.bounds, scale: 2.0)
-        recognizeMultiPath(image, completion: completion)
+        recognizeMultiPath(image, strokes: nil, completion: completion)
     }
     
     // Reconocer desde UIImage (Manual Drawing)
-    func recognize(image: UIImage, completion: @escaping (String?) -> Void) {
-        recognizeMultiPath(image, completion: completion)
+    func recognize(image: UIImage, strokes: [[CGPoint]]? = nil, completion: @escaping (String?) -> Void) {
+        recognizeMultiPath(image, strokes: strokes, completion: completion)
     }
     
     // MARK: - Procesamiento Multi-Camino (Triple Path)
-    private func recognizeMultiPath(_ image: UIImage, completion: @escaping (String?) -> Void) {
+    private func recognizeMultiPath(_ image: UIImage, strokes: [[CGPoint]]?, completion: @escaping (String?) -> Void) {
         // Path 1: Imagen Original (Centrada/Normalizada)
         // Path 2: Imagen Binarizada (Alto Contraste)
         // Path 3: Imagen con Dilatación (Trazos más gruesos)
@@ -57,7 +57,7 @@ class DigitRecognizer {
         }
         
         dispatchGroup.notify(queue: .main) {
-            let finalResult = self.selectBestResult(allCandidates, originalImage: image)
+            let finalResult = self.selectBestResult(allCandidates, originalImage: image, strokes: strokes)
             completion(finalResult)
         }
     }
@@ -134,13 +134,16 @@ class DigitRecognizer {
         }
     }
     
-    private func selectBestResult(_ results: [(String, Float)], originalImage: UIImage?) -> String? {
-        // 0. COMPROBAR PLANTILLAS PERSONALES (Prioridad Máxima)
-        if let img = originalImage, let userMatch = matchUserTemplates(image: img) {
-            // Bajamos de 0.8 (80%) a 0.6 (60%) para ser más permisivos con variaciones naturales
-            if userMatch.1 > 0.6 {
-                print("🧠 Match Personal Encontrado: \(userMatch.0) (Score: \(Int(userMatch.1 * 100))%)")
-                return String(userMatch.0)
+    private func selectBestResult(_ results: [(String, Float)], originalImage: UIImage?, strokes: [[CGPoint]]?) -> String? {
+        // 0. COMPROBAR PLANTILLAS PERSONALES (Prioridad Máxima - Análisis Estructural)
+        if let currentStrokes = strokes {
+            let normalizedCurrent = HandwritingPersonalizationManager.shared.normalize(strokes: currentStrokes)
+            if let userMatch = matchUserStrokes(normalizedCurrent) {
+                print("🧠 Match Estructural Encontrado: \(userMatch.0) (Score: \(Int(userMatch.1 * 100))%)")
+                // Si la similitud estructural es muy alta (>70%), confiamos plenamente
+                if userMatch.1 > 0.7 {
+                    return String(userMatch.0)
+                }
             }
         }
         
@@ -192,14 +195,6 @@ class DigitRecognizer {
                 return String(geometricResult)
             }
             
-            // REFINAMIENTO para el 0 (si la confianza es baja y Vision dudó)
-            if bestValue == "0" && best.1 < 0.6, let img = originalImage {
-                if !isLikelyZero(img) {
-                    // Si Vision cree que es 0 pero geométricamente no tiene forma de loop,
-                    // tal vez sea otra cosa. Pero el 0 es el que más falla.
-                }
-            }
-            
             print("💎 Best Final: \(bestValue) (Confidence: \(Int(best.1 * 100))%)")
             return bestValue
         }
@@ -207,47 +202,55 @@ class DigitRecognizer {
         return nil
     }
     
-    // MARK: - Análisis de Píxeles (Geometría y Personalización)
+    // MARK: - Análisis Estructural (Interpretación de Movimiento)
     
-    /// Compara el dibujo actual con las plantillas personales del usuario.
-    /// Retorna el dígito que más se parece si la similitud es alta.
-    private func matchUserTemplates(image: UIImage) -> (Int, Float)? {
-        guard let currentPixels = getGreyPixelData(image) else { return nil }
+    /// Compara la secuencia de puntos actual con las guardadas por el usuario.
+    private func matchUserStrokes(_ currentPoints: [NormalizedPoint]) -> (Int, Float)? {
+        guard !currentPoints.isEmpty else { return nil }
         
         var bestDigit: Int? = nil
-        var minError: Float = Float.infinity
+        var minDistance: Float = Float.infinity
         
         for digit in 0...9 {
-            guard let template = HandwritingPersonalizationManager.shared.loadTemplate(for: digit),
-                  let templatePixels = getGreyPixelData(template) else { continue }
+            guard let template = HandwritingPersonalizationManager.shared.loadStrokeTemplate(for: digit) else { continue }
             
-            // Calcular Error Cuadrático Medio (MSE) entre píxeles
-            var totalError: Float = 0
-            for i in 0..<min(currentPixels.count, templatePixels.count) {
-                let diff = Float(currentPixels[i]) - Float(templatePixels[i])
-                totalError += diff * diff
-            }
+            // Algoritmo de Distancia Estructural (Muestreo de 12 puntos clave)
+            let distance = calculatePathDistance(currentPoints, template)
             
-            let avgError = totalError / Float(currentPixels.count)
-            
-            if avgError < minError {
-                minError = avgError
+            if distance < minDistance {
+                minDistance = distance
                 bestDigit = digit
             }
         }
         
-        // Un error < 1500 (empírico) indica una similitud muy alta con una plantilla personal
-        // Convertimos el error en un puntaje de "confianza" para el sistema de ensamble
         if let best = bestDigit {
-            // Aumentamos el divisor para que el score baje más lento ante cambios
-            let confidence = max(0, 1.0 - (minError / 7000.0))
-            // Umbral de error más relajado (de 2500 a 3500)
-            if minError < 3500 { 
+            // Un umbral de 0.4 es bastante generoso para variaciones naturales
+            let confidence = max(0, 1.0 - (minDistance / 0.6)) 
+            if minDistance < 0.4 { 
                 return (best, confidence)
             }
         }
         
         return nil
+    }
+    
+    private func calculatePathDistance(_ path1: [NormalizedPoint], _ path2: [NormalizedPoint]) -> Float {
+        let samples = 12
+        var totalDist: Float = 0
+        
+        for i in 0..<samples {
+            let index1 = (path1.count - 1) * i / (samples - 1)
+            let index2 = (path2.count - 1) * i / (samples - 1)
+            
+            let p1 = path1[index1]
+            let p2 = path2[index2]
+            
+            let dx = p1.x - p2.x
+            let dy = p1.y - p2.y
+            totalDist += sqrt(dx*dx + dy*dy)
+        }
+        
+        return totalDist / Float(samples)
     }
     
     private func getGreyPixelData(_ image: UIImage) -> [UInt8]? {

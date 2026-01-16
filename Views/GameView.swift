@@ -207,7 +207,7 @@ struct GameView: View {
         // Renderizar dibujo a imagen (ahora con normalización y padding en DrawingCanvasView)
         let image = ManualDrawingView.renderToImage(strokes: strokes, size: canvasSize)
         
-        recognizer.recognize(image: image) { result in
+        recognizer.recognize(image: image, strokes: strokes) { result in
             DispatchQueue.main.async {
                 isRecognizing = false
                 
