@@ -137,7 +137,8 @@ class DigitRecognizer {
     private func selectBestResult(_ results: [(String, Float)], originalImage: UIImage?) -> String? {
         // 0. COMPROBAR PLANTILLAS PERSONALES (Prioridad Máxima)
         if let img = originalImage, let userMatch = matchUserTemplates(image: img) {
-            if userMatch.1 > 0.8 {
+            // Bajamos de 0.8 (80%) a 0.6 (60%) para ser más permisivos con variaciones naturales
+            if userMatch.1 > 0.6 {
                 print("🧠 Match Personal Encontrado: \(userMatch.0) (Score: \(Int(userMatch.1 * 100))%)")
                 return String(userMatch.0)
             }
@@ -238,8 +239,10 @@ class DigitRecognizer {
         // Un error < 1500 (empírico) indica una similitud muy alta con una plantilla personal
         // Convertimos el error en un puntaje de "confianza" para el sistema de ensamble
         if let best = bestDigit {
-            let confidence = max(0, 1.0 - (minError / 5000.0))
-            if minError < 2500 { // Umbral de "Match Personal"
+            // Aumentamos el divisor para que el score baje más lento ante cambios
+            let confidence = max(0, 1.0 - (minError / 7000.0))
+            // Umbral de error más relajado (de 2500 a 3500)
+            if minError < 3500 { 
                 return (best, confidence)
             }
         }
