@@ -1,42 +1,40 @@
 import SwiftUI
-import Combine
 
 @main
 struct DailyMathApp: App {
-    @StateObject private var statsManager = StatsManager()
-    @State private var hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+    @StateObject private var appState = AppState()
     
     var body: some Scene {
         WindowGroup {
-            if hasCompletedOnboarding {
-                MainTabView()
-                    .environmentObject(statsManager)
-            } else {
-                OnboardingView {
-                    withAnimation {
-                        hasCompletedOnboarding = true
+            Group {
+                if appState.authService.isLoading {
+                    // Splash / Loading
+                    ZStack {
+                        Color(.systemBackground)
+                            .ignoresSafeArea()
+                        
+                        VStack(spacing: 16) {
+                            Image(systemName: "function")
+                                .font(.system(size: 64))
+                                .foregroundStyle(.tint)
+                            
+                            Text("DailyMath")
+                                .font(.largeTitle.bold())
+                            
+                            ProgressView()
+                                .padding(.top, 8)
+                        }
                     }
+                } else if appState.isAuthenticated {
+                    MainTabView()
+                        .environmentObject(appState)
+                } else {
+                    LoginView()
+                        .environmentObject(appState)
                 }
-                .environmentObject(statsManager)
             }
-        }
-    }
-}
-
-struct MainTabView: View {
-    @EnvironmentObject var statsManager: StatsManager
-    
-    var body: some View {
-        TabView {
-            GameView()
-                .tabItem {
-                    Label("Jugar", systemImage: "gamecontroller")
-                }
-            
-            StatsView(statsManager: statsManager)
-                .tabItem {
-                    Label("Estadísticas", systemImage: "chart.bar")
-                }
+            .animation(.easeInOut(duration: 0.3), value: appState.isAuthenticated)
+            .animation(.easeInOut(duration: 0.3), value: appState.authService.isLoading)
         }
     }
 }
