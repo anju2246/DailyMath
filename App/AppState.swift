@@ -1,10 +1,23 @@
 import SwiftUI
+import Combine
 
 // MARK: - App State
 
 @MainActor
 class AppState: ObservableObject {
     @Published var authService = AuthService()
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        // Forward AuthService changes so SwiftUI sees them
+        authService.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+    }
     
     var isAuthenticated: Bool {
         authService.isAuthenticated

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 // MARK: - Profile View
 
@@ -26,7 +27,7 @@ struct ProfileView: View {
                                 )
                                 .frame(width: 80, height: 80)
                             
-                            Text(user?.displayName.prefix(1).uppercased() ?? "?")
+                            Text(user?.displayName?.prefix(1).uppercased() ?? "?")
                                 .font(.largeTitle.bold())
                                 .foregroundStyle(.white)
                         }
@@ -96,7 +97,7 @@ struct ProfileView: View {
                     // Danger zone
                     VStack(spacing: 2) {
                         MenuRow(icon: "rectangle.portrait.and.arrow.right", title: "Cerrar sesión", color: .secondary) {
-                            Task { await appState.authService.signOut() }
+                            Task { try? await appState.authService.signOut() }
                         }
                         
                         MenuRow(icon: "trash", title: "Eliminar cuenta", color: .red) {
@@ -112,7 +113,7 @@ struct ProfileView: View {
             .alert("¿Eliminar cuenta?", isPresented: $showDeleteConfirmation) {
                 Button("Cancelar", role: .cancel) { }
                 Button("Eliminar", role: .destructive) {
-                    Task { await appState.authService.deleteAccount() }
+                    Task { try? await appState.authService.deleteAccount() }
                 }
             } message: {
                 Text("Esta acción es permanente. Se eliminarán todos tus datos.")

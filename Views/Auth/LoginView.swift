@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 // MARK: - Login View
 
@@ -57,7 +58,13 @@ struct LoginView: View {
                         
                         Button {
                             Task {
-                                await authService.signIn(email: email, password: password)
+                                do {
+                                    try await authService.signIn(email: email, password: password)
+                                } catch {
+                                    await MainActor.run {
+                                        authService.errorMessage = error.localizedDescription
+                                    }
+                                }
                             }
                         } label: {
                             if authService.isLoading {

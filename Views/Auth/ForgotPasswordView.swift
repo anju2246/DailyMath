@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 // MARK: - Forgot Password View
 
@@ -64,7 +65,7 @@ struct ForgotPasswordView: View {
                         
                         Button {
                             Task {
-                                await authService.resetPassword(email: email)
+                                try await authService.resetPassword(email: email)
                                 emailSent = true
                             }
                         } label: {

@@ -7,32 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */; };
-		DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */; };
-		DAD5FDC02F1A0000003B7185 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDC12F1A0000003B7185 /* OnboardingView.swift */; };
-		DAD5FDC22F1A0000003B7185 /* HandwritingPersonalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDC32F1A0000003B7185 /* HandwritingPersonalizationManager.swift */; };
+		1FE22C1BABA3186D54FBC192 /* SM2Algorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546987C61CD25334689BA65C /* SM2Algorithm.swift */; };
+		2C321EB2AF37305A78C0D38D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022D0A6CBB492B30ED453ABE /* Constants.swift */; };
+		3C09CA1B32EBF34E654E95D4 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097164C50E704ABCE434269C /* RegisterView.swift */; };
+		3EC1AF4C8FD3E4C11CA54E99 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09082F342C2FDD96064DEB62 /* Exercise.swift */; };
+		6636CD5463A734B912E13815 /* Duel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC8EB93D553B294F928486C /* Duel.swift */; };
+		6A6FDA25D65290DA08A9E2B3 /* DailyMathApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */; };
+		6BD6EBF8DA12D1A203F4BCA2 /* AgilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297A89A15B886A5A8B42BC0C /* AgilityView.swift */; };
+		6E7CE9DE3A50744A84B79FCF /* NumericKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C277A06AD759937097A323F1 /* NumericKeyboardView.swift */; };
+		8FA95626EB009E0B85B153A0 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80FBC626AFB2709A4531F34 /* LoginView.swift */; };
+		989243241DAFBEE43678A8F2 /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D9CDB7C6E581523E82D7578 /* Community.swift */; };
+		A645F7EFA50B03DF744AAB17 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EE569B12BFBF4B7ADCF8AC /* MainTabView.swift */; };
+		AAC28ECA1C94982BB2B01B76 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A2CA82656011C3967AD65F /* UserProfile.swift */; };
+		AB7957635CE4DF28B810AC87 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679493088C90C9C6B32ABF73 /* Secrets.swift */; };
+		AD95BA1052AF3056D468F86D /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F2780566826113571F5D6D /* TodayView.swift */; };
+		BADD44EAA3F9E1320AC4AFC8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66068508B44C9FE02C8ED42 /* Extensions.swift */; };
+		BD45EBBA5DB5DF8F3D020119 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8035B207DACC034330343689 /* AppState.swift */; };
 		DAD5FD5E2F19D9C6003B7185 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAD5FD5D2F19D9C5003B7185 /* Vision.framework */; };
-		DAD5FD7C2F19DBA3003B7185 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */; };
-		DAD5FD7D2F19DBA3003B7185 /* ProblemGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD792F19DBA2003B7185 /* ProblemGenerator.swift */; };
-		DAD5FD7E2F19DBA3003B7185 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */; };
-		DAD5FD7F2F19DBA3003B7185 /* ProblemGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD792F19DBA2003B7185 /* ProblemGenerator.swift */; };
-		DAD5FD802F19DBA3003B7185 /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */; };
-		DAD5FD812F19DBA3003B7185 /* ProblemGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD792F19DBA2003B7185 /* ProblemGenerator.swift */; };
-		DAD5FDA12F19DD37003B7185 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9E2F19DD37003B7185 /* GameView.swift */; };
-		DAD5FDA22F19DD37003B7185 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9F2F19DD37003B7185 /* StatsView.swift */; };
-		DAD5FDA32F19DD37003B7185 /* DigitRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9B2F19DD37003B7185 /* DigitRecognizer.swift */; };
-		DAD5FDA42F19DD37003B7185 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9D2F19DD37003B7185 /* DrawingCanvasView.swift */; };
-		DAD5FDA52F19DD37003B7185 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD992F19DD37003B7185 /* GameStats.swift */; };
-		DAD5FDA62F19DD37003B7185 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9E2F19DD37003B7185 /* GameView.swift */; };
-		DAD5FDA72F19DD37003B7185 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9F2F19DD37003B7185 /* StatsView.swift */; };
-		DAD5FDA82F19DD37003B7185 /* DigitRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9B2F19DD37003B7185 /* DigitRecognizer.swift */; };
-		DAD5FDA92F19DD37003B7185 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9D2F19DD37003B7185 /* DrawingCanvasView.swift */; };
-		DAD5FDAA2F19DD37003B7185 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD992F19DD37003B7185 /* GameStats.swift */; };
-		DAD5FDAB2F19DD37003B7185 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9E2F19DD37003B7185 /* GameView.swift */; };
-		DAD5FDAC2F19DD37003B7185 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9F2F19DD37003B7185 /* StatsView.swift */; };
-		DAD5FDAD2F19DD37003B7185 /* DigitRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9B2F19DD37003B7185 /* DigitRecognizer.swift */; };
-		DAD5FDAE2F19DD37003B7185 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD9D2F19DD37003B7185 /* DrawingCanvasView.swift */; };
-		DAD5FDAF2F19DD37003B7185 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FD992F19DD37003B7185 /* GameStats.swift */; };
+		DD51A0AB4383951B6881358C /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1B393FB1809D4871AAEED /* ForgotPasswordView.swift */; };
+		EA18AC93E41DC98CD4C10F08 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53170A2B08D2D5C0A0C0E62A /* ProfileView.swift */; };
+		EA4E5C3534A606FC4C2CBF93 /* Flashcard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5475E1FB293514535FE3737D /* Flashcard.swift */; };
+		F344D681D602D5AEAFEBB53C /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023E1D35FD43182AD0B0191B /* ExploreView.swift */; };
+		F6F698DBEAFFE000F3072590 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12ED34229BA79441C026FA19 /* AuthService.swift */; };
+		F928E15D47D9BCBFA9B83B45 /* CreateExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED6811713E5AE04C4DCDC9 /* CreateExerciseView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,31 +50,47 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasViewController.swift; sourceTree = "<group>"; };
-		DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMathApp.swift; sourceTree = "<group>"; };
-		DAD5FDC12F1A0000003B7185 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		DAD5FDC32F1A0000003B7185 /* HandwritingPersonalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandwritingPersonalizationManager.swift; sourceTree = "<group>"; };
+		022D0A6CBB492B30ED453ABE /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		023E1D35FD43182AD0B0191B /* ExploreView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
+		05A2CA82656011C3967AD65F /* UserProfile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		09082F342C2FDD96064DEB62 /* Exercise.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
+		097164C50E704ABCE434269C /* RegisterView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		11B30FA5144B1719ACFBE1F0 /* supabase_schema.sql */ = {isa = PBXFileReference; includeInIndex = 1; path = supabase_schema.sql; sourceTree = "<group>"; };
+		12ED34229BA79441C026FA19 /* AuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		1D9CDB7C6E581523E82D7578 /* Community.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
+		297A89A15B886A5A8B42BC0C /* AgilityView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgilityView.swift; sourceTree = "<group>"; };
+		30A1B393FB1809D4871AAEED /* ForgotPasswordView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
+		36EE569B12BFBF4B7ADCF8AC /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		53170A2B08D2D5C0A0C0E62A /* ProfileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		546987C61CD25334689BA65C /* SM2Algorithm.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SM2Algorithm.swift; sourceTree = "<group>"; };
+		5475E1FB293514535FE3737D /* Flashcard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Flashcard.swift; sourceTree = "<group>"; };
+		57F2780566826113571F5D6D /* TodayView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		679493088C90C9C6B32ABF73 /* Secrets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		8035B207DACC034330343689 /* AppState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		9AC8EB93D553B294F928486C /* Duel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Duel.swift; sourceTree = "<group>"; };
+		A66068508B44C9FE02C8ED42 /* Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		B80FBC626AFB2709A4531F34 /* LoginView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		C277A06AD759937097A323F1 /* NumericKeyboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NumericKeyboardView.swift; sourceTree = "<group>"; };
+		C5ED6811713E5AE04C4DCDC9 /* CreateExerciseView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateExerciseView.swift; sourceTree = "<group>"; };
 		DAD5FD202F19D885003B7185 /* DailyMath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyMath.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD2D2F19D888003B7185 /* DailyMathTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD372F19D888003B7185 /* DailyMathUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD5D2F19D9C5003B7185 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
-		DAD5FD792F19DBA2003B7185 /* ProblemGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProblemGenerator.swift; sourceTree = "<group>"; };
-		DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsManager.swift; sourceTree = "<group>"; };
-		DAD5FD992F19DD37003B7185 /* GameStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStats.swift; sourceTree = "<group>"; };
-		DAD5FD9B2F19DD37003B7185 /* DigitRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigitRecognizer.swift; sourceTree = "<group>"; };
-		DAD5FD9D2F19DD37003B7185 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
-		DAD5FD9E2F19DD37003B7185 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
-		DAD5FD9F2F19DD37003B7185 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMathApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DAD5FD302F19D888003B7185 /* DailyMathTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = DailyMathTests;
 			sourceTree = "<group>";
 		};
 		DAD5FD3A2F19D888003B7185 /* DailyMathUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = DailyMathUITests;
 			sourceTree = "<group>";
 		};
@@ -109,27 +122,152 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DAD5FDB42F19F000003B7185 /* Controllers */ = {
+		0458C11472A209EEA3C05BA1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DAD5FDB32F19F000003B7185 /* CanvasViewController.swift */,
+				E2B85B9B0711FDBA2595D2D6 /* Agility */,
+				61DCD5CE5E45C8EFC3BACE92 /* App */,
+				98912A1158814CA6C283D1DD /* Today */,
+				5A4E9FFFD7A185B59001A738 /* Auth */,
+				455339A2D7AF1548E1BADB76 /* Moderator */,
+				DD262F5B4EC47D2A00B524DF /* Explore */,
+				50563739B094DC97974432CB /* Components */,
+				F06A404D289B19AEDF82AA88 /* Profile */,
+				D06E7BD81794F01DD88C1D6A /* Duel */,
+				920DFA04F38A8541CB0D03AD /* Create */,
 			);
-			path = Controllers;
+			name = Views;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0ACDBC0173F8ADD4A15F358B /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				11B30FA5144B1719ACFBE1F0 /* supabase_schema.sql */,
+				679493088C90C9C6B32ABF73 /* Secrets.swift */,
+			);
+			name = Config;
+			path = Config;
+			sourceTree = "<group>";
+		};
+		1B87988BDAC3A05A44C63B20 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9AC8EB93D553B294F928486C /* Duel.swift */,
+				5475E1FB293514535FE3737D /* Flashcard.swift */,
+				05A2CA82656011C3967AD65F /* UserProfile.swift */,
+				09082F342C2FDD96064DEB62 /* Exercise.swift */,
+				1D9CDB7C6E581523E82D7578 /* Community.swift */,
+			);
+			name = Models;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1D9BA71A09F00147D3054B6F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8035B207DACC034330343689 /* AppState.swift */,
+			);
+			name = App;
+			path = App;
+			sourceTree = "<group>";
+		};
+		455339A2D7AF1548E1BADB76 /* Moderator */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Moderator;
+			path = Moderator;
+			sourceTree = "<group>";
+		};
+		50563739B094DC97974432CB /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Components;
+			path = Components;
+			sourceTree = "<group>";
+		};
+		5A4E9FFFD7A185B59001A738 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				B80FBC626AFB2709A4531F34 /* LoginView.swift */,
+				30A1B393FB1809D4871AAEED /* ForgotPasswordView.swift */,
+				097164C50E704ABCE434269C /* RegisterView.swift */,
+			);
+			name = Auth;
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		61DCD5CE5E45C8EFC3BACE92 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				36EE569B12BFBF4B7ADCF8AC /* MainTabView.swift */,
+			);
+			name = App;
+			path = App;
+			sourceTree = "<group>";
+		};
+		6FF3FDA726E7C87BC6D49E0F /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				022D0A6CBB492B30ED453ABE /* Constants.swift */,
+				546987C61CD25334689BA65C /* SM2Algorithm.swift */,
+				A66068508B44C9FE02C8ED42 /* Extensions.swift */,
+			);
+			name = Utilities;
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		920DFA04F38A8541CB0D03AD /* Create */ = {
+			isa = PBXGroup;
+			children = (
+				C5ED6811713E5AE04C4DCDC9 /* CreateExerciseView.swift */,
+			);
+			name = Create;
+			path = Create;
+			sourceTree = "<group>";
+		};
+		98912A1158814CA6C283D1DD /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				57F2780566826113571F5D6D /* TodayView.swift */,
+			);
+			name = Today;
+			path = Today;
+			sourceTree = "<group>";
+		};
+		C19C298394369262865508B6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ViewModels;
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		D06E7BD81794F01DD88C1D6A /* Duel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Duel;
+			path = Duel;
 			sourceTree = "<group>";
 		};
 		DAD5FD172F19D885003B7185 = {
 			isa = PBXGroup;
 			children = (
 				DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */,
-				DAD5FDB42F19F000003B7185 /* Controllers */,
-				DAD5FD9A2F19DD37003B7185 /* Models */,
-				DAD5FD9C2F19DD37003B7185 /* Services */,
-				DAD5FDA02F19DD37003B7185 /* Views */,
 				DAD5FD302F19D888003B7185 /* DailyMathTests */,
 				DAD5FD3A2F19D888003B7185 /* DailyMathUITests */,
 				DAD5FD5C2F19D9C5003B7185 /* Frameworks */,
 				DAD5FD212F19D885003B7185 /* Products */,
-				DAD5FD7B2F19DBA2003B7185 /* Managers */,
+				1D9BA71A09F00147D3054B6F /* App */,
+				0ACDBC0173F8ADD4A15F358B /* Config */,
+				1B87988BDAC3A05A44C63B20 /* Models */,
+				FC7F404466E0A6653E126F35 /* Services */,
+				6FF3FDA726E7C87BC6D49E0F /* Utilities */,
+				C19C298394369262865508B6 /* ViewModels */,
+				0458C11472A209EEA3C05BA1 /* Views */,
 			);
 			sourceTree = "<group>";
 		};
@@ -151,41 +289,41 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DAD5FD7B2F19DBA2003B7185 /* Managers */ = {
+		DD262F5B4EC47D2A00B524DF /* Explore */ = {
 			isa = PBXGroup;
 			children = (
-				DAD5FD792F19DBA2003B7185 /* ProblemGenerator.swift */,
-				DAD5FD7A2F19DBA2003B7185 /* StatsManager.swift */,
+				023E1D35FD43182AD0B0191B /* ExploreView.swift */,
 			);
-			path = Managers;
+			name = Explore;
+			path = Explore;
 			sourceTree = "<group>";
 		};
-		DAD5FD9A2F19DD37003B7185 /* Models */ = {
+		E2B85B9B0711FDBA2595D2D6 /* Agility */ = {
 			isa = PBXGroup;
 			children = (
-				DAD5FD992F19DD37003B7185 /* GameStats.swift */,
+				C277A06AD759937097A323F1 /* NumericKeyboardView.swift */,
+				297A89A15B886A5A8B42BC0C /* AgilityView.swift */,
 			);
-			path = Models;
+			name = Agility;
+			path = Agility;
 			sourceTree = "<group>";
 		};
-		DAD5FD9C2F19DD37003B7185 /* Services */ = {
+		F06A404D289B19AEDF82AA88 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				DAD5FD9B2F19DD37003B7185 /* DigitRecognizer.swift */,
-				DAD5FDC32F1A0000003B7185 /* HandwritingPersonalizationManager.swift */,
+				53170A2B08D2D5C0A0C0E62A /* ProfileView.swift */,
 			);
+			name = Profile;
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		FC7F404466E0A6653E126F35 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				12ED34229BA79441C026FA19 /* AuthService.swift */,
+			);
+			name = Services;
 			path = Services;
-			sourceTree = "<group>";
-		};
-		DAD5FDA02F19DD37003B7185 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				DAD5FD9D2F19DD37003B7185 /* DrawingCanvasView.swift */,
-				DAD5FD9E2F19DD37003B7185 /* GameView.swift */,
-				DAD5FD9F2F19DD37003B7185 /* StatsView.swift */,
-				DAD5FDC12F1A0000003B7185 /* OnboardingView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,8 +342,6 @@
 			dependencies = (
 			);
 			name = DailyMath;
-			packageProductDependencies = (
-			);
 			productName = DailyMath;
 			productReference = DAD5FD202F19D885003B7185 /* DailyMath.app */;
 			productType = "com.apple.product-type.application";
@@ -227,8 +363,6 @@
 				DAD5FD302F19D888003B7185 /* DailyMathTests */,
 			);
 			name = DailyMathTests;
-			packageProductDependencies = (
-			);
 			productName = DailyMathTests;
 			productReference = DAD5FD2D2F19D888003B7185 /* DailyMathTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -250,8 +384,6 @@
 				DAD5FD3A2F19D888003B7185 /* DailyMathUITests */,
 			);
 			name = DailyMathUITests;
-			packageProductDependencies = (
-			);
 			productName = DailyMathUITests;
 			productReference = DAD5FD372F19D888003B7185 /* DailyMathUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -329,17 +461,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAD5FDB22F19F000003B7185 /* CanvasViewController.swift in Sources */,
-				DAD5FDB02F19E000003B7185 /* DailyMathApp.swift in Sources */,
-				DAD5FDC02F1A0000003B7185 /* OnboardingView.swift in Sources */,
-				DAD5FDC22F1A0000003B7185 /* HandwritingPersonalizationManager.swift in Sources */,
-				DAD5FDA62F19DD37003B7185 /* GameView.swift in Sources */,
-				DAD5FDA72F19DD37003B7185 /* StatsView.swift in Sources */,
-				DAD5FDA82F19DD37003B7185 /* DigitRecognizer.swift in Sources */,
-				DAD5FDA92F19DD37003B7185 /* DrawingCanvasView.swift in Sources */,
-				DAD5FDAA2F19DD37003B7185 /* GameStats.swift in Sources */,
-				DAD5FD7C2F19DBA3003B7185 /* StatsManager.swift in Sources */,
-				DAD5FD7D2F19DBA3003B7185 /* ProblemGenerator.swift in Sources */,
+				BD45EBBA5DB5DF8F3D020119 /* AppState.swift in Sources */,
+				AB7957635CE4DF28B810AC87 /* Secrets.swift in Sources */,
+				6636CD5463A734B912E13815 /* Duel.swift in Sources */,
+				EA4E5C3534A606FC4C2CBF93 /* Flashcard.swift in Sources */,
+				AAC28ECA1C94982BB2B01B76 /* UserProfile.swift in Sources */,
+				3EC1AF4C8FD3E4C11CA54E99 /* Exercise.swift in Sources */,
+				989243241DAFBEE43678A8F2 /* Community.swift in Sources */,
+				F6F698DBEAFFE000F3072590 /* AuthService.swift in Sources */,
+				2C321EB2AF37305A78C0D38D /* Constants.swift in Sources */,
+				1FE22C1BABA3186D54FBC192 /* SM2Algorithm.swift in Sources */,
+				BADD44EAA3F9E1320AC4AFC8 /* Extensions.swift in Sources */,
+				6E7CE9DE3A50744A84B79FCF /* NumericKeyboardView.swift in Sources */,
+				6BD6EBF8DA12D1A203F4BCA2 /* AgilityView.swift in Sources */,
+				A645F7EFA50B03DF744AAB17 /* MainTabView.swift in Sources */,
+				AD95BA1052AF3056D468F86D /* TodayView.swift in Sources */,
+				8FA95626EB009E0B85B153A0 /* LoginView.swift in Sources */,
+				DD51A0AB4383951B6881358C /* ForgotPasswordView.swift in Sources */,
+				3C09CA1B32EBF34E654E95D4 /* RegisterView.swift in Sources */,
+				F344D681D602D5AEAFEBB53C /* ExploreView.swift in Sources */,
+				EA18AC93E41DC98CD4C10F08 /* ProfileView.swift in Sources */,
+				F928E15D47D9BCBFA9B83B45 /* CreateExerciseView.swift in Sources */,
+				6A6FDA25D65290DA08A9E2B3 /* DailyMathApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,13 +490,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAD5FD7E2F19DBA3003B7185 /* StatsManager.swift in Sources */,
-				DAD5FD7F2F19DBA3003B7185 /* ProblemGenerator.swift in Sources */,
-				DAD5FDAB2F19DD37003B7185 /* GameView.swift in Sources */,
-				DAD5FDAC2F19DD37003B7185 /* StatsView.swift in Sources */,
-				DAD5FDAD2F19DD37003B7185 /* DigitRecognizer.swift in Sources */,
-				DAD5FDAE2F19DD37003B7185 /* DrawingCanvasView.swift in Sources */,
-				DAD5FDAF2F19DD37003B7185 /* GameStats.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,13 +497,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAD5FDA12F19DD37003B7185 /* GameView.swift in Sources */,
-				DAD5FDA22F19DD37003B7185 /* StatsView.swift in Sources */,
-				DAD5FDA32F19DD37003B7185 /* DigitRecognizer.swift in Sources */,
-				DAD5FDA42F19DD37003B7185 /* DrawingCanvasView.swift in Sources */,
-				DAD5FDA52F19DD37003B7185 /* GameStats.swift in Sources */,
-				DAD5FD802F19DBA3003B7185 /* StatsManager.swift in Sources */,
-				DAD5FD812F19DBA3003B7185 /* ProblemGenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 // MARK: - Register View
 
@@ -109,11 +110,11 @@ struct RegisterView: View {
                         }
                         showPasswordMismatch = false
                         Task {
-                            await authService.signUp(
+                            try? await authService.signUp(
                                 email: email,
                                 password: password,
-                                displayName: displayName,
-                                university: university.isEmpty ? nil : university
+                                username: email,
+                                displayName: displayName
                             )
                         }
                     } label: {
