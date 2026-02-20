@@ -12,10 +12,13 @@
 		3C09CA1B32EBF34E654E95D4 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097164C50E704ABCE434269C /* RegisterView.swift */; };
 		3EC1AF4C8FD3E4C11CA54E99 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09082F342C2FDD96064DEB62 /* Exercise.swift */; };
 		6636CD5463A734B912E13815 /* Duel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC8EB93D553B294F928486C /* Duel.swift */; };
+		6989C56EE740C1004EF18E28 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16345B120691BE8F9AD6CDF7 /* NotificationService.swift */; };
 		6A6FDA25D65290DA08A9E2B3 /* DailyMathApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */; };
 		6BD6EBF8DA12D1A203F4BCA2 /* AgilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297A89A15B886A5A8B42BC0C /* AgilityView.swift */; };
 		6E7CE9DE3A50744A84B79FCF /* NumericKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C277A06AD759937097A323F1 /* NumericKeyboardView.swift */; };
+		775BB4A4F19BD70DABFFFFF3 /* CreateFlashcardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF12C3A35AA4A01B834E13A /* CreateFlashcardView.swift */; };
 		8FA95626EB009E0B85B153A0 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80FBC626AFB2709A4531F34 /* LoginView.swift */; };
+		972A42F740A940E2B475D92B /* FlashcardStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A6C8E9927F5EC00079BE71 /* FlashcardStore.swift */; };
 		989243241DAFBEE43678A8F2 /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D9CDB7C6E581523E82D7578 /* Community.swift */; };
 		A645F7EFA50B03DF744AAB17 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36EE569B12BFBF4B7ADCF8AC /* MainTabView.swift */; };
 		AAC28ECA1C94982BB2B01B76 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A2CA82656011C3967AD65F /* UserProfile.swift */; };
@@ -23,6 +26,7 @@
 		AD95BA1052AF3056D468F86D /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F2780566826113571F5D6D /* TodayView.swift */; };
 		BADD44EAA3F9E1320AC4AFC8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66068508B44C9FE02C8ED42 /* Extensions.swift */; };
 		BD45EBBA5DB5DF8F3D020119 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8035B207DACC034330343689 /* AppState.swift */; };
+		D9301F547C1D6187C9D95822 /* FlashcardQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E186197E7EF3484F32681B9 /* FlashcardQuizView.swift */; };
 		DAD5FD5E2F19D9C6003B7185 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAD5FD5D2F19D9C5003B7185 /* Vision.framework */; };
 		DD51A0AB4383951B6881358C /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1B393FB1809D4871AAEED /* ForgotPasswordView.swift */; };
 		EA18AC93E41DC98CD4C10F08 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53170A2B08D2D5C0A0C0E62A /* ProfileView.swift */; };
@@ -57,15 +61,21 @@
 		097164C50E704ABCE434269C /* RegisterView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		11B30FA5144B1719ACFBE1F0 /* supabase_schema.sql */ = {isa = PBXFileReference; includeInIndex = 1; path = supabase_schema.sql; sourceTree = "<group>"; };
 		12ED34229BA79441C026FA19 /* AuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		16345B120691BE8F9AD6CDF7 /* NotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		1D9CDB7C6E581523E82D7578 /* Community.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
+		2240D26C1DBB2DB345AC3CAE /* FlashcardStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FlashcardStore.swift; path = Services/FlashcardStore.swift; sourceTree = "<group>"; };
+		269875F93116B181414C74E8 /* CreateFlashcardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CreateFlashcardView.swift; path = Views/Today/CreateFlashcardView.swift; sourceTree = "<group>"; };
 		297A89A15B886A5A8B42BC0C /* AgilityView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgilityView.swift; sourceTree = "<group>"; };
 		30A1B393FB1809D4871AAEED /* ForgotPasswordView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
 		36EE569B12BFBF4B7ADCF8AC /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		3E186197E7EF3484F32681B9 /* FlashcardQuizView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlashcardQuizView.swift; sourceTree = "<group>"; };
+		46A6C8E9927F5EC00079BE71 /* FlashcardStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlashcardStore.swift; sourceTree = "<group>"; };
 		53170A2B08D2D5C0A0C0E62A /* ProfileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		546987C61CD25334689BA65C /* SM2Algorithm.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SM2Algorithm.swift; sourceTree = "<group>"; };
 		5475E1FB293514535FE3737D /* Flashcard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Flashcard.swift; sourceTree = "<group>"; };
 		57F2780566826113571F5D6D /* TodayView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		679493088C90C9C6B32ABF73 /* Secrets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		7E0EC559A6BF114235705716 /* FlashcardQuizView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FlashcardQuizView.swift; path = Views/Today/FlashcardQuizView.swift; sourceTree = "<group>"; };
 		8035B207DACC034330343689 /* AppState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		9AC8EB93D553B294F928486C /* Duel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Duel.swift; sourceTree = "<group>"; };
 		A66068508B44C9FE02C8ED42 /* Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -77,6 +87,8 @@
 		DAD5FD372F19D888003B7185 /* DailyMathUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DailyMathUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD5FD5D2F19D9C5003B7185 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		DAD5FDB12F19E000003B7185 /* DailyMathApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMathApp.swift; sourceTree = "<group>"; };
+		DCF12C3A35AA4A01B834E13A /* CreateFlashcardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateFlashcardView.swift; sourceTree = "<group>"; };
+		F112C44C77916BBC38F2ABF8 /* NotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationService.swift; path = Services/NotificationService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -135,6 +147,8 @@
 				F06A404D289B19AEDF82AA88 /* Profile */,
 				D06E7BD81794F01DD88C1D6A /* Duel */,
 				920DFA04F38A8541CB0D03AD /* Create */,
+				7E0EC559A6BF114235705716 /* FlashcardQuizView.swift */,
+				269875F93116B181414C74E8 /* CreateFlashcardView.swift */,
 			);
 			name = Views;
 			path = Views;
@@ -232,6 +246,8 @@
 			isa = PBXGroup;
 			children = (
 				57F2780566826113571F5D6D /* TodayView.swift */,
+				3E186197E7EF3484F32681B9 /* FlashcardQuizView.swift */,
+				DCF12C3A35AA4A01B834E13A /* CreateFlashcardView.swift */,
 			);
 			name = Today;
 			path = Today;
@@ -321,6 +337,10 @@
 			isa = PBXGroup;
 			children = (
 				12ED34229BA79441C026FA19 /* AuthService.swift */,
+				2240D26C1DBB2DB345AC3CAE /* FlashcardStore.swift */,
+				F112C44C77916BBC38F2ABF8 /* NotificationService.swift */,
+				46A6C8E9927F5EC00079BE71 /* FlashcardStore.swift */,
+				16345B120691BE8F9AD6CDF7 /* NotificationService.swift */,
 			);
 			name = Services;
 			path = Services;
@@ -483,6 +503,10 @@
 				EA18AC93E41DC98CD4C10F08 /* ProfileView.swift in Sources */,
 				F928E15D47D9BCBFA9B83B45 /* CreateExerciseView.swift in Sources */,
 				6A6FDA25D65290DA08A9E2B3 /* DailyMathApp.swift in Sources */,
+				972A42F740A940E2B475D92B /* FlashcardStore.swift in Sources */,
+				6989C56EE740C1004EF18E28 /* NotificationService.swift in Sources */,
+				D9301F547C1D6187C9D95822 /* FlashcardQuizView.swift in Sources */,
+				775BB4A4F19BD70DABFFFFF3 /* CreateFlashcardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

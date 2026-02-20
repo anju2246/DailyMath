@@ -1,9 +1,14 @@
 import SwiftUI
 import Combine
+import UserNotifications
 
 @main
 struct DailyMathApp: App {
     @StateObject private var appState = AppState()
+    
+    init() {
+        NotificationService.shared.requestPermission()
+    }
     
     var body: some Scene {
         WindowGroup {
