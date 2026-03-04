@@ -33,6 +33,8 @@ extension Color {
     static let dmAccent = Color("Accent")
     static let dmBackground = Color("Background")
     static let dmSurface = Color("Surface")
+    static let dmPrimary = Color("DMPrimary")
+    static let dmSecondary = Color("DMSecondary")
     static let dmSuccess = Color.green
     static let dmError = Color.red
     static let dmWarning = Color.orange
