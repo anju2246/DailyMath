@@ -5,13 +5,16 @@ import Combine
 
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
-    @State private var email = ""
-    @State private var password = ""
     @State private var showRegister = false
     @State private var showForgotPassword = false
-    
-    private var authService: AuthService { appState.authService }
-    
+    @StateObject private var viewModel: LoginViewModel
+
+    init() {
+        // `appState` is not yet available here, create a placeholder;
+        // we'll override it in body using `.onAppear`.
+        _viewModel = StateObject(wrappedValue: LoginViewModel(authService: AuthService()))
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -27,47 +30,41 @@ struct LoginView: View {
                                     endPoint: .bottomTrailing
                                 )
                             )
-                        
+
                         Text("DailyMath")
                             .font(.largeTitle.bold())
-                        
+
                         Text("Tu plataforma de estudio matemático")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     .padding(.top, 40)
-                    
+
                     // Form
                     VStack(spacing: 16) {
-                        TextField("Email", text: $email)
+                        TextField("Email", text: $viewModel.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .textFieldStyle(.roundedBorder)
-                        
-                        SecureField("Contraseña", text: $password)
+
+                        SecureField("Contraseña", text: $viewModel.password)
                             .textContentType(.password)
                             .textFieldStyle(.roundedBorder)
-                        
-                        if let error = authService.errorMessage {
-                            Text(error)
+
+                        if let toast = viewModel.toast {
+                            Text(toast.message)
                                 .font(.caption)
                                 .foregroundStyle(.red)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        
+
                         Button {
                             Task {
-                                do {
-                                    try await authService.signIn(email: email, password: password)
-                                } catch {
-                                    await MainActor.run {
-                                        authService.errorMessage = error.localizedDescription
-                                    }
-                                }
+                                await viewModel.login()
                             }
                         } label: {
-                            if authService.isLoading {
+                            if viewModel.isLoading {
                                 ProgressView()
                                     .tint(.white)
                                     .primaryButton()
@@ -76,8 +73,8 @@ struct LoginView: View {
                                     .primaryButton()
                             }
                         }
-                        .disabled(email.isEmpty || password.isEmpty || authService.isLoading)
-                        
+                        .disabled(!viewModel.isFormValid || viewModel.isLoading)
+
                         Button("¿Olvidaste tu contraseña?") {
                             showForgotPassword = true
                         }
@@ -85,7 +82,7 @@ struct LoginView: View {
                         .foregroundStyle(.secondary)
                     }
                     .padding(.horizontal)
-                    
+
                     // Divider
                     HStack {
                         Rectangle()
@@ -99,7 +96,7 @@ struct LoginView: View {
                             .foregroundStyle(.quaternary)
                     }
                     .padding(.horizontal)
-                    
+
                     // Register
                     Button {
                         showRegister = true
@@ -119,6 +116,10 @@ struct LoginView: View {
                 ForgotPasswordView()
                     .environmentObject(appState)
             }
+        }
+        .onAppear {
+            // make sure the view model is bound to the shared AuthService instance
+            viewModel.update(authService: appState.authService)
         }
     }
 }

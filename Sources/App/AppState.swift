@@ -7,10 +7,11 @@ import Combine
 class AppState: ObservableObject {
     @Published var authService = AuthService()
     @Published var flashcardStore = FlashcardStore()
+    /// Mirror of the authentication state for easier bindings/publishing.
+    @Published private(set) var isAuthenticated = false
     
     private var cancellables = Set<AnyCancellable>()
     
-    var isAuthenticated: Bool { authService.isAuthenticated }
     var currentUser: UserProfile? { authService.currentUser }
     var isModerator: Bool { authService.currentUser?.isModerator ?? false }
     
@@ -22,5 +23,10 @@ class AppState: ObservableObject {
                 self?.objectWillChange.send()
             }
             .store(in: &cancellables)
+
+        // also keep the simple Bool up-to-date
+        authService.$isAuthenticated
+            .receive(on: RunLoop.main)
+            .assign(to: &$isAuthenticated)
     }
 }
