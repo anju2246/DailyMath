@@ -1,66 +1,62 @@
 import SwiftUI
-import Combine
 
 // MARK: - Explore View (Community Feed)
 
 struct ExploreView: View {
-    @EnvironmentObject var appState: AppState
     @State private var selectedCategory: AppConstants.Category? = nil
     @State private var searchText = ""
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // Category filter chips
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
+        VStack(spacing: 0) {
+            // Category filter chips
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    FilterChip(
+                        title: "Todos",
+                        isSelected: selectedCategory == nil
+                    ) {
+                        selectedCategory = nil
+                    }
+                    
+                    ForEach(AppConstants.Category.allCases, id: \.self) { category in
                         FilterChip(
-                            title: "Todos",
-                            isSelected: selectedCategory == nil
+                            title: category.displayName,
+                            icon: category.icon,
+                            isSelected: selectedCategory == category
                         ) {
-                            selectedCategory = nil
-                        }
-                        
-                        ForEach(AppConstants.Category.allCases, id: \.self) { category in
-                            FilterChip(
-                                title: category.displayName,
-                                icon: category.icon,
-                                isSelected: selectedCategory == category
-                            ) {
-                                selectedCategory = category
-                            }
+                            selectedCategory = category
                         }
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
                 }
-                
-                // Exercise list placeholder
-                ScrollView {
-                    VStack(spacing: 16) {
-                        // Empty state
-                        VStack(spacing: 12) {
-                            Image(systemName: "tray")
-                                .font(.system(size: 48))
-                                .foregroundStyle(.secondary)
-                            
-                            Text("No hay ejercicios aún")
-                                .font(.headline)
-                            
-                            Text("Sé el primero en crear un ejercicio para la comunidad")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center)
-                        }
-                        .cardStyle()
-                        .padding(.top, 40)
-                    }
-                    .padding(.horizontal)
-                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
             }
-            .navigationTitle("Explorar")
-            .searchable(text: $searchText, prompt: "Buscar ejercicios...")
+            
+            // Exercise list placeholder
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Empty state
+                    VStack(spacing: 12) {
+                        Image(systemName: "tray")
+                            .font(.system(size: 48))
+                            .foregroundStyle(.secondary)
+                        
+                        Text("No hay ejercicios aún")
+                            .font(.headline)
+                        
+                        Text("Sé el primero en crear un ejercicio para la comunidad")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .cardStyle()
+                    .padding(.top, 40)
+                }
+                .padding(.horizontal)
+            }
         }
+        .navigationTitle("Explorar")
+        .searchable(text: $searchText, prompt: "Buscar ejercicios...")
     }
 }
 

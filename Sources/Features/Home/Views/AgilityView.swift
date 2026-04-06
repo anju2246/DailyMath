@@ -1,10 +1,8 @@
 import SwiftUI
-import Combine
 
 // MARK: - Agility View (Mental Math with Duolingo-style Keyboard)
 
 struct AgilityView: View {
-    @EnvironmentObject var appState: AppState
     @State private var currentLevel = 1
     @State private var score = 0
     @State private var userAnswer = ""
@@ -16,121 +14,119 @@ struct AgilityView: View {
     @State private var startTime = Date()
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // Progress bar
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(Color(.systemGray5))
-                        
-                        Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: [.green, .green.opacity(0.7)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
+        VStack(spacing: 0) {
+            // Progress bar
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color(.systemGray5))
+                    
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: [.green, .green.opacity(0.7)],
+                                startPoint: .leading,
+                                endPoint: .trailing
                             )
-                            .frame(width: geo.size.width * CGFloat(correctCount) / 10.0)
-                            .animation(.spring(), value: correctCount)
-                    }
+                        )
+                        .frame(width: geo.size.width * CGFloat(correctCount) / 10.0)
+                        .animation(.spring(), value: correctCount)
                 }
-                .frame(height: 10)
-                .padding(.horizontal)
-                .padding(.top, 8)
-                
-                // Stats row
-                HStack {
-                    Label("Nivel \(currentLevel)", systemImage: "star.fill")
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.orange)
-                    
-                    Spacer()
-                    
-                    Text("\(correctCount)/10")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 12)
+            }
+            .frame(height: 10)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            
+            // Stats row
+            HStack {
+                Label("Nivel \(currentLevel)", systemImage: "star.fill")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.orange)
                 
                 Spacer()
                 
-                // Problem display
-                if let problem = currentProblem {
-                    Text(problem.displayText)
-                        .font(.system(size: 48, weight: .bold, design: .rounded))
+                Text("\(correctCount)/10")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 12)
+            
+            Spacer()
+            
+            // Problem display
+            if let problem = currentProblem {
+                Text(problem.displayText)
+                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .padding()
+            }
+            
+            // Answer display
+            ZStack {
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(showResult
+                          ? (isCorrect ? Color.green.opacity(0.15) : Color.red.opacity(0.15))
+                          : Color(.systemGray6)
+                    )
+                    .frame(height: 56)
+                
+                Text(userAnswer.isEmpty ? " " : userAnswer)
+                    .font(.title.bold().monospacedDigit())
+                    .foregroundStyle(
+                        showResult
+                        ? (isCorrect ? .green : .red)
+                        : .primary
+                    )
+            }
+            .padding(.horizontal, 40)
+            .animation(.easeInOut(duration: 0.2), value: showResult)
+            
+            // Feedback
+            if showResult {
+                HStack(spacing: 8) {
+                    Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    Text(isCorrect ? "¡Correcto!" : "Respuesta: \(currentProblem?.answer ?? 0)")
+                }
+                .font(.headline)
+                .foregroundStyle(isCorrect ? .green : .red)
+                .padding(.top, 12)
+                .transition(.scale.combined(with: .opacity))
+            }
+            
+            Spacer()
+            
+            // Continue button (when showing result)
+            if showResult {
+                Button {
+                    nextProblem()
+                } label: {
+                    Text("CONTINUAR")
+                        .font(.headline.bold())
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
                         .padding()
+                        .background(Color.green)
+                        .cornerRadius(14)
                 }
-                
-                // Answer display
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(showResult
-                              ? (isCorrect ? Color.green.opacity(0.15) : Color.red.opacity(0.15))
-                              : Color(.systemGray6)
-                        )
-                        .frame(height: 56)
-                    
-                    Text(userAnswer.isEmpty ? " " : userAnswer)
-                        .font(.title.bold().monospacedDigit())
-                        .foregroundStyle(
-                            showResult
-                            ? (isCorrect ? .green : .red)
-                            : .primary
-                        )
-                }
-                .padding(.horizontal, 40)
-                .animation(.easeInOut(duration: 0.2), value: showResult)
-                
-                // Feedback
-                if showResult {
-                    HStack(spacing: 8) {
-                        Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        Text(isCorrect ? "¡Correcto!" : "Respuesta: \(currentProblem?.answer ?? 0)")
-                    }
-                    .font(.headline)
-                    .foregroundStyle(isCorrect ? .green : .red)
-                    .padding(.top, 12)
-                    .transition(.scale.combined(with: .opacity))
-                }
-                
-                Spacer()
-                
-                // Continue button (when showing result)
-                if showResult {
-                    Button {
-                        nextProblem()
-                    } label: {
-                        Text("CONTINUAR")
-                            .font(.headline.bold())
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.green)
-                            .cornerRadius(14)
-                    }
-                    .padding(.horizontal)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-                }
-                
-                // Numeric Keyboard
-                NumericKeyboardView(
-                    text: $userAnswer,
-                    isDisabled: showResult
-                ) {
-                    checkAnswer()
-                }
-                .padding(.bottom, 8)
+                .padding(.horizontal)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
-            .navigationTitle("Agilidad Mental")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                nextProblem()
+            
+            // Numeric Keyboard
+            NumericKeyboardView(
+                text: $userAnswer,
+                isDisabled: showResult
+            ) {
+                checkAnswer()
             }
-            .animation(.spring(response: 0.3), value: showResult)
+            .padding(.bottom, 8)
         }
+        .navigationTitle("Agilidad Mental")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            nextProblem()
+        }
+        .animation(.spring(response: 0.3), value: showResult)
     }
     
     private func nextProblem() {

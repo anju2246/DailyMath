@@ -1,44 +1,55 @@
 import SwiftUI
-import Combine
 
 // MARK: - Main Tab Navigation
 
 struct MainTabView: View {
-    @EnvironmentObject var appState: AppState
     @EnvironmentObject var navigation: AppNavigationCoordinator
     
     var body: some View {
         TabView(selection: $navigation.selectedTab) {
-            TodayView()
+            NavigationStack(path: $navigation.homePath) {
+                TodayView()
+            }
                 .tabItem {
                     Label("Hoy", systemImage: "calendar.badge.clock")
                 }
                 .tag(MainTab.today)
             
-            ExploreView()
+            NavigationStack(path: $navigation.communityPath) {
+                ExploreView()
+            }
                 .tabItem {
                     Label("Explorar", systemImage: "magnifyingglass")
                 }
                 .tag(MainTab.explore)
             
-            CreateExerciseView()
+            NavigationStack(path: $navigation.createPath) {
+                CreateExerciseView()
+            }
                 .tabItem {
                     Label("Crear", systemImage: "plus.circle.fill")
                 }
                 .tag(MainTab.create)
             
-            AgilityView()
+            NavigationStack(path: $navigation.agilityPath) {
+                AgilityView()
+            }
                 .tabItem {
                     Label("Agilidad", systemImage: "brain")
                 }
                 .tag(MainTab.agility)
             
-            ProfileView()
+            NavigationStack(path: $navigation.profilePath) {
+                ProfileView()
+            }
                 .tabItem {
                     Label("Perfil", systemImage: "person.circle")
                 }
                 .tag(MainTab.profile)
         }
         .tint(.dmPrimary)
+        .onAppear {
+            navigation.resetMainFeaturePaths()
+        }
     }
 }
