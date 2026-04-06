@@ -5,8 +5,7 @@ import Combine
 
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
-    @State private var showRegister = false
-    @State private var showForgotPassword = false
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     @StateObject private var viewModel: LoginViewModel
 
     init() {
@@ -16,7 +15,7 @@ struct LoginView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigation.authPath) {
             ScrollView {
                 VStack(spacing: 32) {
                     // Logo & Header
@@ -76,7 +75,7 @@ struct LoginView: View {
                         .disabled(!viewModel.isFormValid || viewModel.isLoading)
 
                         Button("¿Olvidaste tu contraseña?") {
-                            showForgotPassword = true
+                            navigation.presentAuthSheet(.forgotPassword)
                         }
                         .font(.footnote)
                         .foregroundStyle(.secondary)
@@ -99,7 +98,7 @@ struct LoginView: View {
 
                     // Register
                     Button {
-                        showRegister = true
+                        navigation.pushAuth(.register)
                     } label: {
                         Text("Crear cuenta")
                             .secondaryButton()
@@ -108,16 +107,25 @@ struct LoginView: View {
                 }
                 .padding(.bottom, 40)
             }
-            .navigationDestination(isPresented: $showRegister) {
-                RegisterView()
-                    .environmentObject(appState)
+            .navigationDestination(for: AuthRoute.self) { route in
+                switch route {
+                case .register:
+                    RegisterView()
+                        .environmentObject(appState)
+                        .environmentObject(navigation)
+                }
             }
-            .sheet(isPresented: $showForgotPassword) {
-                ForgotPasswordView()
-                    .environmentObject(appState)
+            .sheet(item: $navigation.authSheet) { sheet in
+                switch sheet {
+                case .forgotPassword:
+                    ForgotPasswordView()
+                        .environmentObject(appState)
+                        .environmentObject(navigation)
+                }
             }
         }
         .onAppear {
+            navigation.resetAuth()
             // Ensure the view model is bound to the shared auth repository instance.
             viewModel.update(authService: appState.authService)
         }

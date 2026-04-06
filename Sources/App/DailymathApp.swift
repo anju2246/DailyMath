@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct DailyMathApp: App {
     @StateObject private var appState = AppState()
+    @StateObject private var navigation = AppNavigationCoordinator()
     
     init() {
         NotificationService.shared.requestPermission()
@@ -30,9 +31,11 @@ struct DailyMathApp: App {
                 } else if appState.isAuthenticated {
                     MainTabView()
                         .environmentObject(appState)
+                        .environmentObject(navigation)
                 } else {
                     LoginView()
                         .environmentObject(appState)
+                        .environmentObject(navigation)
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: appState.isAuthenticated)

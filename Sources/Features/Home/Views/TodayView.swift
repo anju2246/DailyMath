@@ -5,8 +5,7 @@ import Combine
 
 struct TodayView: View {
     @EnvironmentObject var appState: AppState
-    @State private var showQuiz = false
-    @State private var showCreateFlashcard = false
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     
     private var store: any FlashcardRepository { appState.flashcardStore }
     
@@ -52,7 +51,7 @@ struct TodayView: View {
                     // Quiz button
                     if !store.dueFlashcards.isEmpty {
                         Button {
-                            showQuiz = true
+                            navigation.presentHomeFullScreen(.flashcardQuiz)
                         } label: {
                             HStack(spacing: 12) {
                                 Image(systemName: "play.circle.fill")
@@ -88,7 +87,7 @@ struct TodayView: View {
                                 .font(.headline)
                             Spacer()
                             Button {
-                                showCreateFlashcard = true
+                                navigation.presentHomeSheet(.createFlashcard)
                             } label: {
                                 Label("Nueva", systemImage: "plus.circle.fill")
                                     .font(.subheadline.bold())
@@ -111,7 +110,7 @@ struct TodayView: View {
                                     .multilineTextAlignment(.center)
                                 
                                 Button {
-                                    showCreateFlashcard = true
+                                    navigation.presentHomeSheet(.createFlashcard)
                                 } label: {
                                     Text("+ Crear Flashcard")
                                         .secondaryButton()
@@ -132,13 +131,21 @@ struct TodayView: View {
             }
             .navigationTitle("Hoy")
             .navigationBarTitleDisplayMode(.large)
-            .fullScreenCover(isPresented: $showQuiz) {
-                FlashcardQuizView(cards: store.dueFlashcards)
-                    .environmentObject(appState)
+            .fullScreenCover(item: $navigation.homeFullScreen) { screen in
+                switch screen {
+                case .flashcardQuiz:
+                    FlashcardQuizView(cards: store.dueFlashcards)
+                        .environmentObject(appState)
+                        .environmentObject(navigation)
+                }
             }
-            .sheet(isPresented: $showCreateFlashcard) {
-                CreateFlashcardView()
-                    .environmentObject(appState)
+            .sheet(item: $navigation.homeSheet) { sheet in
+                switch sheet {
+                case .createFlashcard:
+                    CreateFlashcardView()
+                        .environmentObject(appState)
+                        .environmentObject(navigation)
+                }
             }
         }
     }

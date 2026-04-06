@@ -5,39 +5,39 @@ import Combine
 
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState
-    @State private var selectedTab = 0
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $navigation.selectedTab) {
             TodayView()
                 .tabItem {
                     Label("Hoy", systemImage: "calendar.badge.clock")
                 }
-                .tag(0)
+                .tag(MainTab.today)
             
             ExploreView()
                 .tabItem {
                     Label("Explorar", systemImage: "magnifyingglass")
                 }
-                .tag(1)
+                .tag(MainTab.explore)
             
             CreateExerciseView()
                 .tabItem {
                     Label("Crear", systemImage: "plus.circle.fill")
                 }
-                .tag(2)
+                .tag(MainTab.create)
             
             AgilityView()
                 .tabItem {
                     Label("Agilidad", systemImage: "brain")
                 }
-                .tag(3)
+                .tag(MainTab.agility)
             
             ProfileView()
                 .tabItem {
                     Label("Perfil", systemImage: "person.circle")
                 }
-                .tag(4)
+                .tag(MainTab.profile)
         }
         .tint(.dmPrimary)
     }
