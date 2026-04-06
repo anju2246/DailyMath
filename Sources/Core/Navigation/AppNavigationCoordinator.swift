@@ -21,6 +21,18 @@ final class AppNavigationCoordinator: ObservableObject {
         authPath.append(route)
     }
 
+    func pushCommunity(_ route: CommunityRoute) {
+        communityPath.append(route)
+    }
+
+    func pushProfile(_ route: ProfileRoute) {
+        profilePath.append(route)
+    }
+
+    func pushChallenges(_ route: ChallengesRoute) {
+        challengesPath.append(route)
+    }
+
     func resetAuth() {
         authPath = NavigationPath()
         authSheet = nil

@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     @State private var showDeleteConfirmation = false
 
     private var user: UserProfile? { appState.currentUser }
@@ -71,20 +72,20 @@ struct ProfileView: View {
                 // Menu items
                 VStack(spacing: 2) {
                     MenuRow(icon: "pencil", title: "Editar perfil", color: .blue) {
-                        // TODO: Navigate to edit profile
+                        navigation.pushProfile(.editProfile)
                     }
 
                     MenuRow(icon: "medal", title: "Insignias", color: .orange) {
-                        // TODO: Navigate to badges
+                        navigation.pushProfile(.badges)
                     }
 
                     MenuRow(icon: "chart.bar", title: "Estadísticas", color: .green) {
-                        // TODO: Navigate to stats
+                        navigation.pushProfile(.stats)
                     }
 
                     if appState.isModerator {
                         MenuRow(icon: "shield.checkered", title: "Panel de Moderador", color: .purple) {
-                            // TODO: Navigate to moderator dashboard
+                            navigation.pushProfile(.moderatorDashboard)
                         }
                     }
                 }

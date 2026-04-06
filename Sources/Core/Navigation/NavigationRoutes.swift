@@ -5,7 +5,8 @@ enum MainTab: Int, Hashable {
     case explore = 1
     case create = 2
     case agility = 3
-    case profile = 4
+    case challenges = 4
+    case profile = 5
 }
 
 enum AuthRoute: Hashable {

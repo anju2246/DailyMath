@@ -3,8 +3,11 @@ import SwiftUI
 // MARK: - Explore View (Community Feed)
 
 struct ExploreView: View {
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     @State private var selectedCategory: AppConstants.Category? = nil
     @State private var searchText = ""
+
+    private let sampleExerciseID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
     
     var body: some View {
         VStack(spacing: 0) {
@@ -48,6 +51,13 @@ struct ExploreView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
+
+                        Button {
+                            navigation.pushCommunity(.exerciseDetail(id: sampleExerciseID))
+                        } label: {
+                            Text("Ver ejercicio de ejemplo")
+                                .secondaryButton()
+                        }
                     }
                     .cardStyle()
                     .padding(.top, 40)

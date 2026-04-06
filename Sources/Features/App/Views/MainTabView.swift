@@ -17,6 +17,12 @@ struct MainTabView: View {
             
             NavigationStack(path: $navigation.communityPath) {
                 ExploreView()
+                    .navigationDestination(for: CommunityRoute.self) { route in
+                        switch route {
+                        case let .exerciseDetail(id):
+                            CommunityExerciseDetailView(exerciseId: id)
+                        }
+                    }
             }
                 .tabItem {
                     Label("Explorar", systemImage: "magnifyingglass")
@@ -38,9 +44,35 @@ struct MainTabView: View {
                     Label("Agilidad", systemImage: "brain")
                 }
                 .tag(MainTab.agility)
+
+            NavigationStack(path: $navigation.challengesPath) {
+                ChallengesHubView()
+                    .navigationDestination(for: ChallengesRoute.self) { route in
+                        switch route {
+                        case .duelLobby:
+                            DuelLobbyView()
+                        }
+                    }
+            }
+                .tabItem {
+                    Label("Desafíos", systemImage: "flag.checkered")
+                }
+                .tag(MainTab.challenges)
             
             NavigationStack(path: $navigation.profilePath) {
                 ProfileView()
+                    .navigationDestination(for: ProfileRoute.self) { route in
+                        switch route {
+                        case .editProfile:
+                            ProfileEditView()
+                        case .badges:
+                            ProfileBadgesView()
+                        case .stats:
+                            ProfileStatsView()
+                        case .moderatorDashboard:
+                            ModeratorDashboardView()
+                        }
+                    }
             }
                 .tabItem {
                     Label("Perfil", systemImage: "person.circle")
