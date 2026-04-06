@@ -11,6 +11,12 @@ final class AppNavigationCoordinator: ObservableObject {
     @Published var homeSheet: HomeSheet?
     @Published var homeFullScreen: HomeFullScreen?
 
+    @Published var communityPath = NavigationPath()
+    @Published var createPath = NavigationPath()
+    @Published var agilityPath = NavigationPath()
+    @Published var profilePath = NavigationPath()
+    @Published var challengesPath = NavigationPath()
+
     func pushAuth(_ route: AuthRoute) {
         authPath.append(route)
     }
@@ -42,5 +48,14 @@ final class AppNavigationCoordinator: ObservableObject {
 
     func dismissHomeFullScreen() {
         homeFullScreen = nil
+    }
+
+    func resetMainFeaturePaths() {
+        homePath = NavigationPath()
+        communityPath = NavigationPath()
+        createPath = NavigationPath()
+        agilityPath = NavigationPath()
+        profilePath = NavigationPath()
+        challengesPath = NavigationPath()
     }
 }

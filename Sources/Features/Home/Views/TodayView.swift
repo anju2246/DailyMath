@@ -10,9 +10,8 @@ struct TodayView: View {
     private var store: any FlashcardRepository { appState.flashcardStore }
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
+        ScrollView {
+            VStack(spacing: 20) {
                     // Header greeting
                     VStack(alignment: .leading, spacing: 8) {
                         Text("¡Hola, \(appState.currentUser?.displayName ?? "")!")
@@ -118,26 +117,27 @@ struct TodayView: View {
                             }
                             .cardStyle()
                             .padding(.horizontal)
-                        } else {
                             ForEach(store.flashcards) { card in
-                                flashcardRow(card)
-                            }
-                            .padding(.horizontal)
-                        }
+                    .padding(.top)
+                    .padding(.bottom, 40)
+                }
+                .navigationTitle("Hoy")
+                .navigationBarTitleDisplayMode(.large)
+                .fullScreenCover(item: $navigation.homeFullScreen) { screen in
+                    switch screen {
+                    case .flashcardQuiz:
+                        FlashcardQuizView(cards: store.dueFlashcards)
+                            .environmentObject(appState)
+                            .environmentObject(navigation)
                     }
                 }
-                .padding(.top)
-                .padding(.bottom, 40)
-            }
+                .sheet(item: $navigation.homeSheet) { sheet in
+                    switch sheet {
+                    case .createFlashcard:
+                        CreateFlashcardView()
+                            .environmentObject(appState)
+                            .environmentObject(navigation)
             .navigationTitle("Hoy")
-            .navigationBarTitleDisplayMode(.large)
-            .fullScreenCover(item: $navigation.homeFullScreen) { screen in
-                switch screen {
-                case .flashcardQuiz:
-                    FlashcardQuizView(cards: store.dueFlashcards)
-                        .environmentObject(appState)
-                        .environmentObject(navigation)
-                }
             }
             .sheet(item: $navigation.homeSheet) { sheet in
                 switch sheet {

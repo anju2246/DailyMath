@@ -29,3 +29,22 @@ enum HomeFullScreen: String, Identifiable {
 
     var id: String { rawValue }
 }
+
+enum CommunityRoute: Hashable {
+    case exerciseDetail(id: UUID)
+}
+
+enum ProfileRoute: Hashable {
+    case editProfile
+    case badges
+    case stats
+    case moderatorDashboard
+}
+
+enum AgilityRoute: Hashable {
+    case summary
+}
+
+enum ChallengesRoute: Hashable {
+    case duelLobby
+}
