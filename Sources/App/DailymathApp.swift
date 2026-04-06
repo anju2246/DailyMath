@@ -11,7 +11,7 @@ struct DailyMathApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if appState.authService.isLoading {
+                if appState.isAuthLoading {
                     // Splash screen
                     VStack(spacing: 16) {
                         Image(systemName: "function")
@@ -36,7 +36,7 @@ struct DailyMathApp: App {
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: appState.isAuthenticated)
-            .animation(.easeInOut(duration: 0.3), value: appState.authService.isLoading)
+            .animation(.easeInOut(duration: 0.3), value: appState.isAuthLoading)
         }
     }
 }

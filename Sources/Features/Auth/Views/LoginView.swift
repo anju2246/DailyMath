@@ -10,9 +10,9 @@ struct LoginView: View {
     @StateObject private var viewModel: LoginViewModel
 
     init() {
-        // `appState` is not yet available here, create a placeholder;
-        // we'll override it in body using `.onAppear`.
-        _viewModel = StateObject(wrappedValue: LoginViewModel(authService: AuthService()))
+        // `appState` is not yet available here;
+        // we'll override the dependency in `.onAppear`.
+        _viewModel = StateObject(wrappedValue: LoginViewModel())
     }
 
     var body: some View {
@@ -118,7 +118,7 @@ struct LoginView: View {
             }
         }
         .onAppear {
-            // make sure the view model is bound to the shared AuthService instance
+            // Ensure the view model is bound to the shared auth repository instance.
             viewModel.update(authService: appState.authService)
         }
     }

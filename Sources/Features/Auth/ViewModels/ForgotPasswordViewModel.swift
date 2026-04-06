@@ -9,7 +9,7 @@ class ForgotPasswordViewModel: ObservableObject {
     @Published var emailSent = false
     @Published var toast: Toast?
 
-    func resetPassword(authService: AuthService) async {
+    func resetPassword(authService: any AuthRepository) async {
         let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
 
         guard !trimmedEmail.isEmpty else {
@@ -23,9 +23,7 @@ class ForgotPasswordViewModel: ObservableObject {
 
         do {
             try await authService.resetPassword(email: trimmedEmail)
-//            withAnimation {
-//                emailSent = true
-//            }
+            emailSent = true
             toast = Toast(message: "Enlace enviado a \(trimmedEmail)", style: .success)
         } catch {
             toast = Toast(message: error.localizedDescription, style: .error)

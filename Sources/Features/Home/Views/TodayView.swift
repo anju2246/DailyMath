@@ -8,7 +8,7 @@ struct TodayView: View {
     @State private var showQuiz = false
     @State private var showCreateFlashcard = false
     
-    private var store: FlashcardStore { appState.flashcardStore }
+    private var store: any FlashcardRepository { appState.flashcardStore }
     
     var body: some View {
         NavigationStack {

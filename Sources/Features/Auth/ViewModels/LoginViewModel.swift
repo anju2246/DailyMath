@@ -13,32 +13,32 @@ class LoginViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var isAuthenticated = false
 
-    private var authService: AuthService
+    private var authService: any AuthRepository
     private var cancellables = Set<AnyCancellable>() 
 
-    init(authService: AuthService) {
+    init(authService: any AuthRepository = AuthService()) {
         self.authService = authService
         bind(to: authService)
     }
 
     /// Change the service instance (used when the view appears).
-    func update(authService: AuthService) {
-        guard self.authService !== authService else { return }
+    func update(authService: any AuthRepository) {
+        guard (self.authService as AnyObject) !== (authService as AnyObject) else { return }
         self.authService = authService
         cancellables.removeAll()
         bind(to: authService)
     }
 
-    private func bind(to service: AuthService) {
-        service.$isLoading
+    private func bind(to service: any AuthRepository) {
+        service.isLoadingPublisher
             .receive(on: RunLoop.main)
             .assign(to: &$isLoading)
 
-        service.$isAuthenticated
+        service.isAuthenticatedPublisher
             .receive(on: RunLoop.main)
             .assign(to: &$isAuthenticated)
 
-        service.$errorMessage
+        service.errorMessagePublisher
             .compactMap { $0 }
             .map { Toast(message: $0, style: .error) }
             .sink { [weak self] t in

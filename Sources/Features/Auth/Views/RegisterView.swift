@@ -5,23 +5,12 @@ import Combine
 
 struct RegisterView: View {
     @EnvironmentObject var appState: AppState
-    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = RegisterViewModel()
     
-    @State private var displayName = ""
-    @State private var email = ""
-    @State private var password = ""
-    @State private var confirmPassword = ""
-    @State private var university = ""
-    @State private var showPasswordMismatch = false
-    
-    private var authService: AuthService { appState.authService }
+    private var authService: any AuthRepository { appState.authService }
     
     private var isFormValid: Bool {
-        !displayName.isEmpty &&
-        !email.isEmpty &&
-        email.isValidEmail &&
-        password.count >= 6 &&
-        password == confirmPassword
+        viewModel.isFormValid
     }
     
     var body: some View {
@@ -48,7 +37,7 @@ struct RegisterView: View {
                         Text("Nombre")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        TextField("Tu nombre completo", text: $displayName)
+                        TextField("Tu nombre completo", text: $viewModel.displayName)
                             .textContentType(.name)
                             .textFieldStyle(.roundedBorder)
                     }
@@ -57,7 +46,7 @@ struct RegisterView: View {
                         Text("Email")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        TextField("correo@universidad.edu", text: $email)
+                        TextField("correo@universidad.edu", text: $viewModel.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
@@ -68,7 +57,7 @@ struct RegisterView: View {
                         Text("Universidad")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        TextField("Ej: Universidad del Quindío", text: $university)
+                        TextField("Ej: Universidad del Quindío", text: $viewModel.university)
                             .textFieldStyle(.roundedBorder)
                     }
                     
@@ -76,7 +65,7 @@ struct RegisterView: View {
                         Text("Contraseña")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        SecureField("Mínimo 6 caracteres", text: $password)
+                        SecureField("Mínimo 6 caracteres", text: $viewModel.password)
                             .textContentType(.newPassword)
                             .textFieldStyle(.roundedBorder)
                     }
@@ -85,40 +74,24 @@ struct RegisterView: View {
                         Text("Confirmar contraseña")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        SecureField("Repite tu contraseña", text: $confirmPassword)
+                        SecureField("Repite tu contraseña", text: $viewModel.confirmPassword)
                             .textContentType(.newPassword)
                             .textFieldStyle(.roundedBorder)
                     }
                     
-                    if showPasswordMismatch {
-                        Text("Las contraseñas no coinciden")
+                    if let toast = viewModel.toast {
+                        Text(toast.message)
                             .font(.caption)
-                            .foregroundStyle(.red)
-                    }
-                    
-                    if let error = authService.errorMessage {
-                        Text(error)
-                            .font(.caption)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(toast.style.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     
                     Button {
-                        if password != confirmPassword {
-                            showPasswordMismatch = true
-                            return
-                        }
-                        showPasswordMismatch = false
                         Task {
-                            try? await authService.signUp(
-                                email: email,
-                                password: password,
-                                username: email,
-                                displayName: displayName
-                            )
+                            await viewModel.register(authService: authService)
                         }
                     } label: {
-                        if authService.isLoading {
+                        if appState.isAuthLoading {
                             ProgressView()
                                 .tint(.white)
                                 .primaryButton()
@@ -127,7 +100,7 @@ struct RegisterView: View {
                                 .primaryButton()
                         }
                     }
-                    .disabled(!isFormValid || authService.isLoading)
+                    .disabled(!isFormValid || appState.isAuthLoading)
                 }
                 .padding(.horizontal)
             }

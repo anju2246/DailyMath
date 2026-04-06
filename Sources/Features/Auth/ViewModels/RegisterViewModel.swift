@@ -19,7 +19,7 @@ class RegisterViewModel: ObservableObject {
         password == confirmPassword
     }
 
-    func register(authService: AuthService) async {
+    func register(authService: any AuthRepository) async {
         let trimmedName  = displayName.trimmingCharacters(in: .whitespaces)
         let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
 

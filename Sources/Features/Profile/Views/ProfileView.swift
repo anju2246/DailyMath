@@ -97,7 +97,7 @@ struct ProfileView: View {
                     // Danger zone
                     VStack(spacing: 2) {
                         MenuRow(icon: "rectangle.portrait.and.arrow.right", title: "Cerrar sesión", color: .secondary) {
-                            Task { try? await appState.authService.signOut() }
+                            Task { try? await appState.signOut() }
                         }
                         
                         MenuRow(icon: "trash", title: "Eliminar cuenta", color: .red) {
@@ -113,7 +113,7 @@ struct ProfileView: View {
             .alert("¿Eliminar cuenta?", isPresented: $showDeleteConfirmation) {
                 Button("Cancelar", role: .cancel) { }
                 Button("Eliminar", role: .destructive) {
-                    Task { try? await appState.authService.deleteAccount() }
+                    Task { try? await appState.deleteAccount() }
                 }
             } message: {
                 Text("Esta acción es permanente. Se eliminarán todos tus datos.")

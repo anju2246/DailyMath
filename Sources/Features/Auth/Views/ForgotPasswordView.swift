@@ -6,16 +6,14 @@ import Combine
 struct ForgotPasswordView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = ForgotPasswordViewModel()
     
-    @State private var email = ""
-    @State private var emailSent = false
-    
-    private var authService: AuthService { appState.authService }
+    private var authService: any AuthRepository { appState.authService }
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                if emailSent {
+                if viewModel.emailSent {
                     // Success state
                     VStack(spacing: 16) {
                         Image(systemName: "envelope.badge.shield.half.filled")
@@ -25,7 +23,7 @@ struct ForgotPasswordView: View {
                         Text("¡Correo enviado!")
                             .font(.title2.bold())
                         
-                        Text("Revisa tu bandeja de entrada en **\(email)** para restablecer tu contraseña.")
+                        Text("Revisa tu bandeja de entrada en **\(viewModel.email)** para restablecer tu contraseña.")
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
                         
@@ -50,26 +48,25 @@ struct ForgotPasswordView: View {
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                         
-                        TextField("Tu email", text: $email)
+                        TextField("Tu email", text: $viewModel.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .textFieldStyle(.roundedBorder)
                             .padding(.top, 8)
                         
-                        if let error = authService.errorMessage {
-                            Text(error)
+                        if let toast = viewModel.toast {
+                            Text(toast.message)
                                 .font(.caption)
-                                .foregroundStyle(.red)
+                                .foregroundStyle(toast.style.color)
                         }
                         
                         Button {
                             Task {
-                                try await authService.resetPassword(email: email)
-                                emailSent = true
+                                await viewModel.resetPassword(authService: authService)
                             }
                         } label: {
-                            if authService.isLoading {
+                            if appState.isAuthLoading {
                                 ProgressView()
                                     .tint(.white)
                                     .primaryButton()
@@ -78,7 +75,7 @@ struct ForgotPasswordView: View {
                                     .primaryButton()
                             }
                         }
-                        .disabled(!email.isValidEmail || authService.isLoading)
+                        .disabled(!viewModel.email.isValidEmail || appState.isAuthLoading)
                     }
                     .padding()
                 }
