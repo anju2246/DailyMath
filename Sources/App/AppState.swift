@@ -7,6 +7,8 @@ import Combine
 class AppState: ObservableObject {
     let authService: any AuthRepository
     let flashcardStore: any FlashcardRepository
+    private let sessionStore = SessionRepository.shared
+    
     /// Mirror of the authentication state for easier bindings/publishing.
     @Published private(set) var isAuthenticated = false
     
@@ -22,12 +24,32 @@ class AppState: ObservableObject {
     ) {
         self.authService = authService
         self.flashcardStore = flashcardStore
+        
+        // Cargar estado inicial desde persistencia
+        self.isAuthenticated = sessionStore.isLoggedIn
 
         // Forward AuthService changes so SwiftUI re-evaluates the view tree
         authService.objectWillChangePublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
-                self?.objectWillChange.send()
+                guard let self = self else { return }
+                // Persistir cambios de sesión si el usuario cambia
+                if let user = self.authService.currentUser {
+                    self.sessionStore.saveSession(userId: user.id.uuidString, isModerator: user.isModerator)
+                }
+                self.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+
+        // Escuchar cambios en la autenticación para persistencia
+        authService.isAuthenticatedPublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] auth in
+                guard let self = self else { return }
+                self.isAuthenticated = auth
+                if !auth {
+                    self.sessionStore.clearSession()
+                }
             }
             .store(in: &cancellables)
 
@@ -38,18 +60,15 @@ class AppState: ObservableObject {
                 self?.objectWillChange.send()
             }
             .store(in: &cancellables)
-
-        // also keep the simple Bool up-to-date
-        authService.isAuthenticatedPublisher
-            .receive(on: RunLoop.main)
-            .assign(to: &$isAuthenticated)
     }
 
     func signOut() async throws {
         try await authService.signOut()
+        sessionStore.clearSession()
     }
 
     func deleteAccount() async throws {
         try await authService.deleteAccount()
+        sessionStore.clearSession()
     }
 }

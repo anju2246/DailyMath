@@ -43,6 +43,8 @@ enum L10n {
     static let tabCreate = tr("tabs.create")
     static let tabAgility = tr("tabs.agility")
     static let tabChallenges = tr("tabs.challenges")
+    static let tabLeaderboard = tr("tabs.leaderboard")
+    static let tabModerator = tr("tabs.moderator")
     static let tabProfile = tr("tabs.profile")
 
     // MARK: - Auth Views

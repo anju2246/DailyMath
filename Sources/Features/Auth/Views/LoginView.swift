@@ -74,6 +74,41 @@ struct LoginView: View {
                         }
                         .disabled(!viewModel.isFormValid || viewModel.isLoading)
 
+                        // MARK: - Demo Access Panel
+                        VStack(spacing: 8) {
+                            Text("Acceso Rápido (Demo)")
+                                .font(.caption2.bold())
+                                .foregroundStyle(.tertiary)
+                                .textCase(.uppercase)
+
+                            HStack(spacing: 12) {
+                                Button {
+                                    viewModel.email = "estudiante@dailymath.com"
+                                    viewModel.password = "password123"
+                                    Task { await viewModel.login() }
+                                } label: {
+                                    Label("Estudiante", systemImage: "person.circle")
+                                        .font(.caption)
+                                        .padding(8)
+                                        .background(Color.blue.opacity(0.1))
+                                        .cornerRadius(8)
+                                }
+
+                                Button {
+                                    viewModel.email = "moderador@dailymath.com"
+                                    viewModel.password = "password123"
+                                    Task { await viewModel.login() }
+                                } label: {
+                                    Label("Moderador", systemImage: "shield.lefthalf.filled")
+                                        .font(.caption)
+                                        .padding(8)
+                                        .background(Color.orange.opacity(0.1))
+                                        .cornerRadius(8)
+                                }
+                            }
+                        }
+                        .padding(.vertical, 8)
+
                         Button(L10n.authForgotPassword) {
                             navigation.presentAuthSheet(.forgotPassword)
                         }

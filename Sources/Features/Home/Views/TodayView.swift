@@ -5,6 +5,7 @@ import SwiftUI
 struct TodayView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var navigation: AppNavigationCoordinator
+    @State private var showNotifications = false
 
     private var store: any FlashcardRepository { appState.flashcardStore }
 
@@ -129,6 +130,17 @@ struct TodayView: View {
         }
         .navigationTitle(L10n.tabToday)
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showNotifications = true
+                } label: {
+                    Image(systemName: "bell.badge.fill")
+                        .foregroundStyle(.orange)
+                        .font(.headline)
+                }
+            }
+        }
         .fullScreenCover(item: $navigation.homeFullScreen) { screen in
             switch screen {
             case .flashcardQuiz:
@@ -144,6 +156,9 @@ struct TodayView: View {
                     .environmentObject(appState)
                     .environmentObject(navigation)
             }
+        }
+        .sheet(isPresented: $showNotifications) {
+            NotificationsView()
         }
     }
 

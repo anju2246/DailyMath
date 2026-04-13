@@ -16,6 +16,8 @@ final class AppNavigationCoordinator: ObservableObject {
     @Published var agilityPath = NavigationPath()
     @Published var profilePath = NavigationPath()
     @Published var challengesPath = NavigationPath()
+    @Published var leaderboardPath = NavigationPath()
+    @Published var moderatorPath = NavigationPath()
 
     func pushAuth(_ route: AuthRoute) {
         authPath.append(route)
@@ -69,5 +71,7 @@ final class AppNavigationCoordinator: ObservableObject {
         agilityPath = NavigationPath()
         profilePath = NavigationPath()
         challengesPath = NavigationPath()
+        leaderboardPath = NavigationPath()
+        moderatorPath = NavigationPath()
     }
 }

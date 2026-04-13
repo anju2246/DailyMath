@@ -18,6 +18,9 @@ class AuthService: ObservableObject {
     func signIn(email: String, password: String) async throws {
         await MainActor.run { isLoading = true }
         try await Task.sleep(nanoseconds: 0)
+        
+        let isModerator = email == "moderador@dailymath.com"
+        
         await MainActor.run {
                 self.currentUser = UserProfile(
                     id: UUID(),
@@ -30,7 +33,7 @@ class AuthService: ObservableObject {
                     reputation: 150,
                     points: 1200,
                     studyStreak: 5,
-                    isModerator: false,
+                    isModerator: isModerator,
                     createdAt: Date()
                 )
             self.isAuthenticated = true

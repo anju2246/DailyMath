@@ -3,62 +3,69 @@ import SwiftUI
 // MARK: - Main Tab Navigation
 
 struct MainTabView: View {
+    @EnvironmentObject var appState: AppState
     @EnvironmentObject var navigation: AppNavigationCoordinator
     
     var body: some View {
         TabView(selection: $navigation.selectedTab) {
-            NavigationStack(path: $navigation.homePath) {
-                TodayView()
-            }
+            // MARK: - Standard User Tabs
+            if !appState.isModerator {
+                NavigationStack(path: $navigation.homePath) {
+                    TodayView()
+                }
                 .tabItem {
                     Label(L10n.tabToday, systemImage: "calendar.badge.clock")
                 }
                 .tag(MainTab.today)
-            
-            NavigationStack(path: $navigation.communityPath) {
-                ExploreView()
-                    .navigationDestination(for: CommunityRoute.self) { route in
-                        switch route {
-                        case let .exerciseDetail(id):
-                            CommunityExerciseDetailView(exerciseId: id)
+                
+                NavigationStack(path: $navigation.communityPath) {
+                    ExploreView()
+                        .navigationDestination(for: CommunityRoute.self) { route in
+                            switch route {
+                            case let .exerciseDetail(id):
+                                CommunityExerciseDetailView(exerciseId: id)
+                            }
                         }
-                    }
-            }
+                }
                 .tabItem {
                     Label(L10n.tabExplore, systemImage: "magnifyingglass")
                 }
                 .tag(MainTab.explore)
-            
-            NavigationStack(path: $navigation.createPath) {
-                CreateExerciseView()
-            }
-                .tabItem {
-                    Label(L10n.tabCreate, systemImage: "plus.circle.fill")
+                
+                NavigationStack(path: $navigation.leaderboardPath) {
+                    LeaderboardView()
                 }
-                .tag(MainTab.create)
-            
-            NavigationStack(path: $navigation.agilityPath) {
-                AgilityView()
-            }
                 .tabItem {
-                    Label(L10n.tabAgility, systemImage: "brain")
+                    Label(L10n.tabLeaderboard, systemImage: "star.bubble.fill")
                 }
-                .tag(MainTab.agility)
-
-            NavigationStack(path: $navigation.challengesPath) {
-                ChallengesHubView()
-                    .navigationDestination(for: ChallengesRoute.self) { route in
-                        switch route {
-                        case .duelLobby:
-                            DuelLobbyView()
+                .tag(MainTab.leaderboard)
+                
+                NavigationStack(path: $navigation.challengesPath) {
+                    ChallengesHubView()
+                        .navigationDestination(for: ChallengesRoute.self) { route in
+                            switch route {
+                            case .duelLobby:
+                                DuelLobbyView()
+                            }
                         }
-                    }
-            }
+                }
                 .tabItem {
                     Label(L10n.tabChallenges, systemImage: "flag.checkered")
                 }
                 .tag(MainTab.challenges)
+                
+            } else {
+                // MARK: - Moderator Specific Tabs
+                NavigationStack(path: $navigation.moderatorPath) {
+                    ModeratorDashboardView()
+                }
+                .tabItem {
+                    Label(L10n.tabModerator, systemImage: "checkmark.seal.fill")
+                }
+                .tag(MainTab.moderator)
+            }
             
+            // MARK: - Common Tabs (Profile)
             NavigationStack(path: $navigation.profilePath) {
                 ProfileView()
                     .navigationDestination(for: ProfileRoute.self) { route in
@@ -74,10 +81,10 @@ struct MainTabView: View {
                         }
                     }
             }
-                .tabItem {
-                    Label(L10n.tabProfile, systemImage: "person.circle")
-                }
-                .tag(MainTab.profile)
+            .tabItem {
+                Label(L10n.tabProfile, systemImage: "person.circle")
+            }
+            .tag(MainTab.profile)
         }
         .tint(.dmPrimary)
         .onAppear {

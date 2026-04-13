@@ -6,7 +6,9 @@ enum MainTab: Int, Hashable {
     case create = 2
     case agility = 3
     case challenges = 4
-    case profile = 5
+    case leaderboard = 5
+    case profile = 6
+    case moderator = 7
 }
 
 enum AuthRoute: Hashable {

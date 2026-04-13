@@ -80,7 +80,7 @@ struct FlashcardQuizView: View {
                     .foregroundStyle(.tint)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(Color.accentColor.opacity(0.1))
+                    .background(Color.dmPrimary.opacity(0.1))
                     .cornerRadius(20)
             }
             

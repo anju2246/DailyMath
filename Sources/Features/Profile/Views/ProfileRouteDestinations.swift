@@ -35,15 +35,3 @@ struct ProfileStatsView: View {
         .navigationTitle(L10n.profileStats)
     }
 }
-
-struct ModeratorDashboardView: View {
-    var body: some View {
-        List {
-            Section(L10n.profileModeratorTitle) {
-                Text(L10n.profileModeratorPlaceholder)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .navigationTitle(L10n.profileModeratorTitle)
-    }
-}
