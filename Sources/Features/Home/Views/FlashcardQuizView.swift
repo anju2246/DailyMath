@@ -58,13 +58,13 @@ struct FlashcardQuizView: View {
             
             // Counter
             HStack {
-                Text("\(currentIndex + 1) de \(cards.count)")
+                Text(L10n.quizProgress(currentIndex + 1, cards.count))
                     .font(.subheadline.bold())
                     .foregroundStyle(.secondary)
                 
                 Spacer()
                 
-                Label("\(correctCount) correctas", systemImage: "checkmark.circle.fill")
+                Label(L10n.quizCorrectCount(correctCount), systemImage: "checkmark.circle.fill")
                     .font(.subheadline.bold())
                     .foregroundStyle(.green)
             }
@@ -108,7 +108,7 @@ struct FlashcardQuizView: View {
                 Button {
                     nextCard()
                 } label: {
-                    Text("CONTINUAR")
+                    Text(L10n.commonContinueUppercase)
                         .font(.headline.bold())
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -121,11 +121,11 @@ struct FlashcardQuizView: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .navigationTitle("Quiz")
+        .navigationTitle(L10n.quizTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("Salir") { dismiss() }
+                Button(L10n.quizExit) { dismiss() }
             }
         }
         .onAppear {
@@ -219,23 +219,23 @@ struct FlashcardQuizView: View {
                 .font(.system(size: 72))
                 .foregroundStyle(.yellow)
             
-            Text("¡Quiz Terminado!")
+            Text(L10n.quizFinishedTitle)
                 .font(.largeTitle.bold())
             
             // Score
             VStack(spacing: 8) {
-                Text("\(correctCount)/\(cards.count)")
+                Text(L10n.quizScore(correctCount, cards.count))
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundStyle(.green)
                 
-                Text("respuestas correctas")
+                Text(L10n.quizCorrectAnswers)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
             
             // Percentage
             let pct = cards.isEmpty ? 0 : Int((Double(correctCount) / Double(cards.count)) * 100)
-            Text("\(pct)%")
+            Text(L10n.quizPercentage(pct))
                 .font(.title.bold())
                 .foregroundStyle(pct >= 80 ? .green : pct >= 50 ? .orange : .red)
             
@@ -244,13 +244,13 @@ struct FlashcardQuizView: View {
             Button {
                 dismiss()
             } label: {
-                Text("Volver")
+                Text(L10n.quizBack)
                     .primaryButton()
             }
             .padding(.horizontal)
             .padding(.bottom, 32)
         }
-        .navigationTitle("Resultado")
+        .navigationTitle(L10n.quizResultTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
     

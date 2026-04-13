@@ -6,10 +6,10 @@ struct ChallengesHubView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text("Desafíos")
+                Text(L10n.challengesTitle)
                     .font(.largeTitle.bold())
 
-                Text("Compite en duelos 1v1 y torneos semanales.")
+                Text(L10n.challengesSubtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
@@ -17,7 +17,7 @@ struct ChallengesHubView: View {
                     navigation.pushChallenges(.duelLobby)
                 } label: {
                     HStack {
-                        Label("Entrar a lobby 1v1", systemImage: "bolt.shield.fill")
+                        Label(L10n.challengesEnterLobby, systemImage: "bolt.shield.fill")
                         Spacer()
                         Image(systemName: "chevron.right")
                     }
@@ -26,6 +26,6 @@ struct ChallengesHubView: View {
             }
             .padding()
         }
-        .navigationTitle("Desafíos")
+        .navigationTitle(L10n.challengesTitle)
     }
 }

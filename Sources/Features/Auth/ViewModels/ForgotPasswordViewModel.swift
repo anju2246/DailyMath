@@ -13,18 +13,18 @@ class ForgotPasswordViewModel: ObservableObject {
         let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
 
         guard !trimmedEmail.isEmpty else {
-            toast = Toast(message: "El email es obligatorio", style: .warning)
+            toast = Toast(message: L10n.authValidationEmailRequired, style: .warning)
             return
         }
         guard trimmedEmail.isValidEmail else {
-            toast = Toast(message: "Ingresa un email válido", style: .error)
+            toast = Toast(message: L10n.authValidationEmailInvalid, style: .error)
             return
         }
 
         do {
             try await authService.resetPassword(email: trimmedEmail)
             emailSent = true
-            toast = Toast(message: "Enlace enviado a \(trimmedEmail)", style: .success)
+            toast = Toast(message: L10n.authResetSentTo(trimmedEmail), style: .success)
         } catch {
             toast = Toast(message: error.localizedDescription, style: .error)
         }

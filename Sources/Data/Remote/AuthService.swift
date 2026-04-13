@@ -11,7 +11,7 @@ class AuthService: ObservableObject {
         case notImplemented
         
         var errorDescription: String? {
-            return "Versión de prueba. Ingresa con cualquier dato."
+            return L10n.authDemoError
         }
     }
     
@@ -22,11 +22,11 @@ class AuthService: ObservableObject {
                 self.currentUser = UserProfile(
                     id: UUID(),
                     email: email,
-                    username: "demo_user",
-                    displayName: "Usuario Demo",
+                    username: L10n.authDemoUsername,
+                    displayName: L10n.authDemoDisplayName,
                     avatarUrl: nil,
                     bio: nil,
-                    university: "Universidad Demo",
+                    university: L10n.authDemoUniversity,
                     reputation: 150,
                     points: 1200,
                     studyStreak: 5,

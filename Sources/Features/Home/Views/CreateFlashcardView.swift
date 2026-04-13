@@ -26,8 +26,8 @@ struct CreateFlashcardView: View {
         NavigationStack {
             Form {
                 // Category
-                Section("Categoría") {
-                    Picker("Categoría", selection: $selectedCategory) {
+                Section(L10n.flashcardCategorySection) {
+                    Picker(L10n.commonCategory, selection: $selectedCategory) {
                         ForEach(AppConstants.Category.allCases, id: \.self) { cat in
                             Label(cat.displayName, systemImage: cat.icon)
                                 .tag(cat)
@@ -37,8 +37,8 @@ struct CreateFlashcardView: View {
                 }
                 
                 // Question
-                Section("Pregunta") {
-                    TextField("Ej: ¿Cuál es la derivada de x²?", text: $question, axis: .vertical)
+                Section(L10n.flashcardQuestionSection) {
+                    TextField(L10n.flashcardQuestionPlaceholder, text: $question, axis: .vertical)
                         .lineLimit(3...6)
                 }
                 
@@ -47,10 +47,10 @@ struct CreateFlashcardView: View {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
-                        TextField("Respuesta correcta", text: $correctAnswer)
+                        TextField(L10n.flashcardCorrectAnswerPlaceholder, text: $correctAnswer)
                     }
                 } header: {
-                    Label("Respuesta Correcta", systemImage: "checkmark.seal.fill")
+                    Label(L10n.flashcardCorrectAnswerHeader, systemImage: "checkmark.seal.fill")
                         .foregroundStyle(.green)
                 }
                 
@@ -59,20 +59,20 @@ struct CreateFlashcardView: View {
                     HStack {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.red)
-                        TextField("Opción incorrecta 1", text: $wrongAnswer1)
+                        TextField(L10n.flashcardWrongOption1, text: $wrongAnswer1)
                     }
                     HStack {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.red)
-                        TextField("Opción incorrecta 2", text: $wrongAnswer2)
+                        TextField(L10n.flashcardWrongOption2, text: $wrongAnswer2)
                     }
                     HStack {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.red)
-                        TextField("Opción incorrecta 3", text: $wrongAnswer3)
+                        TextField(L10n.flashcardWrongOption3, text: $wrongAnswer3)
                     }
                 } header: {
-                    Label("Opciones Incorrectas", systemImage: "xmark.seal.fill")
+                    Label(L10n.flashcardWrongAnswersHeader, systemImage: "xmark.seal.fill")
                         .foregroundStyle(.red)
                 }
                 
@@ -83,7 +83,7 @@ struct CreateFlashcardView: View {
                     } label: {
                         HStack {
                             Spacer()
-                            Label("Guardar Flashcard", systemImage: "plus.circle.fill")
+                            Label(L10n.flashcardSave, systemImage: "plus.circle.fill")
                                 .font(.headline.bold())
                             Spacer()
                         }
@@ -91,18 +91,18 @@ struct CreateFlashcardView: View {
                     .disabled(!isFormValid)
                 }
             }
-            .navigationTitle("Nueva Flashcard")
+            .navigationTitle(L10n.flashcardNewTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancelar") { dismiss() }
+                    Button(L10n.commonCancel) { dismiss() }
                 }
             }
-            .alert("¡Flashcard Guardada!", isPresented: $showSaved) {
-                Button("Crear otra") { resetForm() }
-                Button("Listo") { dismiss() }
+            .alert(L10n.flashcardSavedTitle, isPresented: $showSaved) {
+                Button(L10n.commonCreateAnother) { resetForm() }
+                Button(L10n.commonDone) { dismiss() }
             } message: {
-                Text("Tu flashcard fue agregada al deck. La verás en tu próximo quiz.")
+                Text(L10n.flashcardSavedMessage)
             }
         }
     }

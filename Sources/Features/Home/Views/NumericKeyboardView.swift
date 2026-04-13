@@ -65,7 +65,7 @@ struct NumericKeyboardView: View {
                     onSubmit()
                 }
             } label: {
-                Text("ENVIAR")
+                Text(L10n.commonSendUppercase)
                     .font(.headline.bold())
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)

@@ -6,21 +6,21 @@ struct CommunityExerciseDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Label("Detalle de ejercicio", systemImage: "doc.text.magnifyingglass")
+                Label(L10n.communityDetailTitle, systemImage: "doc.text.magnifyingglass")
                     .font(.title3.bold())
 
-                Text("ID: \(exerciseId.uuidString)")
+                Text(L10n.communityDetailId(exerciseId.uuidString))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
 
-                Text("Este es el primer flujo conectado a CommunityRoute. Aquí se mostrará el enunciado, votos, comentarios y solución cuando se conecte el repositorio de comunidad.")
+                Text(L10n.communityDetailPlaceholder)
                     .font(.body)
                     .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
         }
-        .navigationTitle("Ejercicio")
+        .navigationTitle(L10n.communityExerciseTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

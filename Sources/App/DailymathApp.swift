@@ -24,7 +24,7 @@ struct DailyMathApp: App {
                                     endPoint: .bottomTrailing
                                 )
                             )
-                        Text("DailyMath")
+                        Text(L10n.appName)
                             .font(.largeTitle.bold())
                         ProgressView()
                     }

@@ -20,14 +20,14 @@ struct ForgotPasswordView: View {
                             .font(.system(size: 64))
                             .foregroundStyle(.green)
                         
-                        Text("¡Correo enviado!")
+                        Text(L10n.authForgotSuccessTitle)
                             .font(.title2.bold())
                         
-                        Text("Revisa tu bandeja de entrada en **\(viewModel.email)** para restablecer tu contraseña.")
+                        Text(L10n.authForgotSuccessBody(viewModel.email))
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
                         
-                        Button("Volver al login") {
+                        Button(L10n.authForgotBackToLogin) {
                             dismiss()
                         }
                         .secondaryButton()
@@ -40,15 +40,15 @@ struct ForgotPasswordView: View {
                             .font(.system(size: 48))
                             .foregroundStyle(.tint)
                         
-                        Text("Recuperar Contraseña")
+                        Text(L10n.authForgotHeading)
                             .font(.title2.bold())
                         
-                        Text("Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.")
+                        Text(L10n.authForgotDescription)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                         
-                        TextField("Tu email", text: $viewModel.email)
+                        TextField(L10n.authForgotEmailPlaceholder, text: $viewModel.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
@@ -71,7 +71,7 @@ struct ForgotPasswordView: View {
                                     .tint(.white)
                                     .primaryButton()
                             } else {
-                                Text("Enviar enlace")
+                                Text(L10n.authForgotSendLink)
                                     .primaryButton()
                             }
                         }
@@ -82,11 +82,11 @@ struct ForgotPasswordView: View {
                 
                 Spacer()
             }
-            .navigationTitle("Recuperar contraseña")
+            .navigationTitle(L10n.authForgotTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cerrar") {
+                    Button(L10n.commonClose) {
                         dismiss()
                     }
                 }

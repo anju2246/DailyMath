@@ -25,12 +25,12 @@ class NotificationService {
         center.removePendingNotificationRequests(withIdentifiers: ["dailymath_reminder"])
         
         let content = UNMutableNotificationContent()
-        content.title = "📚 DailyMath"
+        content.title = L10n.notificationTitle
         
         if dueCount > 0 {
-            content.body = "Tienes \(dueCount) tarjetas pendientes por repasar. ¡No pierdas tu racha!"
+            content.body = L10n.notificationDueCards(dueCount)
         } else {
-            content.body = "¡Es hora de tu repaso diario de matemáticas! 🧮"
+            content.body = L10n.notificationDailyReminder
         }
         content.sound = .default
         content.badge = NSNumber(value: dueCount)

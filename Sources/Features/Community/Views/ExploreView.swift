@@ -15,7 +15,7 @@ struct ExploreView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     FilterChip(
-                        title: "Todos",
+                        title: L10n.communityAll,
                         isSelected: selectedCategory == nil
                     ) {
                         selectedCategory = nil
@@ -44,10 +44,10 @@ struct ExploreView: View {
                             .font(.system(size: 48))
                             .foregroundStyle(.secondary)
                         
-                        Text("No hay ejercicios aún")
+                        Text(L10n.communityNoExercises)
                             .font(.headline)
                         
-                        Text("Sé el primero en crear un ejercicio para la comunidad")
+                        Text(L10n.communityCreateFirstExercise)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -55,7 +55,7 @@ struct ExploreView: View {
                         Button {
                             navigation.pushCommunity(.exerciseDetail(id: sampleExerciseID))
                         } label: {
-                            Text("Ver ejercicio de ejemplo")
+                            Text(L10n.communityViewExample)
                                 .secondaryButton()
                         }
                     }
@@ -65,8 +65,8 @@ struct ExploreView: View {
                 .padding(.horizontal)
             }
         }
-        .navigationTitle("Explorar")
-        .searchable(text: $searchText, prompt: "Buscar ejercicios...")
+        .navigationTitle(L10n.communityExploreTitle)
+        .searchable(text: $searchText, prompt: L10n.communitySearchPrompt)
     }
 }
 

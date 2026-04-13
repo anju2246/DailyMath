@@ -3,47 +3,47 @@ import SwiftUI
 struct ProfileEditView: View {
     var body: some View {
         List {
-            Section("Perfil") {
-                Text("Pantalla base de edición de perfil")
+            Section(L10n.profileTitle) {
+                Text(L10n.profileEditPlaceholder)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Editar perfil")
+        .navigationTitle(L10n.profileEdit)
     }
 }
 
 struct ProfileBadgesView: View {
     var body: some View {
         List {
-            Section("Insignias") {
-                Text("Pantalla base de insignias")
+            Section(L10n.profileBadges) {
+                Text(L10n.profileBadgesPlaceholder)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Insignias")
+        .navigationTitle(L10n.profileBadges)
     }
 }
 
 struct ProfileStatsView: View {
     var body: some View {
         List {
-            Section("Estadísticas") {
-                Text("Pantalla base de estadísticas")
+            Section(L10n.profileStats) {
+                Text(L10n.profileStatsPlaceholder)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Estadísticas")
+        .navigationTitle(L10n.profileStats)
     }
 }
 
 struct ModeratorDashboardView: View {
     var body: some View {
         List {
-            Section("Moderación") {
-                Text("Pantalla base del panel de moderación")
+            Section(L10n.profileModeratorTitle) {
+                Text(L10n.profileModeratorPlaceholder)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Moderador")
+        .navigationTitle(L10n.profileModeratorTitle)
     }
 }

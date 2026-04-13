@@ -11,10 +11,10 @@ struct CreateExerciseView: View {
     
     var body: some View {
         Form {
-            Section("Información del ejercicio") {
-                TextField("Título", text: $title)
+            Section(L10n.communityCreateInfoSection) {
+                TextField(L10n.commonTitle, text: $title)
                 
-                Picker("Categoría", selection: $selectedCategory) {
+                Picker(L10n.commonCategory, selection: $selectedCategory) {
                     ForEach(AppConstants.Category.allCases, id: \.self) { category in
                         Label(category.displayName, systemImage: category.icon)
                             .tag(category)
@@ -22,12 +22,12 @@ struct CreateExerciseView: View {
                 }
             }
             
-            Section("Enunciado") {
+            Section(L10n.communityCreateStatement) {
                 TextEditor(text: $statement)
                     .frame(minHeight: 100)
             }
             
-            Section("Solución") {
+            Section(L10n.communityCreateSolution) {
                 TextEditor(text: $solution)
                     .frame(minHeight: 100)
             }
@@ -39,23 +39,23 @@ struct CreateExerciseView: View {
                 } label: {
                     HStack {
                         Spacer()
-                        Label("Publicar ejercicio", systemImage: "paperplane.fill")
+                        Label(L10n.communityPublish, systemImage: "paperplane.fill")
                             .font(.headline)
                         Spacer()
                     }
                 }
                 .disabled(title.isEmpty || statement.isEmpty || solution.isEmpty)
             } footer: {
-                Text("Tu ejercicio será revisado por un moderador antes de aparecer en el feed público.")
+                Text(L10n.communityPublishFooter)
             }
         }
-        .navigationTitle("Crear Ejercicio")
-        .alert("¡Ejercicio publicado!", isPresented: $showSuccess) {
-            Button("OK") {
+        .navigationTitle(L10n.communityCreateTitle)
+        .alert(L10n.communityPublishedTitle, isPresented: $showSuccess) {
+            Button(L10n.commonOk) {
                 clearForm()
             }
         } message: {
-            Text("Tu ejercicio está pendiente de verificación por un moderador.")
+            Text(L10n.communityPublishedMessage)
         }
     }
     

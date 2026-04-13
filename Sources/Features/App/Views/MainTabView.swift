@@ -11,7 +11,7 @@ struct MainTabView: View {
                 TodayView()
             }
                 .tabItem {
-                    Label("Hoy", systemImage: "calendar.badge.clock")
+                    Label(L10n.tabToday, systemImage: "calendar.badge.clock")
                 }
                 .tag(MainTab.today)
             
@@ -25,7 +25,7 @@ struct MainTabView: View {
                     }
             }
                 .tabItem {
-                    Label("Explorar", systemImage: "magnifyingglass")
+                    Label(L10n.tabExplore, systemImage: "magnifyingglass")
                 }
                 .tag(MainTab.explore)
             
@@ -33,7 +33,7 @@ struct MainTabView: View {
                 CreateExerciseView()
             }
                 .tabItem {
-                    Label("Crear", systemImage: "plus.circle.fill")
+                    Label(L10n.tabCreate, systemImage: "plus.circle.fill")
                 }
                 .tag(MainTab.create)
             
@@ -41,7 +41,7 @@ struct MainTabView: View {
                 AgilityView()
             }
                 .tabItem {
-                    Label("Agilidad", systemImage: "brain")
+                    Label(L10n.tabAgility, systemImage: "brain")
                 }
                 .tag(MainTab.agility)
 
@@ -55,7 +55,7 @@ struct MainTabView: View {
                     }
             }
                 .tabItem {
-                    Label("Desafíos", systemImage: "flag.checkered")
+                    Label(L10n.tabChallenges, systemImage: "flag.checkered")
                 }
                 .tag(MainTab.challenges)
             
@@ -75,7 +75,7 @@ struct MainTabView: View {
                     }
             }
                 .tabItem {
-                    Label("Perfil", systemImage: "person.circle")
+                    Label(L10n.tabProfile, systemImage: "person.circle")
                 }
                 .tag(MainTab.profile)
         }

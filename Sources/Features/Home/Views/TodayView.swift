@@ -13,10 +13,10 @@ struct TodayView: View {
             VStack(spacing: 20) {
                 // Header greeting
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("¡Hola, \(appState.currentUser?.displayName ?? "")!")
+                    Text(L10n.homeGreeting(appState.currentUser?.displayName ?? L10n.commonUser))
                         .font(.title.bold())
 
-                    Text("Tus tarjetas de repaso del día")
+                    Text(L10n.homeDailyCardsSubtitle)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -27,19 +27,19 @@ struct TodayView: View {
                 HStack(spacing: 12) {
                     statBadge(
                         value: "\(store.dueFlashcards.count)",
-                        label: "Pendientes",
+                        label: L10n.homePending,
                         icon: "clock.fill",
                         color: .orange
                     )
                     statBadge(
                         value: "\(store.totalReviewedToday)",
-                        label: "Repasadas hoy",
+                        label: L10n.commonReviewedToday,
                         icon: "checkmark.circle.fill",
                         color: .green
                     )
                     statBadge(
                         value: "\(store.flashcards.count)",
-                        label: "Total",
+                        label: L10n.commonTotal,
                         icon: "rectangle.stack.fill",
                         color: .blue
                     )
@@ -55,9 +55,9 @@ struct TodayView: View {
                             Image(systemName: "play.circle.fill")
                                 .font(.title2)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Comenzar Quiz")
+                                Text(L10n.homeStartQuiz)
                                     .font(.headline.bold())
-                                Text("\(store.dueFlashcards.count) tarjetas pendientes")
+                                Text(L10n.homePendingCards(store.dueFlashcards.count))
                                     .font(.caption)
                                     .opacity(0.8)
                             }
@@ -81,13 +81,13 @@ struct TodayView: View {
                 // Flashcard list
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
-                        Text("Mis Flashcards")
+                        Text(L10n.homeMyFlashcards)
                             .font(.headline)
                         Spacer()
                         Button {
                             navigation.presentHomeSheet(.createFlashcard)
                         } label: {
-                            Label("Nueva", systemImage: "plus.circle.fill")
+                            Label(L10n.homeNew, systemImage: "plus.circle.fill")
                                 .font(.subheadline.bold())
                         }
                     }
@@ -99,10 +99,10 @@ struct TodayView: View {
                                 .font(.system(size: 48))
                                 .foregroundStyle(.secondary)
 
-                            Text("No hay flashcards aún")
+                            Text(L10n.homeNoFlashcards)
                                 .font(.headline)
 
-                            Text("Crea tu primera flashcard para empezar a estudiar")
+                            Text(L10n.homeCreateFirstFlashcard)
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)
@@ -110,7 +110,7 @@ struct TodayView: View {
                             Button {
                                 navigation.presentHomeSheet(.createFlashcard)
                             } label: {
-                                Text("+ Crear Flashcard")
+                                Text(L10n.homeCreateFlashcardCta)
                                     .secondaryButton()
                             }
                         }
@@ -127,7 +127,7 @@ struct TodayView: View {
             .padding(.top)
             .padding(.bottom, 40)
         }
-        .navigationTitle("Hoy")
+        .navigationTitle(L10n.tabToday)
         .navigationBarTitleDisplayMode(.large)
         .fullScreenCover(item: $navigation.homeFullScreen) { screen in
             switch screen {
@@ -185,7 +185,7 @@ struct TodayView: View {
                             .foregroundStyle(.tint)
                     }
 
-                    Text(card.isDueToday ? "Pendiente" : "Próximo: \(card.nextReviewDate.shortFormatted)")
+                    Text(card.isDueToday ? L10n.homeDue : L10n.homeNextReview(card.nextReviewDate.shortFormatted))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }

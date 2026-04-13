@@ -4,7 +4,7 @@ import Combine
 // MARK: - App Constants
 
 enum AppConstants {
-    static let appName = "DailyMath"
+    static let appName = L10n.appName
     
     // Categorías de ejercicios
     enum Category: String, CaseIterable, Codable {
@@ -17,12 +17,12 @@ enum AppConstants {
         
         var displayName: String {
             switch self {
-            case .trigonometria: return "Trigonometría"
-            case .calculoDiferencial: return "Cálculo Diferencial"
-            case .calculoIntegral: return "Cálculo Integral"
-            case .ecuacionesDiferenciales: return "Ecuaciones Diferenciales"
-            case .algebraLineal: return "Álgebra Lineal"
-            case .probabilidad: return "Probabilidad"
+            case .trigonometria: return L10n.categoryTrig
+            case .calculoDiferencial: return L10n.categoryCalcDiff
+            case .calculoIntegral: return L10n.categoryCalcInt
+            case .ecuacionesDiferenciales: return L10n.categoryDiffEq
+            case .algebraLineal: return L10n.categoryLinearAlgebra
+            case .probabilidad: return L10n.categoryProbability
             }
         }
         
@@ -58,10 +58,10 @@ enum AppConstants {
         
         var displayName: String {
             switch self {
-            case .pending: return "Pendiente"
-            case .verified: return "Verificado"
-            case .rejected: return "Rechazado"
-            case .archived: return "Archivado"
+            case .pending: return L10n.exerciseStatusPending
+            case .verified: return L10n.exerciseStatusVerified
+            case .rejected: return L10n.exerciseStatusRejected
+            case .archived: return L10n.exerciseStatusArchived
             }
         }
     }
@@ -84,10 +84,10 @@ enum AppConstants {
         
         var name: String {
             switch self {
-            case .novato: return "Novato"
-            case .estudiante: return "Estudiante"
-            case .tutor: return "Tutor"
-            case .maestro: return "Maestro"
+            case .novato: return L10n.userLevelNovice
+            case .estudiante: return L10n.userLevelStudent
+            case .tutor: return L10n.userLevelTutor
+            case .maestro: return L10n.userLevelMaster
             }
         }
         
@@ -127,11 +127,11 @@ enum AppConstants {
         
         var displayName: String {
             switch self {
-            case .firstFlashcard: return "Primera Flashcard"
-            case .tenVerified: return "10 Ejercicios Verificados"
-            case .sevenDayStreak: return "Racha de 7 Días"
-            case .hundredReviews: return "100 Repasos"
-            case .topVotedMonth: return "Más Votado del Mes"
+            case .firstFlashcard: return L10n.badgeFirstFlashcard
+            case .tenVerified: return L10n.badgeTenVerified
+            case .sevenDayStreak: return L10n.badgeSevenDayStreak
+            case .hundredReviews: return L10n.badgeHundredReviews
+            case .topVotedMonth: return L10n.badgeTopVotedMonth
             }
         }
         

@@ -30,10 +30,10 @@ struct LoginView: View {
                                 )
                             )
 
-                        Text("DailyMath")
+                        Text(L10n.appName)
                             .font(.largeTitle.bold())
 
-                        Text("Tu plataforma de estudio matemático")
+                        Text(L10n.authTagline)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -41,13 +41,13 @@ struct LoginView: View {
 
                     // Form
                     VStack(spacing: 16) {
-                        TextField("Email", text: $viewModel.email)
+                        TextField(L10n.commonEmail, text: $viewModel.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .textFieldStyle(.roundedBorder)
 
-                        SecureField("Contraseña", text: $viewModel.password)
+                        SecureField(L10n.commonPassword, text: $viewModel.password)
                             .textContentType(.password)
                             .textFieldStyle(.roundedBorder)
 
@@ -68,13 +68,13 @@ struct LoginView: View {
                                     .tint(.white)
                                     .primaryButton()
                             } else {
-                                Text("Iniciar Sesión")
+                                Text(L10n.authSignIn)
                                     .primaryButton()
                             }
                         }
                         .disabled(!viewModel.isFormValid || viewModel.isLoading)
 
-                        Button("¿Olvidaste tu contraseña?") {
+                        Button(L10n.authForgotPassword) {
                             navigation.presentAuthSheet(.forgotPassword)
                         }
                         .font(.footnote)
@@ -87,7 +87,7 @@ struct LoginView: View {
                         Rectangle()
                             .frame(height: 1)
                             .foregroundStyle(.quaternary)
-                        Text("o")
+                        Text(L10n.authOr)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Rectangle()
@@ -100,7 +100,7 @@ struct LoginView: View {
                     Button {
                         navigation.pushAuth(.register)
                     } label: {
-                        Text("Crear cuenta")
+                        Text(L10n.authCreateAccount)
                             .secondaryButton()
                     }
                     .padding(.horizontal)

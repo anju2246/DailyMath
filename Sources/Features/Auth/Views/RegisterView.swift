@@ -22,10 +22,10 @@ struct RegisterView: View {
                         .font(.system(size: 48))
                         .foregroundStyle(.tint)
                     
-                    Text("Crear Cuenta")
+                    Text(L10n.authRegisterTitle)
                         .font(.title.bold())
                     
-                    Text("Únete a la comunidad DailyMath")
+                    Text(L10n.authRegisterSubtitle)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -34,19 +34,19 @@ struct RegisterView: View {
                 // Form
                 VStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Nombre")
+                        Text(L10n.authNameLabel)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        TextField("Tu nombre completo", text: $viewModel.displayName)
+                        TextField(L10n.authNamePlaceholder, text: $viewModel.displayName)
                             .textContentType(.name)
                             .textFieldStyle(.roundedBorder)
                     }
                     
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Email")
+                        Text(L10n.commonEmail)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        TextField("correo@universidad.edu", text: $viewModel.email)
+                        TextField(L10n.authEmailPlaceholder, text: $viewModel.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
@@ -54,27 +54,27 @@ struct RegisterView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Universidad")
+                        Text(L10n.authUniversityLabel)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        TextField("Ej: Universidad del Quindío", text: $viewModel.university)
+                        TextField(L10n.authUniversityPlaceholder, text: $viewModel.university)
                             .textFieldStyle(.roundedBorder)
                     }
                     
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Contraseña")
+                        Text(L10n.commonPassword)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        SecureField("Mínimo 6 caracteres", text: $viewModel.password)
+                        SecureField(L10n.authPasswordPlaceholder, text: $viewModel.password)
                             .textContentType(.newPassword)
                             .textFieldStyle(.roundedBorder)
                     }
                     
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Confirmar contraseña")
+                        Text(L10n.authConfirmPasswordLabel)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        SecureField("Repite tu contraseña", text: $viewModel.confirmPassword)
+                        SecureField(L10n.authConfirmPasswordPlaceholder, text: $viewModel.confirmPassword)
                             .textContentType(.newPassword)
                             .textFieldStyle(.roundedBorder)
                     }
@@ -96,7 +96,7 @@ struct RegisterView: View {
                                 .tint(.white)
                                 .primaryButton()
                         } else {
-                            Text("Crear Cuenta")
+                            Text(L10n.authRegisterTitle)
                                 .primaryButton()
                         }
                     }
@@ -106,7 +106,7 @@ struct RegisterView: View {
             }
             .padding(.bottom, 40)
         }
-        .navigationTitle("Registro")
+        .navigationTitle(L10n.authRegisterNavTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

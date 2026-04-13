@@ -47,9 +47,9 @@ enum ReviewQuality: Int {
     
     var label: String {
         switch self {
-        case .difficult: return "Difícil"
-        case .normal: return "Normal"
-        case .easy: return "Fácil"
+        case .difficult: return L10n.reviewQualityDifficult
+        case .normal: return L10n.reviewQualityNormal
+        case .easy: return L10n.reviewQualityEasy
         }
     }
     

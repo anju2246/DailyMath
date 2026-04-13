@@ -3,14 +3,14 @@ import SwiftUI
 struct DuelLobbyView: View {
     var body: some View {
         List {
-            Section("Lobby 1v1") {
-                Text("Flujo base de ChallengesRoute activado.")
+            Section(L10n.duelLobbySection) {
+                Text(L10n.duelLobbyFlowEnabled)
                     .foregroundStyle(.secondary)
-                Text("Desde aquí se conectarán crear/unirse a duelo y matchmaking realtime.")
+                Text(L10n.duelLobbyDescription)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Lobby 1v1")
+        .navigationTitle(L10n.duelLobbySection)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

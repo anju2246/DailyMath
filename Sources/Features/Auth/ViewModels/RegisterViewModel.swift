@@ -24,19 +24,19 @@ class RegisterViewModel: ObservableObject {
         let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
 
         guard !trimmedName.isEmpty else {
-            toast = Toast(message: "El nombre es obligatorio", style: .warning)
+            toast = Toast(message: L10n.authValidationNameRequired, style: .warning)
             return
         }
         guard !trimmedEmail.isEmpty, trimmedEmail.isValidEmail else {
-            toast = Toast(message: "Ingresa un email válido", style: .error)
+            toast = Toast(message: L10n.authValidationEmailInvalid, style: .error)
             return
         }
         guard password.count >= 6 else {
-            toast = Toast(message: "La contraseña debe tener al menos 6 caracteres", style: .warning)
+            toast = Toast(message: L10n.authValidationPasswordLength, style: .warning)
             return
         }
         guard password == confirmPassword else {
-            toast = Toast(message: "Las contraseñas no coinciden", style: .error)
+            toast = Toast(message: L10n.authValidationPasswordMismatch, style: .error)
             return
         }
 
@@ -47,7 +47,7 @@ class RegisterViewModel: ObservableObject {
                 username: trimmedEmail,
                 displayName: trimmedName
             )
-            toast = Toast(message: "¡Cuenta creada con éxito!", style: .success)
+            toast = Toast(message: L10n.authRegisterSuccess, style: .success)
         } catch {
             toast = Toast(message: error.localizedDescription, style: .error)
         }

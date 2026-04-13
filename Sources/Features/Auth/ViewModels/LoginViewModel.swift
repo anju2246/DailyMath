@@ -58,15 +58,15 @@ class LoginViewModel: ObservableObject {
         let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
 
         guard !trimmedEmail.isEmpty else {
-            toast = Toast(message: "El email es obligatorio", style: .warning)
+            toast = Toast(message: L10n.authValidationEmailRequired, style: .warning)
             return
         }
         guard trimmedEmail.isValidEmail else {
-            toast = Toast(message: "Ingresa un email válido", style: .error)
+            toast = Toast(message: L10n.authValidationEmailInvalid, style: .error)
             return
         }
         guard !password.isEmpty else {
-            toast = Toast(message: "La contraseña es obligatoria", style: .warning)
+            toast = Toast(message: L10n.authValidationPasswordRequired, style: .warning)
             return
         }
 

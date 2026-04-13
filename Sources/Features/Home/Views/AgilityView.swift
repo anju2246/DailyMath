@@ -39,13 +39,13 @@ struct AgilityView: View {
             
             // Stats row
             HStack {
-                Label("Nivel \(currentLevel)", systemImage: "star.fill")
+                Label(L10n.agilityLevel(currentLevel), systemImage: "star.fill")
                     .font(.subheadline.bold())
                     .foregroundStyle(.orange)
                 
                 Spacer()
                 
-                Text("\(correctCount)/10")
+                Text(L10n.agilityProgress(correctCount))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -85,7 +85,7 @@ struct AgilityView: View {
             if showResult {
                 HStack(spacing: 8) {
                     Image(systemName: isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    Text(isCorrect ? "¡Correcto!" : "Respuesta: \(currentProblem?.answer ?? 0)")
+                    Text(isCorrect ? L10n.agilityCorrect : L10n.agilityAnswer(currentProblem?.answer ?? 0))
                 }
                 .font(.headline)
                 .foregroundStyle(isCorrect ? .green : .red)
@@ -100,7 +100,7 @@ struct AgilityView: View {
                 Button {
                     nextProblem()
                 } label: {
-                    Text("CONTINUAR")
+                    Text(L10n.commonContinueUppercase)
                         .font(.headline.bold())
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -121,7 +121,7 @@ struct AgilityView: View {
             }
             .padding(.bottom, 8)
         }
-        .navigationTitle("Agilidad Mental")
+        .navigationTitle(L10n.agilityTitle)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             nextProblem()

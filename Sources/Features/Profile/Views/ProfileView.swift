@@ -30,7 +30,7 @@ struct ProfileView: View {
                             .foregroundStyle(.white)
                     }
 
-                    Text(user?.displayName ?? "Usuario")
+                    Text(user?.displayName ?? L10n.commonUser)
                         .font(.title2.bold())
 
                     if let university = user?.university, !university.isEmpty {
@@ -44,8 +44,8 @@ struct ProfileView: View {
                         HStack(spacing: 6) {
                             Image(systemName: user.userLevel.icon)
                             Text(user.userLevel.name)
-                            Text("•")
-                            Text("\(user.points) pts")
+                            Text(L10n.commonBullet)
+                            Text(L10n.profilePoints(user.points))
                         }
                         .font(.subheadline.bold())
                         .foregroundStyle(.tint)
@@ -63,28 +63,28 @@ struct ProfileView: View {
                     GridItem(.flexible()),
                     GridItem(.flexible())
                 ], spacing: 12) {
-                    StatCard(title: "Puntos", value: "\(user?.points ?? 0)", icon: "star.fill", color: .orange)
-                    StatCard(title: "Racha", value: "\(user?.studyStreak ?? 0) días", icon: "flame.fill", color: .red)
-                    StatCard(title: "Nivel", value: user?.userLevel.name ?? "—", icon: "trophy.fill", color: .yellow)
+                    StatCard(title: L10n.profilePointsTitle, value: "\(user?.points ?? 0)", icon: "star.fill", color: .orange)
+                    StatCard(title: L10n.profileStreakTitle, value: L10n.profileStreakDays(user?.studyStreak ?? 0), icon: "flame.fill", color: .red)
+                    StatCard(title: L10n.profileLevelTitle, value: user?.userLevel.name ?? L10n.profileLevelFallback, icon: "trophy.fill", color: .yellow)
                 }
                 .padding(.horizontal)
 
                 // Menu items
                 VStack(spacing: 2) {
-                    MenuRow(icon: "pencil", title: "Editar perfil", color: .blue) {
+                    MenuRow(icon: "pencil", title: L10n.profileEdit, color: .blue) {
                         navigation.pushProfile(.editProfile)
                     }
 
-                    MenuRow(icon: "medal", title: "Insignias", color: .orange) {
+                    MenuRow(icon: "medal", title: L10n.profileBadges, color: .orange) {
                         navigation.pushProfile(.badges)
                     }
 
-                    MenuRow(icon: "chart.bar", title: "Estadísticas", color: .green) {
+                    MenuRow(icon: "chart.bar", title: L10n.profileStats, color: .green) {
                         navigation.pushProfile(.stats)
                     }
 
                     if appState.isModerator {
-                        MenuRow(icon: "shield.checkered", title: "Panel de Moderador", color: .purple) {
+                        MenuRow(icon: "shield.checkered", title: L10n.profileModeratorPanel, color: .purple) {
                             navigation.pushProfile(.moderatorDashboard)
                         }
                     }
@@ -94,11 +94,11 @@ struct ProfileView: View {
 
                 // Danger zone
                 VStack(spacing: 2) {
-                    MenuRow(icon: "rectangle.portrait.and.arrow.right", title: "Cerrar sesión", color: .secondary) {
+                    MenuRow(icon: "rectangle.portrait.and.arrow.right", title: L10n.profileSignOut, color: .secondary) {
                         Task { try? await appState.signOut() }
                     }
 
-                    MenuRow(icon: "trash", title: "Eliminar cuenta", color: .red) {
+                    MenuRow(icon: "trash", title: L10n.profileDeleteAccount, color: .red) {
                         showDeleteConfirmation = true
                     }
                 }
@@ -107,14 +107,14 @@ struct ProfileView: View {
             }
             .padding(.bottom, 40)
         }
-        .navigationTitle("Perfil")
-        .alert("¿Eliminar cuenta?", isPresented: $showDeleteConfirmation) {
-            Button("Cancelar", role: .cancel) { }
-            Button("Eliminar", role: .destructive) {
+        .navigationTitle(L10n.profileTitle)
+        .alert(L10n.profileDeleteAlertTitle, isPresented: $showDeleteConfirmation) {
+            Button(L10n.commonCancel, role: .cancel) { }
+            Button(L10n.commonDelete, role: .destructive) {
                 Task { try? await appState.deleteAccount() }
             }
         } message: {
-            Text("Esta acción es permanente. Se eliminarán todos tus datos.")
+            Text(L10n.profileDeleteAlertMessage)
         }
     }
 }

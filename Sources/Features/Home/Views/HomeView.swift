@@ -25,10 +25,10 @@ struct HomeView: View {
                             )
                             .padding(.top, 56)
 
-                        Text("DailyMath")
+                        Text(L10n.appName)
                             .font(.system(size: 44, weight: .heavy))
 
-                        Text("Practica matemáticas todos los días.\nMejora tu razonamiento con ejercicios\npersonalizados y tarjetas de estudio.")
+                        Text(L10n.homeLandingDescription)
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -41,26 +41,26 @@ struct HomeView: View {
                         featureRow(
                             icon: "brain.head.profile",
                             color: .blue,
-                            title: "Repaso Espaciado",
-                            description: "Algoritmo SM-2 para memorización eficiente"
+                            title: L10n.homeFeatureSpacedReviewTitle,
+                            description: L10n.homeFeatureSpacedReviewDescription
                         )
                         featureRow(
                             icon: "flame.fill",
                             color: .orange,
-                            title: "Racha Diaria",
-                            description: "Mantén el hábito de estudio cada día"
+                            title: L10n.homeFeatureStreakTitle,
+                            description: L10n.homeFeatureStreakDescription
                         )
                         featureRow(
                             icon: "person.2.fill",
                             color: .purple,
-                            title: "Comunidad",
-                            description: "Compite y colabora con otros estudiantes"
+                            title: L10n.homeFeatureCommunityTitle,
+                            description: L10n.homeFeatureCommunityDescription
                         )
                         featureRow(
                             icon: "bolt.fill",
                             color: .green,
-                            title: "Agilidad Mental",
-                            description: "Desafíos cronometrados para pensar rápido"
+                            title: L10n.homeFeatureAgilityTitle,
+                            description: L10n.homeFeatureAgilityDescription
                         )
                     }
                     .padding(.horizontal, 24)
@@ -71,14 +71,14 @@ struct HomeView: View {
                         Button {
                             showLogin = true
                         } label: {
-                            Text("Iniciar Sesión")
+                            Text(L10n.authSignIn)
                                 .primaryButton()
                         }
 
                         Button {
                             showRegister = true
                         } label: {
-                            Text("Crear cuenta gratis")
+                            Text(L10n.homeCreateAccountFree)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                                 .background(.secondary.opacity(0.12))

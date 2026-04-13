@@ -147,33 +147,33 @@ class FlashcardStore: ObservableObject {
     private func loadSampleFlashcards() {
         let samples: [QuizFlashcard] = [
             QuizFlashcard(
-                question: "¿Cuál es la derivada de sin(x)?",
-                correctAnswer: "cos(x)",
-                wrongAnswers: ["-cos(x)", "tan(x)", "-sin(x)"],
+                question: L10n.sampleQuestion1,
+                correctAnswer: L10n.sampleQuestion1Correct,
+                wrongAnswers: [L10n.sampleQuestion1Wrong1, L10n.sampleQuestion1Wrong2, L10n.sampleQuestion1Wrong3],
                 category: "calculo_diferencial"
             ),
             QuizFlashcard(
-                question: "¿Cuánto es sen(π/2)?",
-                correctAnswer: "1",
-                wrongAnswers: ["0", "-1", "√2/2"],
+                question: L10n.sampleQuestion2,
+                correctAnswer: L10n.sampleQuestion2Correct,
+                wrongAnswers: [L10n.sampleQuestion2Wrong1, L10n.sampleQuestion2Wrong2, L10n.sampleQuestion2Wrong3],
                 category: "trigonometria"
             ),
             QuizFlashcard(
-                question: "¿Cuál es la integral de 1/x dx?",
-                correctAnswer: "ln|x| + C",
-                wrongAnswers: ["x² + C", "1/x² + C", "eˣ + C"],
+                question: L10n.sampleQuestion3,
+                correctAnswer: L10n.sampleQuestion3Correct,
+                wrongAnswers: [L10n.sampleQuestion3Wrong1, L10n.sampleQuestion3Wrong2, L10n.sampleQuestion3Wrong3],
                 category: "calculo_integral"
             ),
             QuizFlashcard(
-                question: "¿Cuál es el determinante de una matriz identidad 3×3?",
-                correctAnswer: "1",
-                wrongAnswers: ["0", "3", "-1"],
+                question: L10n.sampleQuestion4,
+                correctAnswer: L10n.sampleQuestion4Correct,
+                wrongAnswers: [L10n.sampleQuestion4Wrong1, L10n.sampleQuestion4Wrong2, L10n.sampleQuestion4Wrong3],
                 category: "algebra_lineal"
             ),
             QuizFlashcard(
-                question: "Si P(A) = 0.3 y P(B) = 0.5 son independientes, ¿cuánto es P(A∩B)?",
-                correctAnswer: "0.15",
-                wrongAnswers: ["0.80", "0.20", "0.35"],
+                question: L10n.sampleQuestion5,
+                correctAnswer: L10n.sampleQuestion5Correct,
+                wrongAnswers: [L10n.sampleQuestion5Wrong1, L10n.sampleQuestion5Wrong2, L10n.sampleQuestion5Wrong3],
                 category: "probabilidad"
             )
         ]
