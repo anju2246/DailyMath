@@ -44,7 +44,7 @@ struct LeaderboardView: View {
                 .padding(.horizontal)
             }
         }
-        .navigationTitle("Top Global")
+        .navigationTitle(L10n.leaderboardTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

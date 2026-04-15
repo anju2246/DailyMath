@@ -16,7 +16,7 @@ struct ModeratorDashboardView: View {
     
     var body: some View {
         List {
-            Section(header: Text("Ejercicios por Validar")) {
+            Section(header: Text(L10n.moderatorExercisesHeader)) {
                 ForEach(pendingExercises, id: \.self) { exercise in
                     Button {
                         selectedExercise = exercise
@@ -37,14 +37,14 @@ struct ModeratorDashboardView: View {
                 }
             }
         }
-        .navigationTitle("Panel de Moderación")
-        .alert("Detalle del Ejercicio", isPresented: $showAlert) {
-            Button("Rechazar", role: .destructive) { }
-            Button("Aprobar") { }
-            Button("Cancelar", role: .cancel) { }
+        .navigationTitle(L10n.moderatorPanelTitle)
+        .alert(L10n.moderatorDetailTitle, isPresented: $showAlert) {
+            Button(L10n.moderatorReject, role: .destructive) { }
+            Button(L10n.moderatorApprove) { }
+            Button(L10n.commonCancel, role: .cancel) { }
         } message: {
             if let exercise = selectedExercise {
-                Text("¿Deseas validar el ejercicio: \"\(exercise)\"?")
+                Text(L10n.moderatorConfirmMsg(exercise))
             }
         }
         .toolbar {
