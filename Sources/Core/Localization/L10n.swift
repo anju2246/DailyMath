@@ -44,7 +44,16 @@ enum L10n {
     static let tabAgility = tr("tabs.agility")
     static let tabChallenges = tr("tabs.challenges")
     static let tabLeaderboard = tr("tabs.leaderboard")
+    static let leaderboardTitle = tr("leaderboard.title")
     static let tabModerator = tr("tabs.moderator")
+    static let moderatorPanelTitle = tr("moderator.panel_title")
+    static let moderatorExercisesHeader = tr("moderator.exercises_header")
+    static let moderatorDetailTitle = tr("moderator.detail_title")
+    static let moderatorApprove = tr("moderator.approve")
+    static let moderatorReject = tr("moderator.reject")
+    static func moderatorConfirmMsg(_ exercise: String) -> String {
+        fmt("moderator.confirm_msg", exercise)
+    }
     static let tabProfile = tr("tabs.profile")
 
     // MARK: - Auth Views
