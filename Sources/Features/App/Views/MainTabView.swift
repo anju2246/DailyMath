@@ -1,23 +1,18 @@
 import SwiftUI
 
-// MARK: - Main Tab Navigation
-
 struct MainTabView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var navigation: AppNavigationCoordinator
-    
+
     var body: some View {
         TabView(selection: $navigation.selectedTab) {
-            // MARK: - Standard User Tabs
             if !appState.isModerator {
                 NavigationStack(path: $navigation.homePath) {
                     TodayView()
                 }
-                .tabItem {
-                    Label(L10n.tabToday, systemImage: "calendar.badge.clock")
-                }
+                .tabItem { Label("Hoy", systemImage: "calendar") }
                 .tag(MainTab.today)
-                
+
                 NavigationStack(path: $navigation.communityPath) {
                     ExploreView()
                         .navigationDestination(for: CommunityRoute.self) { route in
@@ -27,19 +22,9 @@ struct MainTabView: View {
                             }
                         }
                 }
-                .tabItem {
-                    Label(L10n.tabExplore, systemImage: "magnifyingglass")
-                }
+                .tabItem { Label("Explorar", systemImage: "magnifyingglass") }
                 .tag(MainTab.explore)
-                
-                NavigationStack(path: $navigation.leaderboardPath) {
-                    LeaderboardView()
-                }
-                .tabItem {
-                    Label(L10n.tabLeaderboard, systemImage: "star.bubble.fill")
-                }
-                .tag(MainTab.leaderboard)
-                
+
                 NavigationStack(path: $navigation.challengesPath) {
                     ChallengesHubView()
                         .navigationDestination(for: ChallengesRoute.self) { route in
@@ -49,23 +34,23 @@ struct MainTabView: View {
                             }
                         }
                 }
-                .tabItem {
-                    Label(L10n.tabChallenges, systemImage: "flag.checkered")
-                }
+                .tabItem { Label("Combatir", systemImage: "flag.checkered") }
                 .tag(MainTab.challenges)
-                
+
+                NavigationStack(path: $navigation.agilityPath) {
+                    AgilityView()
+                }
+                .tabItem { Label("Agilidad", systemImage: "brain.head.profile") }
+                .tag(MainTab.agility)
+
             } else {
-                // MARK: - Moderator Specific Tabs
                 NavigationStack(path: $navigation.moderatorPath) {
                     ModeratorDashboardView()
                 }
-                .tabItem {
-                    Label(L10n.tabModerator, systemImage: "checkmark.seal.fill")
-                }
+                .tabItem { Label(L10n.tabModerator, systemImage: "checkmark.seal.fill") }
                 .tag(MainTab.moderator)
             }
-            
-            // MARK: - Common Tabs (Profile)
+
             NavigationStack(path: $navigation.profilePath) {
                 ProfileView()
                     .navigationDestination(for: ProfileRoute.self) { route in
@@ -81,14 +66,18 @@ struct MainTabView: View {
                         }
                     }
             }
-            .tabItem {
-                Label(L10n.tabProfile, systemImage: "person.circle")
-            }
+            .tabItem { Label("Perfil", systemImage: "person.fill") }
             .tag(MainTab.profile)
         }
-        .tint(.dmPrimary)
+        .tint(Color.dmPrimary)
         .onAppear {
             navigation.resetMainFeaturePaths()
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(Color.dmSurface)
+            appearance.shadowColor = UIColor.black.withAlphaComponent(0.05)
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
         }
     }
 }

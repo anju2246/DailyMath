@@ -13,6 +13,8 @@ enum MainTab: Int, Hashable {
 
 enum AuthRoute: Hashable {
     case register
+    case otp(email: String)
+    case onboarding
 }
 
 enum AuthSheet: String, Identifiable {

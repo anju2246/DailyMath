@@ -35,38 +35,47 @@ extension Color {
     static let dmSurface = Color("Surface")
     static let dmPrimary = Color("DMPrimary")
     static let dmSecondary = Color("DMSecondary")
-    static let dmSuccess = Color.green
-    static let dmError = Color.red
-    static let dmWarning = Color.orange
+    static let dmSuccess = Color("DMSuccess")
+    static let dmError = Color("DMError")
+    static let dmWarning = Color("DMWarning")
+    static let dmOnDark = Color("DMOnDark")
+    static let dmTextSecondary = Color("DMTextSecondary")
 }
 
 extension View {
     func cardStyle() -> some View {
         self
-            .padding()
-            .background(Color(.systemBackground))
-            .cornerRadius(16)
-            .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 2)
+            .padding(DMSpacing.md)
+            .background(Color.dmSurface)
+            .cornerRadius(DMRadius.lg)
+            .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 2)
     }
-    
+
     func primaryButton() -> some View {
         self
-            .font(.headline)
+            .font(DMFont.headline())
             .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.dmPrimary)
-            .cornerRadius(14)
+            .frame(maxWidth: .infinity, minHeight: 52)
+            .background(Color.dmSuccess)
+            .cornerRadius(DMRadius.pill)
     }
-    
+
     func secondaryButton() -> some View {
         self
-            .font(.headline)
-            .foregroundColor(Color.dmPrimary)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.dmPrimary.opacity(0.12))
-            .cornerRadius(14)
+            .font(DMFont.headline())
+            .foregroundColor(Color.dmSurface)
+            .frame(maxWidth: .infinity, minHeight: 52)
+            .background(Color.dmOnDark)
+            .cornerRadius(DMRadius.pill)
+    }
+
+    func accentButton() -> some View {
+        self
+            .font(DMFont.headline())
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity, minHeight: 52)
+            .background(Color.dmPrimary)
+            .cornerRadius(DMRadius.pill)
     }
 }
 

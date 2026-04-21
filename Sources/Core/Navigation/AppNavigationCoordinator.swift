@@ -23,6 +23,10 @@ final class AppNavigationCoordinator: ObservableObject {
         authPath.append(route)
     }
 
+    func popAuth() {
+        if !authPath.isEmpty { authPath.removeLast() }
+    }
+
     func pushCommunity(_ route: CommunityRoute) {
         communityPath.append(route)
     }

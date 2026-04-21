@@ -1,98 +1,157 @@
 import SwiftUI
 
-// MARK: - Explore View (Community Feed)
-
 struct ExploreView: View {
     @EnvironmentObject var navigation: AppNavigationCoordinator
     @State private var selectedCategory: AppConstants.Category? = nil
     @State private var searchText = ""
+    @State private var showCreate = false
 
-    private let sampleExerciseID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
-    
+    private var filtered: [SampleExercise] {
+        SampleExercises.all.filter { ex in
+            (selectedCategory == nil || ex.category == selectedCategory!) &&
+            (searchText.isEmpty ||
+             ex.title.localizedCaseInsensitiveContains(searchText) ||
+             ex.statement.localizedCaseInsensitiveContains(searchText))
+        }
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            // Category filter chips
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    FilterChip(
-                        title: L10n.communityAll,
-                        isSelected: selectedCategory == nil
-                    ) {
-                        selectedCategory = nil
-                    }
-                    
-                    ForEach(AppConstants.Category.allCases, id: \.self) { category in
-                        FilterChip(
-                            title: category.displayName,
-                            icon: category.icon,
-                            isSelected: selectedCategory == category
-                        ) {
-                            selectedCategory = category
+        ZStack {
+            Color.dmBackground.ignoresSafeArea()
+            VStack(spacing: DMSpacing.md) {
+                header
+                searchBar
+                categoryStrip
+                if filtered.isEmpty {
+                    emptyState
+                    Spacer()
+                } else {
+                    ScrollView {
+                        VStack(spacing: DMSpacing.sm) {
+                            ForEach(filtered) { ex in
+                                Button { navigation.pushCommunity(.exerciseDetail(id: ex.id)) } label: {
+                                    exerciseCard(ex)
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
+                        .padding(.bottom, DMSpacing.xxl)
                     }
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
             }
-            
-            // Exercise list placeholder
-            ScrollView {
-                VStack(spacing: 16) {
-                    // Empty state
-                    VStack(spacing: 12) {
-                        Image(systemName: "tray")
-                            .font(.system(size: 48))
-                            .foregroundStyle(.secondary)
-                        
-                        Text(L10n.communityNoExercises)
-                            .font(.headline)
-                        
-                        Text(L10n.communityCreateFirstExercise)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
+            .padding(.horizontal, DMSpacing.lg)
+            .padding(.top, DMSpacing.sm)
+        }
+        .navigationBarHidden(true)
+        .sheet(isPresented: $showCreate) { CreateExerciseView() }
+    }
 
-                        Button {
-                            navigation.pushCommunity(.exerciseDetail(id: sampleExerciseID))
-                        } label: {
-                            Text(L10n.communityViewExample)
-                                .secondaryButton()
-                        }
-                    }
-                    .cardStyle()
-                    .padding(.top, 40)
+    private var header: some View {
+        HStack {
+            Text("Explorar").font(DMFont.largeTitle())
+            Spacer()
+            Button { showCreate = true } label: {
+                ZStack {
+                    Circle().fill(Color.dmSuccess).frame(width: 36, height: 36)
+                    Image(systemName: "plus").foregroundStyle(.white).font(.headline)
                 }
-                .padding(.horizontal)
             }
         }
-        .navigationTitle(L10n.communityExploreTitle)
-        .searchable(text: $searchText, prompt: L10n.communitySearchPrompt)
+    }
+
+    private var searchBar: some View {
+        HStack(spacing: DMSpacing.xs) {
+            Image(systemName: "magnifyingglass").foregroundStyle(Color.dmTextSecondary)
+            TextField("Buscar ejercicios...", text: $searchText)
+                .font(DMFont.callout())
+        }
+        .padding(.horizontal, DMSpacing.md)
+        .padding(.vertical, DMSpacing.sm)
+        .background(Color.dmSurface)
+        .cornerRadius(DMRadius.md)
+    }
+
+    private var categoryStrip: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: DMSpacing.sm) {
+                FilterChip(title: "Todos", isSelected: selectedCategory == nil) { selectedCategory = nil }
+                ForEach(AppConstants.Category.allCases, id: \.self) { category in
+                    FilterChip(title: category.displayName, icon: category.icon, isSelected: selectedCategory == category) {
+                        selectedCategory = category
+                    }
+                }
+            }
+        }
+    }
+
+    private func exerciseCard(_ ex: SampleExercise) -> some View {
+        VStack(alignment: .leading, spacing: DMSpacing.xs) {
+            HStack {
+                Text(ex.category.displayName.uppercased())
+                    .font(DMFont.caption2())
+                    .foregroundStyle(Color.dmTextSecondary)
+                Spacer()
+                HStack(spacing: 2) {
+                    Image(systemName: "arrow.up").font(.caption)
+                    Text("\(ex.votes)").font(DMFont.caption())
+                }
+                .foregroundStyle(Color.dmSuccess)
+            }
+            Text(ex.title).font(DMFont.calloutEmphasized()).foregroundStyle(.primary)
+            Text(ex.statement)
+                .font(DMFont.footnote())
+                .foregroundStyle(Color.dmTextSecondary)
+                .lineLimit(2)
+            HStack {
+                Image(systemName: "person.circle.fill")
+                    .foregroundStyle(Color.dmTextSecondary)
+                Text(ex.author)
+                    .font(DMFont.caption())
+                    .foregroundStyle(Color.dmTextSecondary)
+            }
+            .padding(.top, DMSpacing.xxs)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(DMSpacing.md)
+        .background(Color.dmSurface)
+        .cornerRadius(DMRadius.lg)
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: DMSpacing.sm) {
+            Image(systemName: "tray")
+                .font(.system(size: 48))
+                .foregroundStyle(Color.dmTextSecondary.opacity(0.5))
+            Text("No hay ejercicios").font(DMFont.headline()).foregroundStyle(Color.dmTextSecondary)
+            Text("Prueba con otra búsqueda o categoría")
+                .font(DMFont.footnote())
+                .foregroundStyle(Color.dmTextSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, DMSpacing.xl)
     }
 }
-
-// MARK: - Filter Chip Component
 
 struct FilterChip: View {
     let title: String
     var icon: String? = nil
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 4) {
                 if let icon = icon {
-                    Image(systemName: icon)
-                        .font(.caption)
+                    Image(systemName: icon).font(.caption)
                 }
-                Text(title)
-                    .font(.subheadline.weight(.medium))
+                Text(title).font(DMFont.callout())
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(isSelected ? Color.dmPrimary : Color(.systemGray6))
-            .foregroundStyle(isSelected ? .white : .primary)
-            .cornerRadius(20)
+            .padding(.horizontal, DMSpacing.md)
+            .padding(.vertical, DMSpacing.xs)
+            .background(isSelected ? Color.dmOnDark : Color.dmSurface)
+            .foregroundStyle(isSelected ? Color.dmSurface : .primary)
+            .cornerRadius(DMRadius.pill)
         }
     }
 }
