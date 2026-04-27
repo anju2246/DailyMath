@@ -1,7 +1,5 @@
 import SwiftUI
 
-// MARK: - Today View (Flashcard Hub)
-
 struct TodayView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var navigation: AppNavigationCoordinator
@@ -10,134 +8,26 @@ struct TodayView: View {
     private var store: any FlashcardRepository { appState.flashcardStore }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Header greeting
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(L10n.homeGreeting(appState.currentUser?.displayName ?? L10n.commonUser))
-                        .font(.title.bold())
-
-                    Text(L10n.homeDailyCardsSubtitle)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+        ZStack {
+            Color.dmBackground.ignoresSafeArea()
+            ScrollView {
+                VStack(alignment: .leading, spacing: DMSpacing.lg) {
+                    header
+                    statsRow
+                    if !store.dueFlashcards.isEmpty { quizCard }
+                    flashcardSection
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-
-                // Stats cards
-                HStack(spacing: 12) {
-                    statBadge(
-                        value: "\(store.dueFlashcards.count)",
-                        label: L10n.homePending,
-                        icon: "clock.fill",
-                        color: .orange
-                    )
-                    statBadge(
-                        value: "\(store.totalReviewedToday)",
-                        label: L10n.commonReviewedToday,
-                        icon: "checkmark.circle.fill",
-                        color: .green
-                    )
-                    statBadge(
-                        value: "\(store.flashcards.count)",
-                        label: L10n.commonTotal,
-                        icon: "rectangle.stack.fill",
-                        color: .blue
-                    )
-                }
-                .padding(.horizontal)
-
-                // Quiz button
-                if !store.dueFlashcards.isEmpty {
-                    Button {
-                        navigation.presentHomeFullScreen(.flashcardQuiz)
-                    } label: {
-                        HStack(spacing: 12) {
-                            Image(systemName: "play.circle.fill")
-                                .font(.title2)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(L10n.homeStartQuiz)
-                                    .font(.headline.bold())
-                                Text(L10n.homePendingCards(store.dueFlashcards.count))
-                                    .font(.caption)
-                                    .opacity(0.8)
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                        .foregroundStyle(.white)
-                        .padding()
-                        .background(
-                            LinearGradient(
-                                colors: [.green, .mint],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(16)
-                    }
-                    .padding(.horizontal)
-                }
-
-                // Flashcard list
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text(L10n.homeMyFlashcards)
-                            .font(.headline)
-                        Spacer()
-                        Button {
-                            navigation.presentHomeSheet(.createFlashcard)
-                        } label: {
-                            Label(L10n.homeNew, systemImage: "plus.circle.fill")
-                                .font(.subheadline.bold())
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    if store.flashcards.isEmpty {
-                        VStack(spacing: 16) {
-                            Image(systemName: "sparkles")
-                                .font(.system(size: 48))
-                                .foregroundStyle(.secondary)
-
-                            Text(L10n.homeNoFlashcards)
-                                .font(.headline)
-
-                            Text(L10n.homeCreateFirstFlashcard)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center)
-
-                            Button {
-                                navigation.presentHomeSheet(.createFlashcard)
-                            } label: {
-                                Text(L10n.homeCreateFlashcardCta)
-                                    .secondaryButton()
-                            }
-                        }
-                        .cardStyle()
-                        .padding(.horizontal)
-                    } else {
-                        ForEach(store.flashcards) { card in
-                            flashcardRow(card)
-                        }
-                        .padding(.horizontal)
-                    }
-                }
+                .padding(.horizontal, DMSpacing.lg)
+                .padding(.top, DMSpacing.sm)
+                .padding(.bottom, DMSpacing.xxl)
             }
-            .padding(.top)
-            .padding(.bottom, 40)
         }
-        .navigationTitle(L10n.tabToday)
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showNotifications = true
-                } label: {
-                    Image(systemName: "bell.badge.fill")
-                        .foregroundStyle(.orange)
-                        .font(.headline)
+                Button { showNotifications = true } label: {
+                    Image(systemName: "bell.fill")
+                        .foregroundStyle(Color.dmOnDark)
                 }
             }
         }
@@ -157,63 +47,110 @@ struct TodayView: View {
                     .environmentObject(navigation)
             }
         }
-        .sheet(isPresented: $showNotifications) {
-            NotificationsView()
+        .sheet(isPresented: $showNotifications) { NotificationsView() }
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Hoy")
+                .font(DMFont.largeTitle())
+            Text("¡Hola, \(appState.currentUser?.displayName ?? "")!")
+                .font(DMFont.title3())
+            Text("Tus tarjetas de repaso del día")
+                .font(DMFont.footnote())
+                .foregroundStyle(Color.dmTextSecondary)
+                .padding(.top, 2)
         }
     }
 
-    // MARK: - Components
+    private var statsRow: some View {
+        HStack(spacing: DMSpacing.sm) {
+            statCard(value: "\(store.dueFlashcards.count)", label: "Pendientes", icon: "clock.fill", tint: Color.dmError)
+            statCard(value: "\(store.totalReviewedToday)", label: "Pendientes", icon: "checkmark.circle.fill", tint: Color.dmSuccess)
+            statCard(value: "\(store.flashcards.count)", label: "Pendientes", icon: "square.stack.3d.up.fill", tint: Color.dmPrimary)
+        }
+    }
 
-    private func statBadge(value: String, label: String, icon: String, color: Color) -> some View {
-        VStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundStyle(color)
-            Text(value)
-                .font(.title2.bold())
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+    private func statCard(value: String, label: String, icon: String, tint: Color) -> some View {
+        VStack(spacing: DMSpacing.xs) {
+            Image(systemName: icon).foregroundStyle(tint).font(.title3)
+            Text(value).font(DMFont.title2())
+            Text(label).font(DMFont.caption()).foregroundStyle(Color.dmTextSecondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-        .background(Color(.systemGray6))
-        .cornerRadius(14)
+        .padding(.vertical, DMSpacing.md)
+        .background(Color.dmSurface)
+        .cornerRadius(DMRadius.lg)
+    }
+
+    private var quizCard: some View {
+        Button {
+            navigation.presentHomeFullScreen(.flashcardQuiz)
+        } label: {
+            HStack(spacing: DMSpacing.md) {
+                Image(systemName: "play.circle.fill").font(.title)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Comenzar Quiz").font(DMFont.headline())
+                    Text("\(store.dueFlashcards.count) tarjetas pendientes").font(DMFont.footnote()).opacity(0.9)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+            }
+            .foregroundStyle(.white)
+            .padding(DMSpacing.md)
+            .frame(maxWidth: .infinity)
+            .background(Color.dmSuccess)
+            .cornerRadius(DMRadius.lg)
+        }
+    }
+
+    private var flashcardSection: some View {
+        VStack(alignment: .leading, spacing: DMSpacing.sm) {
+            HStack {
+                Text("Mis Flashcards").font(DMFont.calloutEmphasized())
+                Spacer()
+                Button {
+                    navigation.presentHomeSheet(.createFlashcard)
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(Color.dmSuccess)
+                        .font(.title3)
+                }
+            }
+            if store.flashcards.isEmpty {
+                VStack(spacing: DMSpacing.sm) {
+                    Image(systemName: "sparkles").font(.system(size: 48)).foregroundStyle(Color.dmTextSecondary)
+                    Text("Sin flashcards todavía").font(DMFont.headline())
+                    Button {
+                        navigation.presentHomeSheet(.createFlashcard)
+                    } label: {
+                        Text("Crear primera").secondaryButton()
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(DMSpacing.lg)
+                .background(Color.dmSurface)
+                .cornerRadius(DMRadius.lg)
+            } else {
+                ForEach(store.flashcards) { card in flashcardRow(card) }
+            }
+        }
     }
 
     private func flashcardRow(_ card: QuizFlashcard) -> some View {
-        HStack(spacing: 12) {
-            // Due indicator
+        HStack(spacing: DMSpacing.sm) {
             Circle()
-                .fill(card.isDueToday ? Color.orange : Color.green)
-                .frame(width: 10, height: 10)
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(card.question)
-                    .font(.subheadline.bold())
-                    .lineLimit(2)
-
-                HStack(spacing: 8) {
-                    if let cat = AppConstants.Category(rawValue: card.category) {
-                        Text(cat.displayName)
-                            .font(.caption2)
-                            .foregroundStyle(.tint)
-                    }
-
-                    Text(card.isDueToday ? L10n.homeDue : L10n.homeNextReview(card.nextReviewDate.shortFormatted))
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
+                .fill(card.isDueToday ? Color.dmSuccess : Color.dmTextSecondary.opacity(0.4))
+                .frame(width: 8, height: 8)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(card.question).font(DMFont.calloutEmphasized()).lineLimit(2)
+                Text(card.isDueToday ? "Pendiente" : "Al día").font(DMFont.caption()).foregroundStyle(Color.dmTextSecondary)
             }
-
             Spacer()
-
-            Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
+            Image(systemName: "chevron.right").foregroundStyle(Color.dmTextSecondary)
         }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(14)
+        .padding(DMSpacing.md)
+        .background(Color.dmSurface)
+        .cornerRadius(DMRadius.lg)
     }
 }

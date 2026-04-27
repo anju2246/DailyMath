@@ -26,6 +26,7 @@ enum L10n {
     static let commonCancel = tr("common.cancel")
     static let commonClose = tr("common.close")
     static let commonDone = tr("common.done")
+    static let commonBack = tr("common.back")
     static let commonOk = tr("common.ok")
     static let commonCreateAnother = tr("common.create_another")
     static let commonContinueUppercase = tr("common.continue.uppercase")

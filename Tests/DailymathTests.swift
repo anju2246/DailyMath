@@ -1,5 +1,5 @@
 import Testing
-@testable import DailyMath
+@testable import dailymath
 
 struct DailyMathTests {
 

@@ -1,153 +1,52 @@
 import SwiftUI
 import Combine
 
-// MARK: - Login View
-
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var navigation: AppNavigationCoordinator
     @StateObject private var viewModel: LoginViewModel
+    @State private var showInvalidAlert = false
 
     init() {
-        // `appState` is not yet available here;
-        // we'll override the dependency in `.onAppear`.
         _viewModel = StateObject(wrappedValue: LoginViewModel())
     }
 
     var body: some View {
         NavigationStack(path: $navigation.authPath) {
-            ScrollView {
-                VStack(spacing: 32) {
-                    // Logo & Header
-                    VStack(spacing: 12) {
-                        Image(systemName: "function")
-                            .font(.system(size: 72, weight: .bold))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.blue, .purple],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
+            ZStack {
+                Color.dmBackground.ignoresSafeArea()
 
-                        Text(L10n.appName)
-                            .font(.largeTitle.bold())
-
-                        Text(L10n.authTagline)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding(.top, 40)
-
-                    // Form
-                    VStack(spacing: 16) {
-                        TextField(L10n.commonEmail, text: $viewModel.email)
-                            .textContentType(.emailAddress)
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                            .textFieldStyle(.roundedBorder)
-
-                        SecureField(L10n.commonPassword, text: $viewModel.password)
-                            .textContentType(.password)
-                            .textFieldStyle(.roundedBorder)
-
-                        if let toast = viewModel.toast {
-                            Text(toast.message)
-                                .font(.caption)
-                                .foregroundStyle(.red)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-
-                        Button {
-                            Task {
-                                await viewModel.login()
-                            }
-                        } label: {
-                            if viewModel.isLoading {
-                                ProgressView()
-                                    .tint(.white)
-                                    .primaryButton()
-                            } else {
-                                Text(L10n.authSignIn)
-                                    .primaryButton()
-                            }
-                        }
-                        .disabled(!viewModel.isFormValid || viewModel.isLoading)
-
-                        // MARK: - Demo Access Panel
-                        VStack(spacing: 8) {
-                            Text("Acceso Rápido (Demo)")
-                                .font(.caption2.bold())
-                                .foregroundStyle(.tertiary)
-                                .textCase(.uppercase)
-
-                            HStack(spacing: 12) {
-                                Button {
-                                    viewModel.email = "estudiante@dailymath.com"
-                                    viewModel.password = "password123"
-                                    Task { await viewModel.login() }
-                                } label: {
-                                    Label("Estudiante", systemImage: "person.circle")
-                                        .font(.caption)
-                                        .padding(8)
-                                        .background(Color.blue.opacity(0.1))
-                                        .cornerRadius(8)
-                                }
-
-                                Button {
-                                    viewModel.email = "moderador@dailymath.com"
-                                    viewModel.password = "password123"
-                                    Task { await viewModel.login() }
-                                } label: {
-                                    Label("Moderador", systemImage: "shield.lefthalf.filled")
-                                        .font(.caption)
-                                        .padding(8)
-                                        .background(Color.orange.opacity(0.1))
-                                        .cornerRadius(8)
-                                }
-                            }
-                        }
-                        .padding(.vertical, 8)
-
-                        Button(L10n.authForgotPassword) {
-                            navigation.presentAuthSheet(.forgotPassword)
-                        }
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    }
-                    .padding(.horizontal)
-
-                    // Divider
-                    HStack {
-                        Rectangle()
-                            .frame(height: 1)
-                            .foregroundStyle(.quaternary)
-                        Text(L10n.authOr)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Rectangle()
-                            .frame(height: 1)
-                            .foregroundStyle(.quaternary)
-                    }
-                    .padding(.horizontal)
-
-                    // Register
-                    Button {
-                        navigation.pushAuth(.register)
-                    } label: {
-                        Text(L10n.authCreateAccount)
-                            .secondaryButton()
-                    }
-                    .padding(.horizontal)
+                VStack(spacing: 0) {
+                    header
+                    Spacer(minLength: DMSpacing.lg)
+                    DMBrandHeader(tagline: L10n.authTagline)
+                    Spacer(minLength: DMSpacing.lg)
+                    formCard
+                    Spacer()
+                    bottomCTA
                 }
-                .padding(.bottom, 40)
+                .padding(.horizontal, DMSpacing.lg)
+
+                if showInvalidAlert {
+                    DMAlertCard(
+                        title: "Inicio de Sesión Inválido",
+                        message: "Verifica tus credenciales de entrada.",
+                        primaryTitle: "Continuar",
+                        onPrimary: { showInvalidAlert = false }
+                    )
+                }
             }
+            .navigationBarHidden(true)
             .navigationDestination(for: AuthRoute.self) { route in
                 switch route {
                 case .register:
                     RegisterView()
                         .environmentObject(appState)
                         .environmentObject(navigation)
+                case .otp(let email):
+                    OTPView(email: email)
+                case .onboarding:
+                    OnboardingView(onFinish: { navigation.popAuth() })
                 }
             }
             .sheet(item: $navigation.authSheet) { sheet in
@@ -161,8 +60,76 @@ struct LoginView: View {
         }
         .onAppear {
             navigation.resetAuth()
-            // Ensure the view model is bound to the shared auth repository instance.
             viewModel.update(authService: appState.authService)
         }
+        .onChange(of: viewModel.toast) { _, new in
+            if new?.style == .error { showInvalidAlert = true }
+        }
+    }
+
+    private var header: some View {
+        HStack {
+            Button(L10n.commonBack) { }
+                .font(DMFont.callout())
+                .foregroundStyle(Color.dmTextSecondary)
+            Spacer()
+        }
+        .padding(.top, DMSpacing.md)
+    }
+
+    private var formCard: some View {
+        DMFormCard {
+            DMUnderlineField(
+                placeholder: L10n.commonEmail,
+                text: $viewModel.email,
+                keyboardType: .emailAddress,
+                contentType: .emailAddress,
+                autocapitalization: .never,
+                trailingIcon: viewModel.email.isEmpty ? nil : "xmark.circle.fill",
+                onTrailingTap: { viewModel.email = "" }
+            )
+            DMUnderlineField(
+                placeholder: L10n.commonPassword,
+                text: $viewModel.password,
+                isSecure: true,
+                contentType: .password,
+                trailingIcon: viewModel.password.isEmpty ? nil : "xmark.circle.fill",
+                onTrailingTap: { viewModel.password = "" }
+            )
+
+            HStack {
+                Spacer()
+                Button(L10n.authForgotPassword) {
+                    navigation.presentAuthSheet(.forgotPassword)
+                }
+                .font(DMFont.footnote())
+                .foregroundStyle(Color.dmTextSecondary)
+            }
+
+            Button {
+                Task { await viewModel.login() }
+            } label: {
+                if viewModel.isLoading {
+                    ProgressView().tint(.white).primaryButton()
+                } else {
+                    Text(L10n.authSignIn).primaryButton()
+                }
+            }
+            .disabled(!viewModel.isFormValid || viewModel.isLoading)
+        }
+    }
+
+    private var bottomCTA: some View {
+        VStack(spacing: DMSpacing.sm) {
+            Text("¿No tienes cuenta?")
+                .font(DMFont.footnote())
+                .foregroundStyle(Color.dmTextSecondary)
+            Button {
+                navigation.pushAuth(.register)
+            } label: {
+                Text(L10n.authCreateAccount).secondaryButton()
+            }
+        }
+        .padding(.bottom, DMSpacing.md)
     }
 }

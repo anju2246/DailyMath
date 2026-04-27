@@ -13,20 +13,23 @@ struct DailyMathApp: App {
         WindowGroup {
             Group {
                 if appState.isAuthLoading {
-                    // Splash screen
-                    VStack(spacing: 16) {
-                        Image(systemName: "function")
-                            .font(.system(size: 72, weight: .bold))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.blue, .purple],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
+                    ZStack {
+                        Color.dmBackground.ignoresSafeArea()
+                        VStack(spacing: 16) {
+                            Image(systemName: "function")
+                                .font(.system(size: 72, weight: .bold))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [Color.dmPrimary, Color.dmSuccess],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
                                 )
-                            )
-                        Text(L10n.appName)
-                            .font(.largeTitle.bold())
-                        ProgressView()
+                            Text(L10n.appName)
+                                .font(DMFont.largeTitle())
+                                .foregroundStyle(.primary)
+                            ProgressView()
+                        }
                     }
                 } else if appState.isAuthenticated {
                     MainTabView()

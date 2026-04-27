@@ -59,25 +59,6 @@ struct NumericKeyboardView: View {
                 .disabled(isDisabled)
             }
             
-            // Submit button
-            Button {
-                if !isDisabled {
-                    onSubmit()
-                }
-            } label: {
-                Text(L10n.commonSendUppercase)
-                    .font(.headline.bold())
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 52)
-                    .background(
-                        text.isEmpty || isDisabled
-                            ? Color.gray
-                            : Color.green
-                    )
-                    .cornerRadius(14)
-            }
-            .disabled(text.isEmpty || isDisabled)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)

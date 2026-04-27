@@ -7,7 +7,7 @@ let project = Project(
             name: "dailymath",
             destinations: .iOS,
             product: .app,
-            bundleId: "dev.tuist.dailymath",
+            bundleId: "com.juanpa.dailymath",
             infoPlist: .extendingDefault(
                 with: [
                     "UILaunchScreen": [
@@ -20,7 +20,10 @@ let project = Project(
                 "Sources",
                 "Resources",
             ],
-            dependencies: []
+            dependencies: [],
+            settings: .settings(base: [
+                "CODE_SIGN_STYLE": "Automatic",
+            ])
         ),
         .target(
             name: "dailymathTests",
