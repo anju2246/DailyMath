@@ -15,7 +15,7 @@ struct DMBrandHeader: View {
     }
 }
 
-struct DMUnderlineField: View {
+struct DMValidatedField: View {
     let placeholder: String
     @Binding var text: String
     var isSecure: Bool = false
@@ -24,36 +24,57 @@ struct DMUnderlineField: View {
     var autocapitalization: TextInputAutocapitalization = .sentences
     var trailingIcon: String? = nil
     var onTrailingTap: (() -> Void)? = nil
+    var error: String? = nil
+
+    @FocusState private var isFocused: Bool
 
     var body: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 8) {
-                Group {
-                    if isSecure {
-                        SecureField(placeholder, text: $text)
-                    } else {
-                        TextField(placeholder, text: $text)
+        VStack(alignment: .leading, spacing: DMSpacing.xxs) {
+            VStack(spacing: 8) {
+                HStack(spacing: 8) {
+                    Group {
+                        if isSecure {
+                            SecureField(placeholder, text: $text)
+                        } else {
+                            TextField(placeholder, text: $text)
+                        }
                     }
-                }
-                .font(DMFont.body())
-                .keyboardType(keyboardType)
-                .textInputAutocapitalization(autocapitalization)
-                .textContentType(contentType)
-                .autocorrectionDisabled(contentType == .emailAddress || isSecure)
+                    .font(DMFont.body())
+                    .keyboardType(keyboardType)
+                    .textInputAutocapitalization(autocapitalization)
+                    .textContentType(contentType)
+                    .focused($isFocused)
+                    .autocorrectionDisabled(contentType == .emailAddress || isSecure)
 
-                if let icon = trailingIcon {
-                    Button {
-                        onTrailingTap?()
-                    } label: {
-                        Image(systemName: icon)
-                            .foregroundStyle(Color.dmTextSecondary)
+                    if let icon = trailingIcon {
+                        Button {
+                            onTrailingTap?()
+                        } label: {
+                            Image(systemName: icon)
+                                .foregroundStyle(Color.dmTextSecondary)
+                        }
                     }
                 }
+                Rectangle()
+                    .fill(lineColor)
+                    .frame(height: isFocused || error != nil ? 2 : 1)
             }
-            Rectangle()
-                .fill(Color.dmTextSecondary.opacity(0.3))
-                .frame(height: 1)
+            
+            if let error = error {
+                Text(error)
+                    .font(DMFont.caption2())
+                    .foregroundStyle(Color.dmError)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
         }
+        .animation(.spring(response: 0.3), value: error)
+        .animation(.easeInOut(duration: 0.2), value: isFocused)
+    }
+
+    private var lineColor: Color {
+        if error != nil { return Color.dmError }
+        if isFocused { return Color.dmPrimary }
+        return Color.dmTextSecondary.opacity(0.3)
     }
 }
 

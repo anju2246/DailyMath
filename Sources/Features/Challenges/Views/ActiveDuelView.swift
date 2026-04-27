@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ActiveDuelView: View {
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     var userName: String = "Tú"
     var opponentName: String = "Diegue"
     var currentExercise: Int = 3
@@ -31,7 +32,9 @@ struct ActiveDuelView: View {
                     .padding(.horizontal, DMSpacing.lg)
                     .padding(.top, DMSpacing.md)
 
-                Button { } label: {
+                Button {
+                    navigation.pushChallenges(.duelResult(won: true))
+                } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "checkmark")
                         Text("Enviar respuesta")

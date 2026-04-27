@@ -28,12 +28,13 @@ struct ForgotPasswordView: View {
                 }
                 Spacer(minLength: DMSpacing.lg)
                 DMFormCard {
-                    DMUnderlineField(
+                    DMValidatedField(
                         placeholder: L10n.commonEmail,
                         text: $viewModel.email,
                         keyboardType: .emailAddress,
                         contentType: .emailAddress,
-                        autocapitalization: .never
+                        autocapitalization: .never,
+                        error: viewModel.emailError
                     )
                     Button {
                         Task {
@@ -44,10 +45,10 @@ struct ForgotPasswordView: View {
                         if appState.isAuthLoading {
                             ProgressView().tint(.white).primaryButton()
                         } else {
-                            Text(L10n.authForgotSendLink).primaryButton()
+                            Text(L10n.authForgotSendLink).primaryButton(isDisabled: !viewModel.isFormValid)
                         }
                     }
-                    .disabled(!viewModel.email.isValidEmail || appState.isAuthLoading)
+                    .disabled(!viewModel.isFormValid || appState.isAuthLoading)
                 }
                 Spacer()
             }

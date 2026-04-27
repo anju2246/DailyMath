@@ -39,6 +39,14 @@ final class AppNavigationCoordinator: ObservableObject {
         challengesPath.append(route)
     }
 
+    func popChallengesToRoot() {
+        challengesPath = NavigationPath()
+    }
+
+    func popAgility() {
+        agilityPath = NavigationPath()
+    }
+
     func resetAuth() {
         authPath = NavigationPath()
         authSheet = nil

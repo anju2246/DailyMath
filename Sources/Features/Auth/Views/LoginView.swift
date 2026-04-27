@@ -6,6 +6,7 @@ struct LoginView: View {
     @EnvironmentObject var navigation: AppNavigationCoordinator
     @StateObject private var viewModel: LoginViewModel
     @State private var showInvalidAlert = false
+    @State private var alertMessage = ""
 
     init() {
         _viewModel = StateObject(wrappedValue: LoginViewModel())
@@ -29,9 +30,9 @@ struct LoginView: View {
 
                 if showInvalidAlert {
                     DMAlertCard(
-                        title: "Inicio de Sesión Inválido",
-                        message: "Verifica tus credenciales de entrada.",
-                        primaryTitle: "Continuar",
+                        title: L10n.authSignIn,
+                        message: alertMessage,
+                        primaryTitle: L10n.commonBack,
                         onPrimary: { showInvalidAlert = false }
                     )
                 }
@@ -63,7 +64,11 @@ struct LoginView: View {
             viewModel.update(authService: appState.authService)
         }
         .onChange(of: viewModel.toast) { _, new in
-            if new?.style == .error { showInvalidAlert = true }
+            if let toast = new, (toast.style == .error || toast.style == .warning) && 
+                !toast.message.contains("obligatorio") && !toast.message.contains("inválido") {
+                alertMessage = toast.message
+                showInvalidAlert = true
+            }
         }
     }
 
@@ -79,22 +84,24 @@ struct LoginView: View {
 
     private var formCard: some View {
         DMFormCard {
-            DMUnderlineField(
+            DMValidatedField(
                 placeholder: L10n.commonEmail,
                 text: $viewModel.email,
                 keyboardType: .emailAddress,
                 contentType: .emailAddress,
                 autocapitalization: .never,
                 trailingIcon: viewModel.email.isEmpty ? nil : "xmark.circle.fill",
-                onTrailingTap: { viewModel.email = "" }
+                onTrailingTap: { viewModel.email = "" },
+                error: viewModel.emailError
             )
-            DMUnderlineField(
+            DMValidatedField(
                 placeholder: L10n.commonPassword,
                 text: $viewModel.password,
                 isSecure: true,
                 contentType: .password,
                 trailingIcon: viewModel.password.isEmpty ? nil : "xmark.circle.fill",
-                onTrailingTap: { viewModel.password = "" }
+                onTrailingTap: { viewModel.password = "" },
+                error: viewModel.passwordError
             )
 
             HStack {
@@ -112,10 +119,50 @@ struct LoginView: View {
                 if viewModel.isLoading {
                     ProgressView().tint(.white).primaryButton()
                 } else {
-                    Text(L10n.authSignIn).primaryButton()
+                    Text(L10n.authSignIn).primaryButton(isDisabled: !viewModel.isFormValid)
                 }
             }
-            .disabled(!viewModel.isFormValid || viewModel.isLoading)
+            .disabled(viewModel.isLoading || !viewModel.isFormValid)
+
+            // MARK: - Demo Access Panel
+            VStack(spacing: DMSpacing.xxs) {
+                Text("Acceso Rápido (Demo)")
+                    .font(DMFont.caption2())
+                    .foregroundStyle(Color.dmTextSecondary)
+                    .textCase(.uppercase)
+
+                HStack(spacing: DMSpacing.sm) {
+                    demoButton(
+                        title: "Estudiante",
+                        icon: "person.circle",
+                        color: .blue,
+                        email: "estudiante@dailymath.com"
+                    )
+
+                    demoButton(
+                        title: "Moderador",
+                        icon: "shield.lefthalf.filled",
+                        color: .orange,
+                        email: "moderador@dailymath.com"
+                    )
+                }
+            }
+            .padding(.top, DMSpacing.sm)
+        }
+    }
+
+    private func demoButton(title: String, icon: String, color: Color, email: String) -> some View {
+        Button {
+            viewModel.email = email
+            viewModel.password = "password123"
+            Task { await viewModel.login() }
+        } label: {
+            Label(title, systemImage: icon)
+                .font(DMFont.caption())
+                .padding(DMSpacing.xs)
+                .background(color.opacity(0.1))
+                .cornerRadius(DMRadius.sm)
+                .foregroundStyle(color)
         }
     }
 

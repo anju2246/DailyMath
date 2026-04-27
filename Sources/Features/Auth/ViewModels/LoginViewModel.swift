@@ -7,6 +7,8 @@ import Combine
 class LoginViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
+    @Published var emailError: String?
+    @Published var passwordError: String?
     @Published var toast: Toast?
 
     // mirror the service state so views can bind directly
@@ -19,6 +21,7 @@ class LoginViewModel: ObservableObject {
     init(authService: any AuthRepository = AuthService()) {
         self.authService = authService
         bind(to: authService)
+        setupValidation()
     }
 
     /// Change the service instance (used when the view appears).
@@ -47,28 +50,57 @@ class LoginViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
+    private func setupValidation() {
+        $email
+            .dropFirst()
+            .removeDuplicates()
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .map { email -> String? in
+                let trimmed = email.trimmingCharacters(in: .whitespaces)
+                if trimmed.isEmpty { return L10n.authValidationEmailRequired }
+                if !trimmed.isValidEmail { return L10n.authValidationEmailInvalid }
+                return nil
+            }
+            .assign(to: &$emailError)
+
+        $password
+            .dropFirst()
+            .removeDuplicates()
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .map { password -> String? in
+                if password.isEmpty { return L10n.authValidationPasswordRequired }
+                return nil
+            }
+            .assign(to: &$passwordError)
+    }
+
     var isFormValid: Bool {
         !email.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !password.isEmpty
+        emailError == nil &&
+        !password.isEmpty &&
+        passwordError == nil
     }
 
     /// Perform a login using the injected authService.
     @MainActor
     func login() async {
         let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
+        var hasError = false
 
-        guard !trimmedEmail.isEmpty else {
-            toast = Toast(message: L10n.authValidationEmailRequired, style: .warning)
-            return
+        if trimmedEmail.isEmpty {
+            emailError = L10n.authValidationEmailRequired
+            hasError = true
+        } else if !trimmedEmail.isValidEmail {
+            emailError = L10n.authValidationEmailInvalid
+            hasError = true
         }
-        guard trimmedEmail.isValidEmail else {
-            toast = Toast(message: L10n.authValidationEmailInvalid, style: .error)
-            return
+
+        if password.isEmpty {
+            passwordError = L10n.authValidationPasswordRequired
+            hasError = true
         }
-        guard !password.isEmpty else {
-            toast = Toast(message: L10n.authValidationPasswordRequired, style: .warning)
-            return
-        }
+
+        guard !hasError else { return }
 
         do {
             try await authService.signIn(email: trimmedEmail, password: password)

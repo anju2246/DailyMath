@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DuelLobbyView: View {
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     @Environment(\.dismiss) private var dismiss
     @State private var dotCount: Int = 0
 
@@ -40,6 +41,11 @@ struct DuelLobbyView: View {
         .navigationBarHidden(true)
         .onReceive(timer) { _ in
             dotCount = (dotCount + 1) % 4
+        }
+        .task {
+            // Simulate waiting for an opponent
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            navigation.pushChallenges(.activeDuel)
         }
     }
 }

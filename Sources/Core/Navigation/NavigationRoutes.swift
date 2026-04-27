@@ -52,4 +52,6 @@ enum AgilityRoute: Hashable {
 
 enum ChallengesRoute: Hashable {
     case duelLobby
+    case activeDuel
+    case duelResult(won: Bool)
 }

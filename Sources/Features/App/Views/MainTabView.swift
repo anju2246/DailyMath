@@ -31,6 +31,10 @@ struct MainTabView: View {
                             switch route {
                             case .duelLobby:
                                 DuelLobbyView()
+                            case .activeDuel:
+                                ActiveDuelView()
+                            case .duelResult(let won):
+                                DuelResultView(won: won)
                             }
                         }
                 }

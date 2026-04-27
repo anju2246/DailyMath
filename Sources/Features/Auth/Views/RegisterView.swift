@@ -46,14 +46,18 @@ struct RegisterView: View {
                     primaryTitle: "Continuar",
                     onPrimary: {
                         showSuccess = false
-                        dismiss()
+                        navigation.pushAuth(.otp(email: viewModel.email))
                     }
                 )
             }
         }
         .navigationBarHidden(true)
         .onChange(of: viewModel.toast) { _, new in
-            if new?.style == .error { showError = true }
+            if let toast = new, (toast.style == .error || toast.style == .warning) &&
+                !toast.message.contains("obligatorio") && !toast.message.contains("inválido") &&
+                !toast.message.contains("longitud") && !toast.message.contains("coinciden") {
+                showError = true
+            }
             if new?.style == .success { showSuccess = true }
         }
     }
@@ -70,30 +74,34 @@ struct RegisterView: View {
 
     private var formCard: some View {
         DMFormCard {
-            DMUnderlineField(
+            DMValidatedField(
                 placeholder: L10n.authNamePlaceholder,
                 text: $viewModel.displayName,
                 contentType: .name,
-                autocapitalization: .words
+                autocapitalization: .words,
+                error: viewModel.displayNameError
             )
-            DMUnderlineField(
+            DMValidatedField(
                 placeholder: L10n.commonEmail,
                 text: $viewModel.email,
                 keyboardType: .emailAddress,
                 contentType: .emailAddress,
-                autocapitalization: .never
+                autocapitalization: .never,
+                error: viewModel.emailError
             )
-            DMUnderlineField(
+            DMValidatedField(
                 placeholder: L10n.commonPassword,
                 text: $viewModel.password,
                 isSecure: true,
-                contentType: .newPassword
+                contentType: .newPassword,
+                error: viewModel.passwordError
             )
-            DMUnderlineField(
+            DMValidatedField(
                 placeholder: L10n.authConfirmPasswordPlaceholder,
                 text: $viewModel.confirmPassword,
                 isSecure: true,
-                contentType: .newPassword
+                contentType: .newPassword,
+                error: viewModel.confirmPasswordError
             )
         }
     }
@@ -113,10 +121,10 @@ struct RegisterView: View {
                 if appState.isAuthLoading {
                     ProgressView().tint(.white).primaryButton()
                 } else {
-                    Text("Registrarme").primaryButton()
+                    Text("Registrarme").primaryButton(isDisabled: !isFormValid)
                 }
             }
-            .disabled(!isFormValid || appState.isAuthLoading)
+            .disabled(appState.isAuthLoading || !isFormValid)
 
             HStack(spacing: 4) {
                 Text("¿Ya tienes cuenta?")

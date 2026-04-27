@@ -1,13 +1,14 @@
 import SwiftUI
 
 struct DuelResultView: View {
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     var won: Bool = true
     var correctAnswers: Int = 6
     var timeSpent: String = "1:47"
     var pointsEarned: Int = 85
     var opponentName: String = "Carlos"
     var onRematch: () -> Void = {}
-    var onExit: () -> Void = {}
+    var onExit: (() -> Void)? = nil
 
     var body: some View {
         ZStack {
@@ -48,7 +49,10 @@ struct DuelResultView: View {
                             .background(Color.dmWarning)
                             .cornerRadius(DMRadius.pill)
                     }
-                    Button(action: onExit) {
+                    Button {
+                        if let onExit = onExit { onExit() }
+                        else { navigation.popChallengesToRoot() }
+                    } label: {
                         Text("Volver")
                             .font(DMFont.calloutEmphasized())
                             .foregroundStyle(Color.dmOnDark)

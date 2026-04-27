@@ -51,31 +51,34 @@ extension View {
             .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 2)
     }
 
-    func primaryButton() -> some View {
+    func primaryButton(isDisabled: Bool = false) -> some View {
         self
             .font(DMFont.headline())
             .foregroundColor(.white)
             .frame(maxWidth: .infinity, minHeight: 52)
-            .background(Color.dmSuccess)
+            .background(isDisabled ? Color.dmTextSecondary.opacity(0.3) : Color.dmSuccess)
             .cornerRadius(DMRadius.pill)
+            .opacity(isDisabled ? 0.6 : 1.0)
     }
 
-    func secondaryButton() -> some View {
+    func secondaryButton(isDisabled: Bool = false) -> some View {
         self
             .font(DMFont.headline())
             .foregroundColor(Color.dmSurface)
             .frame(maxWidth: .infinity, minHeight: 52)
-            .background(Color.dmOnDark)
+            .background(isDisabled ? Color.dmTextSecondary.opacity(0.3) : Color.dmOnDark)
             .cornerRadius(DMRadius.pill)
+            .opacity(isDisabled ? 0.6 : 1.0)
     }
 
-    func accentButton() -> some View {
+    func accentButton(isDisabled: Bool = false) -> some View {
         self
             .font(DMFont.headline())
             .foregroundColor(.white)
             .frame(maxWidth: .infinity, minHeight: 52)
-            .background(Color.dmPrimary)
+            .background(isDisabled ? Color.dmTextSecondary.opacity(0.3) : Color.dmPrimary)
             .cornerRadius(DMRadius.pill)
+            .opacity(isDisabled ? 0.6 : 1.0)
     }
 }
 
