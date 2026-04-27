@@ -7,26 +7,32 @@ import Combine
 class AppState: ObservableObject {
     let authService: any AuthRepository
     let flashcardStore: any FlashcardRepository
+    let exerciseRepository: LocalExerciseRepository
+    let communityRepository: LocalCommunityRepository
+    let profileRepository: LocalUserProfileRepository
     private let sessionStore = SessionRepository.shared
-    
+
     /// Mirror of the authentication state for easier bindings/publishing.
     @Published private(set) var isAuthenticated = false
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
+
     var currentUser: UserProfile? { authService.currentUser }
     var isModerator: Bool { authService.currentUser?.isModerator ?? false }
     var isAuthLoading: Bool { authService.isLoading }
 
     init(
-        authService: any AuthRepository = AuthService(),
+        authService: AuthService = AuthService(),
         flashcardStore: any FlashcardRepository = FlashcardStore()
     ) {
         self.authService = authService
         self.flashcardStore = flashcardStore
-        
+        self.exerciseRepository = LocalExerciseRepository(authService: authService)
+        self.communityRepository = LocalCommunityRepository(authService: authService, exerciseRepo: exerciseRepository)
+        self.profileRepository = LocalUserProfileRepository(authService: authService)
+
         // Cargar estado inicial desde persistencia
-        self.isAuthenticated = sessionStore.isLoggedIn
+        self.isAuthenticated = sessionStore.isLoggedIn || authService.isAuthenticated
 
         // Forward AuthService changes so SwiftUI re-evaluates the view tree
         authService.objectWillChangePublisher
@@ -59,6 +65,22 @@ class AppState: ObservableObject {
             .sink { [weak self] _ in
                 self?.objectWillChange.send()
             }
+            .store(in: &cancellables)
+
+        // Forward exercise/community/profile changes
+        exerciseRepository.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+
+        communityRepository.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+
+        profileRepository.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &cancellables)
     }
 

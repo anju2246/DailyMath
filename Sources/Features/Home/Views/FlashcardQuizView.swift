@@ -5,33 +5,67 @@ import SwiftUI
 struct FlashcardQuizView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) private var dismiss
-    
+
     @State private var currentIndex = 0
     @State private var selectedAnswer: String? = nil
     @State private var showResult = false
     @State private var correctCount = 0
     @State private var isFinished = false
     @State private var shuffledOptions: [String] = []
-    
+    @State private var sessionCards: [QuizFlashcard] = []
+
     let cards: [QuizFlashcard]
-    
+
     private var currentCard: QuizFlashcard? {
-        guard currentIndex < cards.count else { return nil }
-        return cards[currentIndex]
+        guard currentIndex < sessionCards.count else { return nil }
+        return sessionCards[currentIndex]
     }
-    
+
     var body: some View {
         NavigationStack {
-            if isFinished {
-                finishedView
-            } else if let card = currentCard {
-                quizContent(card: card)
+            ZStack {
+                Color.dmBackground.ignoresSafeArea()
+
+                if sessionCards.isEmpty {
+                    emptyState
+                } else if isFinished {
+                    finishedView
+                } else if let card = currentCard {
+                    quizContent(card: card)
+                }
+            }
+            .onAppear {
+                if sessionCards.isEmpty {
+                    sessionCards = cards
+                }
             }
         }
     }
-    
+
+    // MARK: - Empty State
+
+    private var emptyState: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "checkmark.seal.fill")
+                .font(.system(size: 64))
+                .foregroundStyle(.green)
+            Text("No tienes flashcards pendientes")
+                .font(.title3.bold())
+            Text("¡Buen trabajo! Vuelve más tarde para tu próximo repaso.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+            Button { dismiss() } label: {
+                Text("Volver").primaryButton()
+            }
+            .padding(.horizontal, 32)
+            .padding(.top, 8)
+        }
+    }
+
     // MARK: - Quiz Content
-    
+
     private func quizContent(card: QuizFlashcard) -> some View {
         VStack(spacing: 0) {
             // Progress bar
@@ -39,7 +73,7 @@ struct FlashcardQuizView: View {
                 ZStack(alignment: .leading) {
                     Capsule()
                         .fill(Color(.systemGray5))
-                    
+
                     Capsule()
                         .fill(
                             LinearGradient(
@@ -48,31 +82,31 @@ struct FlashcardQuizView: View {
                                 endPoint: .trailing
                             )
                         )
-                        .frame(width: geo.size.width * CGFloat(currentIndex) / CGFloat(cards.count))
+                        .frame(width: geo.size.width * CGFloat(currentIndex) / CGFloat(max(sessionCards.count, 1)))
                         .animation(.spring(), value: currentIndex)
                 }
             }
             .frame(height: 8)
             .padding(.horizontal)
             .padding(.top, 12)
-            
+
             // Counter
             HStack {
-                Text(L10n.quizProgress(currentIndex + 1, cards.count))
+                Text(L10n.quizProgress(currentIndex + 1, sessionCards.count))
                     .font(.subheadline.bold())
                     .foregroundStyle(.secondary)
-                
+
                 Spacer()
-                
+
                 Label(L10n.quizCorrectCount(correctCount), systemImage: "checkmark.circle.fill")
                     .font(.subheadline.bold())
                     .foregroundStyle(.green)
             }
             .padding(.horizontal)
             .padding(.top, 8)
-            
+
             Spacer()
-            
+
             // Category badge
             if let cat = AppConstants.Category(rawValue: card.category) {
                 Label(cat.displayName, systemImage: cat.icon)
@@ -83,16 +117,16 @@ struct FlashcardQuizView: View {
                     .background(Color.dmPrimary.opacity(0.1))
                     .cornerRadius(20)
             }
-            
+
             // Question
             Text(card.question)
                 .font(.title2.bold())
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
                 .padding(.top, 16)
-            
+
             Spacer()
-            
+
             // Options
             VStack(spacing: 12) {
                 ForEach(shuffledOptions, id: \.self) { option in
@@ -100,9 +134,9 @@ struct FlashcardQuizView: View {
                 }
             }
             .padding(.horizontal, 20)
-            
+
             Spacer()
-            
+
             // Continue button
             if showResult {
                 Button {
@@ -128,18 +162,18 @@ struct FlashcardQuizView: View {
                 Button(L10n.quizExit) { dismiss() }
             }
         }
-        .onAppear {
+        .task(id: currentIndex) {
             shuffledOptions = card.shuffledOptions
         }
         .animation(.spring(response: 0.3), value: showResult)
     }
-    
+
     // MARK: - Option Button
-    
+
     private func optionButton(option: String, card: QuizFlashcard) -> some View {
         let isCorrectOption = option == card.correctAnswer
         let isSelected = option == selectedAnswer
-        
+
         let bgColor: Color = {
             guard showResult else {
                 return Color(.systemGray5)
@@ -152,7 +186,7 @@ struct FlashcardQuizView: View {
             }
             return Color(.systemGray5)
         }()
-        
+
         let borderColor: Color = {
             guard showResult else {
                 return Color(.systemGray4)
@@ -165,19 +199,19 @@ struct FlashcardQuizView: View {
             }
             return Color(.systemGray4)
         }()
-        
+
         let icon: String? = {
             guard showResult else { return nil }
             if isCorrectOption { return "checkmark.circle.fill" }
             if isSelected && !isCorrectOption { return "xmark.circle.fill" }
             return nil
         }()
-        
+
         return Button {
             guard !showResult else { return }
             selectedAnswer = option
             showResult = true
-            
+
             let wasCorrect = option == card.correctAnswer
             if wasCorrect { correctCount += 1 }
             appState.flashcardStore.review(id: card.id, wasCorrect: wasCorrect)
@@ -187,9 +221,9 @@ struct FlashcardQuizView: View {
                     .font(.body.bold())
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
-                
+
                 Spacer()
-                
+
                 if let icon = icon {
                     Image(systemName: icon)
                         .font(.title3)
@@ -208,39 +242,40 @@ struct FlashcardQuizView: View {
         .disabled(showResult)
         .animation(.easeInOut(duration: 0.2), value: showResult)
     }
-    
+
     // MARK: - Finished View
-    
+
     private var finishedView: some View {
         VStack(spacing: 24) {
             Spacer()
-            
-            Image(systemName: correctCount == cards.count ? "trophy.fill" : "star.fill")
+
+            Image(systemName: correctCount == sessionCards.count ? "trophy.fill" : "star.fill")
                 .font(.system(size: 72))
                 .foregroundStyle(.yellow)
-            
+
             Text(L10n.quizFinishedTitle)
                 .font(.largeTitle.bold())
-            
+                .multilineTextAlignment(.center)
+
             // Score
             VStack(spacing: 8) {
-                Text(L10n.quizScore(correctCount, cards.count))
+                Text(L10n.quizScore(correctCount, sessionCards.count))
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundStyle(.green)
-                
+
                 Text(L10n.quizCorrectAnswers)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-            
+
             // Percentage
-            let pct = cards.isEmpty ? 0 : Int((Double(correctCount) / Double(cards.count)) * 100)
+            let pct = sessionCards.isEmpty ? 0 : Int((Double(correctCount) / Double(sessionCards.count)) * 100)
             Text(L10n.quizPercentage(pct))
                 .font(.title.bold())
                 .foregroundStyle(pct >= 80 ? .green : pct >= 50 ? .orange : .red)
-            
+
             Spacer()
-            
+
             Button {
                 dismiss()
             } label: {
@@ -250,21 +285,19 @@ struct FlashcardQuizView: View {
             .padding(.horizontal)
             .padding(.bottom, 32)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationTitle(L10n.quizResultTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
-    
+
     // MARK: - Logic
-    
+
     private func nextCard() {
         selectedAnswer = nil
         showResult = false
-        
-        if currentIndex + 1 < cards.count {
+
+        if currentIndex + 1 < sessionCards.count {
             currentIndex += 1
-            if let card = currentCard {
-                shuffledOptions = card.shuffledOptions
-            }
         } else {
             isFinished = true
         }

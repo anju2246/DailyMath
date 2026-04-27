@@ -4,48 +4,84 @@ import SwiftUI
 
 struct LeaderboardView: View {
     @EnvironmentObject var appState: AppState
-    
-    // Simulación de los mejores del ranking
-    private let topUsers = [
-        ("Sofia_Math", 2540, "🥇"),
-        ("Andres_Calc", 2100, "🥈"),
-        ("Carlos_Uniquindio", 1950, "🥉"),
-        ("Laura_Algebra", 1800, "4"),
-        ("Pedro_Trig", 1750, "5"),
-        ("Maria_Log", 1600, "6")
-    ]
-    
+
+    private var topUsers: [UserProfile] {
+        appState.profileRepository.topUsers(limit: 10)
+    }
+
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                // Header Podio
-                HStack(alignment: .bottom, spacing: 16) {
-                    PodiumColumn(name: "Andres_Calc", points: "2100", icon: "🥈", height: 100)
-                    PodiumColumn(name: "Sofia_Math", points: "2540", icon: "🥇", height: 140, isWinner: true)
-                    PodiumColumn(name: "Carlos_U", points: "1950", icon: "🥉", height: 80)
+            if topUsers.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "trophy")
+                        .font(.system(size: 48))
+                        .foregroundStyle(.secondary)
+                    Text("Aún no hay ranking. Empieza a estudiar y crear ejercicios para sumar puntos.")
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 32)
                 }
-                .padding(.top, 40)
-                
-                // Lista de Ranking
-                VStack(spacing: 0) {
-                    ForEach(3..<topUsers.count, id: \.self) { index in
-                        RankingRow(
-                            position: "\(index + 1)",
-                            name: topUsers[index].0,
-                            points: "\(topUsers[index].1) pts"
-                        )
-                        if index < topUsers.count - 1 {
-                            Divider().padding(.leading, 60)
+                .padding(.top, 80)
+            } else {
+                VStack(spacing: 20) {
+                    podium
+
+                    if topUsers.count > 3 {
+                        VStack(spacing: 0) {
+                            ForEach(Array(topUsers.enumerated()).filter { $0.offset >= 3 }, id: \.element.id) { idx, user in
+                                RankingRow(
+                                    position: "\(idx + 1)",
+                                    name: user.displayName ?? user.username,
+                                    points: "\(user.points) pts"
+                                )
+                                if idx < topUsers.count - 1 {
+                                    Divider().padding(.leading, 60)
+                                }
+                            }
                         }
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(16)
+                        .padding(.horizontal)
                     }
                 }
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(16)
-                .padding(.horizontal)
             }
         }
         .navigationTitle(L10n.leaderboardTitle)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private var podium: some View {
+        let users = topUsers
+        HStack(alignment: .bottom, spacing: 16) {
+            if users.count >= 2 {
+                PodiumColumn(
+                    name: users[1].displayName ?? users[1].username,
+                    points: "\(users[1].points)",
+                    icon: "🥈",
+                    height: 100
+                )
+            }
+            if let first = users.first {
+                PodiumColumn(
+                    name: first.displayName ?? first.username,
+                    points: "\(first.points)",
+                    icon: "🥇",
+                    height: 140,
+                    isWinner: true
+                )
+            }
+            if users.count >= 3 {
+                PodiumColumn(
+                    name: users[2].displayName ?? users[2].username,
+                    points: "\(users[2].points)",
+                    icon: "🥉",
+                    height: 80
+                )
+            }
+        }
+        .padding(.top, 40)
     }
 }
 

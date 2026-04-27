@@ -107,6 +107,7 @@ struct LoginView: View {
             }
 
             Button {
+                hideKeyboard()
                 Task { await viewModel.login() }
             } label: {
                 if viewModel.isLoading {

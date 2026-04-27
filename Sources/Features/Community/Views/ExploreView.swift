@@ -2,16 +2,21 @@ import SwiftUI
 
 struct ExploreView: View {
     @EnvironmentObject var navigation: AppNavigationCoordinator
+    @EnvironmentObject var appState: AppState
     @State private var selectedCategory: AppConstants.Category? = nil
     @State private var searchText = ""
     @State private var showCreate = false
 
-    private var filtered: [SampleExercise] {
-        SampleExercises.all.filter { ex in
-            (selectedCategory == nil || ex.category == selectedCategory!) &&
-            (searchText.isEmpty ||
-             ex.title.localizedCaseInsensitiveContains(searchText) ||
-             ex.statement.localizedCaseInsensitiveContains(searchText))
+    private var filtered: [Exercise] {
+        appState.exerciseRepository.exercises.filter { ex in
+            guard ex.status == AppConstants.ExerciseStatus.verified.rawValue else { return false }
+            if let category = selectedCategory, ex.category != category.rawValue { return false }
+            if !searchText.isEmpty,
+               !ex.title.localizedCaseInsensitiveContains(searchText),
+               !ex.statement.localizedCaseInsensitiveContains(searchText) {
+                return false
+            }
+            return true
         }
     }
 
@@ -84,16 +89,20 @@ struct ExploreView: View {
         }
     }
 
-    private func exerciseCard(_ ex: SampleExercise) -> some View {
-        VStack(alignment: .leading, spacing: DMSpacing.xs) {
+    private func exerciseCard(_ ex: Exercise) -> some View {
+        let categoryName = ex.categoryEnum?.displayName ?? ex.category
+        let authorName = ex.author?.displayName
+            ?? ex.author?.username
+            ?? (ex.isPreloaded ? "DailyMath" : "Anónimo")
+        return VStack(alignment: .leading, spacing: DMSpacing.xs) {
             HStack {
-                Text(ex.category.displayName.uppercased())
+                Text(categoryName.uppercased())
                     .font(DMFont.caption2())
                     .foregroundStyle(Color.dmTextSecondary)
                 Spacer()
                 HStack(spacing: 2) {
                     Image(systemName: "arrow.up").font(.caption)
-                    Text("\(ex.votes)").font(DMFont.caption())
+                    Text("\(ex.votesCount)").font(DMFont.caption())
                 }
                 .foregroundStyle(Color.dmSuccess)
             }
@@ -105,7 +114,7 @@ struct ExploreView: View {
             HStack {
                 Image(systemName: "person.circle.fill")
                     .foregroundStyle(Color.dmTextSecondary)
-                Text(ex.author)
+                Text(authorName)
                     .font(DMFont.caption())
                     .foregroundStyle(Color.dmTextSecondary)
             }

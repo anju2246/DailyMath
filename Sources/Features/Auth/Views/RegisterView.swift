@@ -6,15 +6,10 @@ struct RegisterView: View {
     @EnvironmentObject var navigation: AppNavigationCoordinator
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = RegisterViewModel()
-    @State private var acceptTerms = false
-    @State private var showSuccess = false
+    @State private var acceptTerms = true
     @State private var showError = false
 
     private var authService: any AuthRepository { appState.authService }
-
-    private var isFormValid: Bool {
-        viewModel.isFormValid && acceptTerms
-    }
 
     var body: some View {
         ZStack {
@@ -39,22 +34,10 @@ struct RegisterView: View {
                     onPrimary: { showError = false }
                 )
             }
-            if showSuccess {
-                DMAlertCard(
-                    title: "¡Bienvenido!",
-                    message: "Tu cuenta fue creada con éxito.",
-                    primaryTitle: "Continuar",
-                    onPrimary: {
-                        showSuccess = false
-                        dismiss()
-                    }
-                )
-            }
         }
         .navigationBarHidden(true)
         .onChange(of: viewModel.toast) { _, new in
             if new?.style == .error { showError = true }
-            if new?.style == .success { showSuccess = true }
         }
     }
 
@@ -108,6 +91,7 @@ struct RegisterView: View {
             .toggleStyle(SwitchToggleStyle(tint: Color.dmSuccess))
 
             Button {
+                hideKeyboard()
                 Task { await viewModel.register(authService: authService) }
             } label: {
                 if appState.isAuthLoading {
@@ -116,7 +100,7 @@ struct RegisterView: View {
                     Text("Registrarme").primaryButton()
                 }
             }
-            .disabled(!isFormValid || appState.isAuthLoading)
+            .disabled(appState.isAuthLoading)
 
             HStack(spacing: 4) {
                 Text("¿Ya tienes cuenta?")

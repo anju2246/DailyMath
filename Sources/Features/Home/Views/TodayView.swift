@@ -66,8 +66,8 @@ struct TodayView: View {
     private var statsRow: some View {
         HStack(spacing: DMSpacing.sm) {
             statCard(value: "\(store.dueFlashcards.count)", label: "Pendientes", icon: "clock.fill", tint: Color.dmError)
-            statCard(value: "\(store.totalReviewedToday)", label: "Pendientes", icon: "checkmark.circle.fill", tint: Color.dmSuccess)
-            statCard(value: "\(store.flashcards.count)", label: "Pendientes", icon: "square.stack.3d.up.fill", tint: Color.dmPrimary)
+            statCard(value: "\(store.totalReviewedToday)", label: "Hechas hoy", icon: "checkmark.circle.fill", tint: Color.dmSuccess)
+            statCard(value: "\(store.flashcards.count)", label: "Total", icon: "square.stack.3d.up.fill", tint: Color.dmPrimary)
         }
     }
 

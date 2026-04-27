@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import UIKit
 
 // MARK: - Utility Extensions
 
@@ -43,6 +44,10 @@ extension Color {
 }
 
 extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+
     func cardStyle() -> some View {
         self
             .padding(DMSpacing.md)

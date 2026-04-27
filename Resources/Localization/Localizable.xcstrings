@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "¡Buen trabajo! Vuelve más tarde para tu próximo repaso." : {
+
+    },
     "¡Hola, %@!" : {
 
     },
@@ -19,10 +22,16 @@
     "%@" : {
 
     },
+    "%@ comentarios" : {
+
+    },
     "%@ tarjetas pendientes" : {
 
     },
     "%@/10" : {
+
+    },
+    "•" : {
 
     },
     "⚔️" : {
@@ -141,6 +150,9 @@
           }
         }
       }
+    },
+    "Aún no hay ranking. Empieza a estudiar y crear ejercicios para sumar puntos." : {
+
     },
     "auth.confirm_password.label" : {
       "extractionState" : "manual",
@@ -1052,6 +1064,9 @@
         }
       }
     },
+    "COMENTARIOS" : {
+
+    },
     "Comenzar Quiz" : {
 
     },
@@ -1687,10 +1702,16 @@
         }
       }
     },
+    "Ejercicio no encontrado" : {
+
+    },
     "Emparejando con un estudiante de\nnivel general similar" : {
 
     },
     "Empieza Ahora" : {
+
+    },
+    "ENUNCIADO" : {
 
     },
     "Enviar respuesta" : {
@@ -2580,6 +2601,12 @@
 
     },
     "No hay ejercicios" : {
+
+    },
+    "No hay ejercicios pendientes." : {
+
+    },
+    "No tienes flashcards pendientes" : {
 
     },
     "notification.daily_reminder" : {
@@ -3650,7 +3677,13 @@
         }
       }
     },
+    "Sé el primero en comentar." : {
+
+    },
     "Sin flashcards todavía" : {
+
+    },
+    "SOLUCIÓN" : {
 
     },
     "Soporte" : {
@@ -3801,6 +3834,9 @@
     "Torneos Semanales" : {
 
     },
+    "Tu ejercicio quedó pendiente de revisión por un moderador." : {
+
+    },
     "Tus publicaciones" : {
 
     },
@@ -3879,6 +3915,9 @@
       }
     },
     "Ver" : {
+
+    },
+    "Ver solución" : {
 
     },
     "Verificar mi cuenta" : {
