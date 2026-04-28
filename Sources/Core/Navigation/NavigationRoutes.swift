@@ -31,6 +31,7 @@ enum HomeSheet: String, Identifiable {
 
 enum HomeFullScreen: String, Identifiable {
     case flashcardQuiz
+    case agility
 
     var id: String { rawValue }
 }

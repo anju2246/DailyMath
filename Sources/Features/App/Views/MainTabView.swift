@@ -41,11 +41,6 @@ struct MainTabView: View {
                 .tabItem { Label("Combatir", systemImage: "flag.checkered") }
                 .tag(MainTab.challenges)
 
-                NavigationStack(path: $navigation.agilityPath) {
-                    AgilityView()
-                }
-                .tabItem { Label("Agilidad", systemImage: "brain.head.profile") }
-                .tag(MainTab.agility)
 
             } else {
                 NavigationStack(path: $navigation.moderatorPath) {

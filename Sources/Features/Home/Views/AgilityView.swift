@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct AgilityView: View {
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     @State private var currentLevel = 1
     @State private var score = 0
     @State private var userAnswer = ""
@@ -15,9 +16,20 @@ struct AgilityView: View {
         ZStack {
             Color.dmBackground.ignoresSafeArea()
             VStack(spacing: 0) {
-                Text("Agilidad mental")
-                    .font(DMFont.headline())
-                    .padding(.top, DMSpacing.md)
+                HStack {
+                    Button { navigation.dismissHomeFullScreen() } label: {
+                        Image(systemName: "xmark")
+                            .font(.title3.bold())
+                            .foregroundStyle(Color.dmTextSecondary)
+                    }
+                    Spacer()
+                    Text("Agilidad mental")
+                        .font(DMFont.headline())
+                    Spacer()
+                    Color.clear.frame(width: 24)
+                }
+                .padding(.horizontal, DMSpacing.lg)
+                .padding(.top, DMSpacing.md)
 
                 progressBar
                     .padding(.horizontal, DMSpacing.lg)

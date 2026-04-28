@@ -14,6 +14,7 @@ struct TodayView: View {
                 VStack(alignment: .leading, spacing: DMSpacing.lg) {
                     header
                     statsRow
+                    agilityCard
                     if !store.dueFlashcards.isEmpty { quizCard }
                     flashcardSection
                 }
@@ -37,6 +38,12 @@ struct TodayView: View {
                 FlashcardQuizView(cards: store.dueFlashcards)
                     .environmentObject(appState)
                     .environmentObject(navigation)
+            case .agility:
+                NavigationStack(path: $navigation.agilityPath) {
+                    AgilityView()
+                }
+                .environmentObject(appState)
+                .environmentObject(navigation)
             }
         }
         .sheet(item: $navigation.homeSheet) { sheet in
@@ -68,6 +75,38 @@ struct TodayView: View {
             statCard(value: "\(store.dueFlashcards.count)", label: "Pendientes", icon: "clock.fill", tint: Color.dmError)
             statCard(value: "\(store.totalReviewedToday)", label: "Pendientes", icon: "checkmark.circle.fill", tint: Color.dmSuccess)
             statCard(value: "\(store.flashcards.count)", label: "Pendientes", icon: "square.stack.3d.up.fill", tint: Color.dmPrimary)
+        }
+    }
+
+    private var agilityCard: some View {
+        Button {
+            navigation.presentHomeFullScreen(.agility)
+        } label: {
+            HStack(spacing: DMSpacing.md) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.dmPrimary.opacity(0.1))
+                        .frame(width: 48, height: 48)
+                    Image(systemName: "brain.head.profile")
+                        .font(.title2)
+                        .foregroundStyle(Color.dmPrimary)
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Agilidad Mental").font(DMFont.headline())
+                    Text("Entrena tu velocidad de cálculo").font(DMFont.footnote()).foregroundStyle(Color.dmTextSecondary)
+                }
+                Spacer()
+                Image(systemName: "play.fill")
+                    .font(.footnote)
+                    .foregroundStyle(Color.dmPrimary)
+                    .padding(8)
+                    .background(Circle().fill(Color.dmPrimary.opacity(0.1)))
+            }
+            .padding(DMSpacing.md)
+            .background(Color.dmSurface)
+            .cornerRadius(DMRadius.lg)
+            .shadow(color: .black.opacity(0.04), radius: 8, x: 0, y: 2)
         }
     }
 
