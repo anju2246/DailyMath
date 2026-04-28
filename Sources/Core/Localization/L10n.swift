@@ -150,6 +150,7 @@ enum L10n {
     static let quizTitle = tr("quiz.title")
     static let quizExit = tr("quiz.exit")
     static let quizFinishedTitle = tr("quiz.finished.title")
+    static let quizFinishedMessage = tr("quiz.finished.message")
     static func quizScore(_ correct: Int, _ total: Int) -> String {
         fmt("quiz.score", correct, total)
     }

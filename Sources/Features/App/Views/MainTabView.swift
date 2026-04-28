@@ -9,6 +9,18 @@ struct MainTabView: View {
             if !appState.isModerator {
                 NavigationStack(path: $navigation.homePath) {
                     TodayView()
+                        .navigationDestination(for: HomeRoute.self) { route in
+                            switch route {
+                            case .agility:
+                                AgilityView()
+                                    .environmentObject(appState)
+                                    .environmentObject(navigation)
+                            case .flashcardQuiz:
+                                FlashcardQuizView()
+                                    .environmentObject(appState)
+                                    .environmentObject(navigation)
+                            }
+                        }
                 }
                 .tabItem { Label("Hoy", systemImage: "calendar") }
                 .tag(MainTab.today)

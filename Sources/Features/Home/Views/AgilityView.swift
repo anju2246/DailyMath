@@ -13,23 +13,29 @@ struct AgilityView: View {
     @State private var startTime = Date()
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
+            // Fondo que ocupa todo
             Color.dmBackground.ignoresSafeArea()
+            
+            // Contenido que hace "fit" arriba
             VStack(spacing: 0) {
+                // Custom Header
                 HStack {
-                    Button { navigation.dismissHomeFullScreen() } label: {
-                        Image(systemName: "xmark")
-                            .font(.title3.bold())
+                    Button { 
+                        navigation.homePath.removeLast()
+                    } label: {
+                        Text(L10n.quizExit)
+                            .font(DMFont.calloutEmphasized())
                             .foregroundStyle(Color.dmTextSecondary)
                     }
                     Spacer()
                     Text("Agilidad mental")
                         .font(DMFont.headline())
                     Spacer()
-                    Color.clear.frame(width: 24)
+                    Color.clear.frame(width: 44)
                 }
                 .padding(.horizontal, DMSpacing.lg)
-                .padding(.top, DMSpacing.md)
+                .padding(.top, 8)
 
                 progressBar
                     .padding(.horizontal, DMSpacing.lg)
@@ -39,7 +45,8 @@ struct AgilityView: View {
                     .padding(.horizontal, DMSpacing.lg)
                     .padding(.top, DMSpacing.xs)
 
-                Spacer()
+                // Espacio controlado para separar la cabecera del juego
+                Spacer().frame(height: 40)
 
                 if let problem = currentProblem {
                     Text(problem.displayText)
@@ -61,7 +68,7 @@ struct AgilityView: View {
                     .padding(.top, DMSpacing.sm)
                 }
 
-                Spacer()
+                Spacer().frame(height: 40)
 
                 NumericKeyboardView(text: $userAnswer, isDisabled: showResult) { checkAnswer() }
                     .padding(.horizontal, DMSpacing.lg)
@@ -77,22 +84,28 @@ struct AgilityView: View {
                 .padding(.bottom, DMSpacing.md)
             }
         }
+        .navigationBarTitle("")
         .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
         .onAppear { nextProblem() }
         .animation(.spring(response: 0.3), value: showResult)
     }
 
     private var progressBar: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .leading) {
-                Capsule().fill(Color.dmTextSecondary.opacity(0.2))
+        ZStack(alignment: .leading) {
+            Capsule()
+                .fill(Color.dmTextSecondary.opacity(0.2))
+                .frame(height: 4)
+            
+            GeometryReader { geo in
                 Capsule()
                     .fill(Color.dmSuccess)
                     .frame(width: geo.size.width * CGFloat(correctCount) / 10.0)
-                    .animation(.spring(), value: correctCount)
             }
+            .frame(height: 4)
         }
-        .frame(height: 4)
     }
 
     private var statsRow: some View {

@@ -32,20 +32,6 @@ struct TodayView: View {
                 }
             }
         }
-        .fullScreenCover(item: $navigation.homeFullScreen) { screen in
-            switch screen {
-            case .flashcardQuiz:
-                FlashcardQuizView(cards: store.dueFlashcards)
-                    .environmentObject(appState)
-                    .environmentObject(navigation)
-            case .agility:
-                NavigationStack(path: $navigation.agilityPath) {
-                    AgilityView()
-                }
-                .environmentObject(appState)
-                .environmentObject(navigation)
-            }
-        }
         .sheet(item: $navigation.homeSheet) { sheet in
             switch sheet {
             case .createFlashcard:
@@ -80,7 +66,7 @@ struct TodayView: View {
 
     private var agilityCard: some View {
         Button {
-            navigation.presentHomeFullScreen(.agility)
+            navigation.homePath.append(HomeRoute.agility)
         } label: {
             HStack(spacing: DMSpacing.md) {
                 ZStack {
@@ -124,7 +110,7 @@ struct TodayView: View {
 
     private var quizCard: some View {
         Button {
-            navigation.presentHomeFullScreen(.flashcardQuiz)
+            navigation.homePath.append(HomeRoute.flashcardQuiz)
         } label: {
             HStack(spacing: DMSpacing.md) {
                 Image(systemName: "play.circle.fill").font(.title)

@@ -9,7 +9,6 @@ final class AppNavigationCoordinator: ObservableObject {
 
     @Published var homePath = NavigationPath()
     @Published var homeSheet: HomeSheet?
-    @Published var homeFullScreen: HomeFullScreen?
 
     @Published var communityPath = NavigationPath()
     @Published var createPath = NavigationPath()
@@ -68,13 +67,6 @@ final class AppNavigationCoordinator: ObservableObject {
         homeSheet = nil
     }
 
-    func presentHomeFullScreen(_ screen: HomeFullScreen) {
-        homeFullScreen = screen
-    }
-
-    func dismissHomeFullScreen() {
-        homeFullScreen = nil
-    }
 
     func resetMainFeaturePaths() {
         homePath = NavigationPath()

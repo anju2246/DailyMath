@@ -3095,6 +3095,23 @@
         }
       }
     },
+    "quiz.finished.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Has completado tus tarjetas de hoy"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Has completado tus tarjetas de hoy"
+          }
+        }
+      }
+    },
     "quiz.percentage" : {
       "extractionState" : "manual",
       "localizations" : {

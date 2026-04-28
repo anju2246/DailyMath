@@ -4,6 +4,7 @@ import SwiftUI
 
 struct FlashcardQuizView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var navigation: AppNavigationCoordinator
     @Environment(\.dismiss) private var dismiss
     
     @State private var currentIndex = 0
@@ -13,7 +14,9 @@ struct FlashcardQuizView: View {
     @State private var isFinished = false
     @State private var shuffledOptions: [String] = []
     
-    let cards: [QuizFlashcard]
+    private var cards: [QuizFlashcard] {
+        appState.flashcardStore.dueFlashcards
+    }
     
     private var currentCard: QuizFlashcard? {
         guard currentIndex < cards.count else { return nil }
@@ -21,13 +24,48 @@ struct FlashcardQuizView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            if isFinished {
-                finishedView
-            } else if let card = currentCard {
-                quizContent(card: card)
+        ZStack(alignment: .top) {
+            // Fondo
+            Color.dmBackground.ignoresSafeArea()
+            
+            // Contenido que hace "fit" arriba
+            VStack(spacing: 0) {
+                // Custom Header
+                HStack {
+                    Button { 
+                        navigation.homePath.removeLast()
+                    } label: {
+                        Text(L10n.quizExit)
+                            .font(DMFont.calloutEmphasized())
+                            .foregroundStyle(Color.dmTextSecondary)
+                    }
+                    Spacer()
+                    Text(L10n.quizTitle)
+                        .font(DMFont.headline())
+                    Spacer()
+                    Color.clear.frame(width: 44)
+                }
+                .padding(.horizontal, DMSpacing.lg)
+                .padding(.top, 8)
+
+                if isFinished {
+                    finishedView
+                } else if let card = currentCard {
+                    quizContent(card: card)
+                }
             }
         }
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
+        .onAppear {
+            if let card = currentCard {
+                shuffledOptions = card.shuffledOptions
+            }
+        }
+        .animation(.spring(response: 0.3), value: showResult)
     }
     
     // MARK: - Quiz Content
@@ -35,11 +73,12 @@ struct FlashcardQuizView: View {
     private func quizContent(card: QuizFlashcard) -> some View {
         VStack(spacing: 0) {
             // Progress bar
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(Color(.systemGray5))
-                    
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(Color(.systemGray5))
+                    .frame(height: 8)
+                
+                GeometryReader { geo in
                     Capsule()
                         .fill(
                             LinearGradient(
@@ -49,10 +88,9 @@ struct FlashcardQuizView: View {
                             )
                         )
                         .frame(width: geo.size.width * CGFloat(currentIndex) / CGFloat(cards.count))
-                        .animation(.spring(), value: currentIndex)
                 }
+                .frame(height: 8)
             }
-            .frame(height: 8)
             .padding(.horizontal)
             .padding(.top, 12)
             
@@ -71,7 +109,7 @@ struct FlashcardQuizView: View {
             .padding(.horizontal)
             .padding(.top, 8)
             
-            Spacer()
+            Spacer().frame(height: 32)
             
             // Category badge
             if let cat = AppConstants.Category(rawValue: card.category) {
@@ -91,7 +129,7 @@ struct FlashcardQuizView: View {
                 .padding(.horizontal, 24)
                 .padding(.top, 16)
             
-            Spacer()
+            Spacer().frame(height: 32)
             
             // Options
             VStack(spacing: 12) {
@@ -101,7 +139,7 @@ struct FlashcardQuizView: View {
             }
             .padding(.horizontal, 20)
             
-            Spacer()
+            Spacer().frame(height: 32)
             
             // Continue button
             if showResult {
@@ -119,13 +157,6 @@ struct FlashcardQuizView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 16)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-        }
-        .navigationTitle(L10n.quizTitle)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button(L10n.quizExit) { dismiss() }
             }
         }
         .onAppear {
@@ -213,7 +244,7 @@ struct FlashcardQuizView: View {
     
     private var finishedView: some View {
         VStack(spacing: 24) {
-            Spacer()
+            Spacer().frame(height: 60)
             
             Image(systemName: correctCount == cards.count ? "trophy.fill" : "star.fill")
                 .font(.system(size: 72))
@@ -222,27 +253,20 @@ struct FlashcardQuizView: View {
             Text(L10n.quizFinishedTitle)
                 .font(.largeTitle.bold())
             
-            // Score
             VStack(spacing: 8) {
-                Text(L10n.quizScore(correctCount, cards.count))
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
-                    .foregroundStyle(.green)
-                
-                Text(L10n.quizCorrectAnswers)
-                    .font(.subheadline)
+                Text(L10n.quizFinishedMessage)
+                    .font(.title3)
                     .foregroundStyle(.secondary)
+                
+                Text(L10n.quizScore(correctCount, cards.count))
+                    .font(.title.bold())
+                    .foregroundStyle(Color.dmPrimary)
             }
             
-            // Percentage
-            let pct = cards.isEmpty ? 0 : Int((Double(correctCount) / Double(cards.count)) * 100)
-            Text(L10n.quizPercentage(pct))
-                .font(.title.bold())
-                .foregroundStyle(pct >= 80 ? .green : pct >= 50 ? .orange : .red)
-            
-            Spacer()
+            Spacer().frame(height: 40)
             
             Button {
-                dismiss()
+                navigation.homePath.removeLast()
             } label: {
                 Text(L10n.quizBack)
                     .primaryButton()
@@ -250,8 +274,6 @@ struct FlashcardQuizView: View {
             .padding(.horizontal)
             .padding(.bottom, 32)
         }
-        .navigationTitle(L10n.quizResultTitle)
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     // MARK: - Logic

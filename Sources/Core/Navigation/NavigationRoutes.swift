@@ -28,12 +28,9 @@ enum HomeSheet: String, Identifiable {
 
     var id: String { rawValue }
 }
-
-enum HomeFullScreen: String, Identifiable {
-    case flashcardQuiz
+enum HomeRoute: Hashable {
     case agility
-
-    var id: String { rawValue }
+    case flashcardQuiz
 }
 
 enum CommunityRoute: Hashable {
